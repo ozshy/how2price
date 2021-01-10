@@ -1,0 +1,161 @@
+<html>
+<head>
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+<META name=VI60_defaultClientScript content=JavaScript>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Single Seller / Single Market / Network Services</title>
+
+<SCRIPT LANGUAGE=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+var a, b, d, c, F;
+function initialize() {
+a=12; b=10; d=1; c=1; F=4; //initializing variables
+}
+function writdata() { //writes the data provided by the user
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> single-seller / single-market / Network services</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("Inverse demand function is given by: <EM>p</EM> = ",'<font color="fuchsia">', a ,'</font>', " + ",'<font color="fuchsia">', b,'</font>', " <EM>Q</EM>"," - ",'<font color="fuchsia">', d,'</font>', " <EM>Q</EM><SUP>2</SUP>", "<br>" );
+results.document.write("Maginal cost equals: ", '<font color="fuchsia">', c,'</font>', "<br>");
+results.document.write("Fixed cost equals: ", '<font color="fuchsia">', F, '</font>', "<br>");
+}
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function writ1mktmonopnet() { // writes non-disc into for results
+writresult();
+results.document.write('<font color="#FF0000"> A profit-maximizing service (connection) provider should act as follows:</font><br>');
+price=(b*Math.sqrt(3*a*d+b*b-3*c*d)+6*a*d+b*b+3*c*d)/(9*d);
+quant=(Math.sqrt(3*a*d+b*b-3*c*d)+b)/(3*d);
+results.document.write("Ignoring fixed cost, the seller should set the price (subscription fee): ");
+results.document.write('<font color="#0000FF"><i>p</i> = ', round(price) ,'</font>', "<br>");
+results.document.write('Ignoring fixed cost, the firm should sell (subscribe): ');
+results.document.write('<font color="#0000FF">','<i>q</i> = ', round(quant), '</font>', " units (consumers)<br>");
+//results.document.write('Price-elasticity is: ');
+//results.document.write('<font color="#0000FF">','<i>e</i> = ', round(-(a+c)/(a-c)), '</font>', "<br>");
+results.document.write("Ignoring all costs , the revenue (turnover) collected is: ");
+results.document.write('<font color="#0000FF">','<i>R</i> = ',round(price*quant) , '</font>', "<br>");
+results.document.write("Ignoring fixed cost, the monopoly earns a profit: ")
+results.document.write('<font color="#0000FF">', "<EM>Profit</EM>  = ", round((price-c)*quant), '</font>', "<br>")
+if ((price-c)*quant >= F)
+results.document.write("Taking fixed cost into account, the monopoly earns a total profit of: ", '<font color="#0000FF">', "<EM>Profit</EM> = ", round((price-c)*quant-F), '</font>');
+else 
+results.document.write("Taking fixed cost into account, the monopoly makes a total loss of: ", '<font color="#0000FF">', "<EM>L</EM> = ", round(F-(price-c)*quant), '</font>');
+}
+
+function writanalysis() { // peak price etc.
+writresult();
+results.document.write('<font color="#FF0000"> The demand for this (network) service has the following features:</font><br>');
+results.document.write("Marginal-cost pricing (subscription fee) will generate a demand by: ");
+results.document.write('<font color="#0000FF">' + round((Math.sqrt(4*a*d+b*b-4*c*d)+b/1)/(2*d)) + '</font> subscribers', "<br>");
+results.document.write("A zero subscription fee will generate a demand by: ");
+results.document.write('<font color="#0000FF">' + round((Math.sqrt(4*a*d+b*b)+b)/(2*d)) + '</font> subscribers', "<br>");
+results.document.write("Thus, a profit maximizing subscription fee will restrict the actual number of subscribers to: ");
+results.document.write('<font color="#0000FF">' + round(100*((Math.sqrt(3*a*d+b*b-3*c*d)+b)/(3*d))/((Math.sqrt(4*a*d+b*b)+b)/(2*d))) + '</font> % of the potential number of subscribers', "<br>");
+results.document.write("No consumer will subscribe to this service, if the price (subscription fee) exceeds: ");
+results.document.write('<font color="#0000FF">' + round(a/1+b*b/(4*d)) + '</font> ', "<br>");
+}
+function calc() { // start computation function (main function!)
+openresultswindow();
+writdata(); //writes the data function
+if (c >= a/1+ b*b/(4*d)) { //total shut down due to cost exceeding peak
+writresult();
+results.document.write('<font color="#0000FF">The monopoly should shut down (not produce anything) since marginal cost exceeds consumers\' willingness to pay. That is, the necessary requirement that (a > c) is not satisfied according to the data you provided.</font>' );}
+else { // else of c>max(a1,a2)
+writ1mktmonopnet(); writanalysis();
+} //end else non shut down monopoly
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+// end of all functions
+
+resultno=0; //initializing results counter
+</SCRIPT>
+</head>
+
+<body bgColor=white text="black">
+
+<h1 style="BACKGROUND-COLOR: aqua">Single Seller / Single Market / Network Services</h1>
+<h2>[Class of demand for network services]</h2>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: To calculate the 
+profit-maximizing price and number 
+of subscribers&nbsp;served by a single
+firm selling a certain network service (e.g., telecommunication service)&nbsp;in a single market.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br>
+
+<FORM NAME="data" onSubmit="calc()">
+<font color="#ff0000">
+Please, <STRONG>always</STRONG>
+  click 
+<INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>
+before changing or submitting the following parameters:
+</font>
+<ul>
+  <li>The intercept (<i>a</i>)&nbsp;of the&nbsp;inverse
+    demand function <i> p</i> = <i> a</i>&nbsp;+ <EM>b&nbsp;Q</EM> - <EM>d 
+  Q</EM><SUP>2</SUP>.<BR>
+    Enter
+    <i>a</i> in this box (<i>a</i> &gt;  0): <INPUT id="ainput" name="ainput" value=12 size=10 onChange= "a =this.value">
+  
+  <li> The absolute value of the&nbsp;1st coefficient&nbsp;(<i>b</i>) of the inverse demand 
+  function&nbsp; <EM>p</EM> = <EM>a</EM>&nbsp;+ <EM>b&nbsp;Q</EM> - <EM>d Q</EM><SUP>2</SUP>. <BR>
+    Enter <i>b</i> in this box (<i>b</i> &gt;  0): <INPUT id="binput" name="binput" value=10 size=10 onChange= "b =this.value">
+  
+  <li>The absolute value of the&nbsp;2nd coefficient&nbsp;(<i>d</i>) of the inverse demand 
+  function&nbsp; <EM>p</EM> = <EM>a</EM>&nbsp;+ <EM>b&nbsp;Q</EM> - <EM>d Q</EM><SUP>2</SUP>. <BR>
+  Enter&nbsp;<EM>d</EM> in this box (<i>d</i> &gt; 0): <INPUT id="dinput" name="dinput" value=1 size=10 onChange= "d =this.value">
+  
+  <li>The marginal production cost (<i>c</i>). <BR>
+  Enter&nbsp; <EM>c</EM> in this box (<i>c</i> &gt; 0 
+  or <EM>c</EM> = 0): <INPUT id="cinput" name="cinput" value=1 size=10 onChange= "c =this.value">
+  
+  <li>Fixed production cost (<i>F</i>). 
+  <BR>Enter <i>F</i> in this box (<i>F</i> &gt;  0 or <i>F</i> = 0): <INPUT id="Finput" name="Finput" value=4 size=10 onChange= "F =this.value"></li>
+</ul>
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !">
+<INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()">
+<INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')">
+<INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')">
+</FORM>
+<hr>
+<h5>
+Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.
+</h5>
+
+</body>
+
+</html>
+

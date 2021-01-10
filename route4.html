@@ -1,0 +1,348 @@
+<html><head>
+<title>Distance / Shortest Route / 3-9 Cities</title>
+<META content="Client (IE 4.0 DHTML)" name=VI60_DTCScriptingPlatform>
+<META content=JavaScript name=VI60_defaultClientScript>
+<meta http-equiv=Content-Language content=en-us>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta content="Microsoft FrontPage 4.0" name=GENERATOR>
+<meta content=FrontPage.Editor.Document name=ProgId>
+<SCRIPT language=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+function comparenumbers(a,b) { // needed for soring arrays
+return a - b
+}
+
+var T, c, revise, route= new Array(9), seq= new Array(9), invroute= new Array(9), g= new Array(9), gg= new Array(100), d= new Array(100), dmax, dmin, originmin, originmax, destinationmin, destinationmax, totaldistance, connectionno, distunit, total;
+
+function initialize() {
+T=7; c=2; distunit='kilometers'; total=0; nc='nc';
+d[11]=0; d[12]=-333; d[13]=-333; d[14]=-333; d[15]=-333; d[16]=-333; d[17]=-333; d[18]=-333; d[19]=-333;
+d[21]=2; d[22]=0; d[23]=-333; d[24]=-333; d[25]=-333; d[26]=-333; d[27]=-333; d[28]=-333; d[29]=-333;
+d[31]=4; d[32]=Infinity; d[33]=0; d[34]=-333; d[35]=-333; d[36]=-333; d[37]=-333; d[38]=-333; d[39]=-333;
+d[41]=10; d[42]=11; d[43]=3; d[44]=0; d[45]=-333; d[46]=-333; d[47]=-333; d[48]=-333; d[49]=-333;
+d[51]=Infinity; d[52]=5; d[53]=Infinity; d[54]=8; d[55]=0; d[56]=-333; d[57]=-333; d[58]=-333; d[59]=-333;
+d[61]=Infinity; d[62]=Infinity; d[63]=1; d[64]=7; d[65]=Infinity; d[66]=0; d[67]=-333; d[68]=-333; d[69]=-333;
+d[71]=Infinity; d[72]=Infinity; d[73]=Infinity; d[74]=Infinity; d[75]=6; d[76]=9; d[77]=0; d[78]=-333; d[79]=-333;
+d[81]=333; d[82]=333; d[83]=333; d[84]=333; d[85]=333; d[86]=333; d[87]=333; d[88]=0; d[89]=-333;
+d[91]=333; d[92]=333; d[93]=333; d[94]=333; d[95]=333; d[96]=333; d[97]=333; d[98]=333; d[99]=0;
+revise=false; resultno=0; //initializing variables
+}
+
+function f(k,l) { //transforms data into a function
+var ftemp=d[10*k+l/1];
+return ftemp;
+}
+
+function notconnected() { //converts nc into Infinity
+for (var i = 11; i < 100; i++) {
+if (isNaN(d[i])) d[i]=Infinity;
+}//end for i
+}//end notconnected
+
+function completedata() { //completes the dij matrix
+var divider, remainder, polarindex;
+for (var i = 11; i < 100; i++) {
+	if (d[i]==-333) {
+	remainder= i%10;
+	divider= (i-remainder)/10;
+	polarindex=10*remainder/1 + divider/1;
+	// results.document.write(polarindex + '<br>'); //testing polar index
+	d[i]=d[polarindex];
+	}//end if
+}//end for i
+}//end completedata()
+
+function sortdata() { // finds the longest and shortest distances
+dmax=12; dmin=12; originmin=1; originmax=1; destinationmax=2; destinationmin=2; totaldistance=0; k=0;
+for (var i = 1; i <= T; i++) {
+	for (var j = 1; j <= T; j++) {
+	k=10*i+j;
+	totaldistance=totaldistance/1+d[k]/1;
+	if (d[k] > d[dmax]) {dmax=k; originmax=(k-(k%10))/10; destinationmax=k%10};
+	if (d[k] < d[dmin] && (k-(k%10))/10 != k%10) {dmin=k; originmin=(k-(k%10))/10; destinationmin=k%10};
+	} //end for j statement
+} // end for i statement
+}
+
+function writdata() { //writes the data provided by the user
+sortdata(); 
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Distance / Shortest Route / 3-9 Cities</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write('Distance is measured in: <font color="fuchsia">', distunit,'</font>', "<br>");
+results.document.write('The transportation (connection) cost per unit of distance is: <i>c</i> = <font color="fuchsia">', c,'</font>', "<br>");
+results.document.write('The number of cities is: <i>T</i> = <font color="fuchsia">', T,'</font>', "<br>");
+for (var i = 1; i <= T; i++) {
+results.document.write('The distance between city <font color="fuchsia">', i,'</font> and other cities is:<br>');
+	for (var j = 1; j <= T; j++) { 
+		if (f(i,j) != Infinity) 
+		results.document.write('<i>d</i><sub>'+i+'</sub><sub>'+j+'</sub> = <font color="fuchsia">' + round(f(i,j)) + '</font>, ');
+		else
+		results.document.write('<i>d</i><sub>'+i+'</sub><sub>'+j+'</sub> = <font color="fuchsia"> nc </font>, ');
+	}
+results.document.write('<br>');
+}//end for i
+if (f(originmax,destinationmax) == Infinity)
+results.document.write('The longest distance is between city <font color="fuchsia">' + originmax + '</font> and city <font color="fuchsia">' + destinationmax + '</font> (nc = not connected)<br>');
+else results.document.write('The longest distance is between city <font color="fuchsia">' + originmax + '</font> and city <font color="fuchsia">' + destinationmax + '</font><br>');
+results.document.write('The shortest distance is between city <font color="fuchsia">' + originmin + '</font> and city <font color="fuchsia">' + destinationmin + '</font><br>');
+results.document.write('The average distance between cities is <font color="fuchsia">' + round(totaldistance/(T*(T-1)))+ '</font> ' + distunit + '<br>');
+}//end writdata
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function revisedata(j) { // asks revision on data due to price below unit cost
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, the distance bewtween city ' + i + ' and city ' + j + ' is negative.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function writconnect() {// main program
+writresult(); 
+g[1]=0; //g[2]=f(1,2); seq[2]=1;
+for (var i = 2; i <= T; i++) {
+	g[i]=Infinity; //initialization
+	for (var j = 1; j <= i-1; j++) {
+	gg[j*10+i/1]=g[i-1]/1+f(i,j)/1;
+		if (gg[j*10+i/1] < g[i]) { //minimizing gg
+		g[i]=gg[j*10+i/1]; seq[i]=j; //labeling from where city i should be approached
+		}// end if <
+	}//end for j
+	//results.document.write(i + ' = i; ' + seq[i] + ' = seqi <br>');//testing
+}//end for i. 
+k=T; connectionno=0;
+do { //measuring # connections needed
+connectionno=connectionno/1+1/1; 
+k=seq[k];
+} while (seq[k] > 1);
+k=T;
+for (var i = 1; i <= connectionno/1+2/1; i++) { //assiging cities to invroute
+invroute[i]=k;
+//results.document.write('Segment #' + i + ': Route <font color="#0000FF">' + invroute[i] + '</font><br>');//testing
+k=seq[k];
+}//end for i
+for (var i = 1; i <= connectionno/1+2/1; i++) { //assiging invroute to route
+route[i]=invroute[connectionno/1+3/1-i];
+//results.document.write('Segment #' + i + ': Route <font color="#0000FF">' + route[i] + '</font><br>');//testing
+}//end for i
+connectionno=connectionno/1+1/1; //this is the true # segments
+total=0;
+if (seq[T]==1) { //if 1 directly connected to T (writing the direct route)
+results.document.write('<font color="#FF0000">The shortest route from city 1 to city <font color="fuchsia">' + round(T)+ '</font> contains <font color="#0000FF"> one (direct) </font> segment: </font><br>');
+total=f(1,T);
+results.document.write('From <font color="#0000FF"> 1 </font> To <font color="#0000FF"> T </font> [segment\'s length = <font color="#0000FF">' + total + '</font> ' + distunit + ']<br>');
+}//end if direct connection
+else { //indirect connection
+results.document.write('<font color="#FF0000">The shortest route from city 1 to city <font color="fuchsia">' + round(T)+ '</font> contains <font color="#0000FF">' + connectionno + '</font> segments: </font><br>');
+for (var i = 1; i <= connectionno; i++) { //writing route
+var templength=f(route[i],route[i/1+1/1]); 
+total=total/1+templength/1;
+results.document.write('Segment #' + i + ': From <font color="#0000FF">' + route[i] + '</font> To <font color="#0000FF">' + route[i/1+1/1] + '</font> [segment\'s length = <font color="#0000FF">' + templength + '</font> ' + distunit + ']<br>');
+}//end else
+}//end for i (writing route)
+}//end connect()
+
+function writconversion() {
+writresult();
+results.document.write('<font color="#FF0000">Total cost and the length of the shortest route (rounded to two decimals): </font><br>');
+results.document.write('Total transportation (connection) cost is: <font color="#0000FF">' + round(total*c) + '</font> <br>');
+
+if (distunit=='kilometers') {
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total) + '</font> ' + distunit + ' <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total/1.609344) + '</font> miles <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total/1.85325) + '</font> nautical miles <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*3280.839895) + '</font> feet <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*1093.613298) + '</font> yards <br>');
+}//end if kilometers
+
+if (distunit=='miles') {
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total) + '</font> ' + distunit + ' <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*1.609344) + '</font> kilometers <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*1.609344/1.85325) + '</font> nautical miles <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*1.609344*3280.839895) + '</font> feet <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*1.609344*1093.613298) + '</font> yards <br>');
+}//end if miles
+
+if (distunit=='nautical miles') {
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total) + '</font> ' + distunit + ' <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*1.85325/1.609344) + '</font> miles <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*1.85325) + '</font> kilometers <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*1.85325*3280.839895) + '</font> feet <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*1.85325*1093.613298) + '</font> yards <br>');
+}//end if nautical miles
+
+if (distunit=='feet') {
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total) + '</font> ' + distunit + ' <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*0.0003048) + '</font> kilometers <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*0.0003048/1.609344) + '</font> miles <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*0.0003048/1.85325) + '</font> nautical miles <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*0.0003048*1093.613298) + '</font> yards <br>');
+}//end if feet
+
+if (distunit=='yards') {
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total) + '</font> ' + distunit + ' <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*0.0009144) + '</font> kilometers <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*0.0009144/1.609344) + '</font> miles <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*0.0009144/1.85325) + '</font> nautical miles <br>');
+results.document.write('The length of the shortest route is: <font color="#0000FF">' + round(total*0.0009144*3280.839895) + '</font> feet <br>');
+}//end if yards
+}//end of writconversion()
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+if (T > 9) T = 9; //making sure that # Observations does not exceed 9
+if (T < 3) T = 3; //making sure that # Observations is at least 4 (does not work with 3)
+notconnected();
+completedata();
+writdata(); //writes the data function
+if (revise==false) { // main calc begins
+writconnect(); writconversion();
+} //end of if revise is false
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+</head>
+<body text=black bgColor=white>
+<h1 style="BACKGROUND-COLOR: aqua">Distance&nbsp;/&nbsp;Shortest Route /&nbsp;3 to&nbsp;9 
+Cities</h1>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b> : To&nbsp;determine the shortest route between 
+city 1 to&nbsp;city&nbsp;<em>T</em> in an economy with <em>T</em> cities.&nbsp;The user (you) input the number of 
+cities and the distance between all city pairs (or any type of locality). <br>Then, <em>How-to-Price</em><sup>TM</sup> determines the shortest route to go from (or 
+connect) city 1 to city <em>T</em> .</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting&nbsp;cities 
+and&nbsp;distance&nbsp;data:</b><br>
+<FORM name=data onsubmit=calc()><font color=#ff0000>Please, <STRONG>always</STRONG> click <INPUT id=reset1 onclick=initialize() type=reset value="Reset !" name=reset1>&nbsp;before 
+changing or submitting the following parameters:</font> 
+<UL>
+  <LI>Distance is measured in: <SELECT id=Select1 
+  onclick=distunit=this.value> <option value=kilometers 
+    selected>Kilometers</option> <option value=miles 
+    >Miles</option> <option value="nautical miles" 
+    >Nautical Miles</option> <option value=feet 
+    >Feet</option> <option value=yards 
+    >Yards</option></SELECT> 
+  <LI>The transportation (connection) cost per unit of 
+  distance: Enter <em>c</em> = <INPUT id=Text102 
+  onchange="c =this.value" size=10 value=2 name=cinput> 
+  <li>Enter the number of cities (3-9): <em 
+  >T </em>= <INPUT id=Ninput onchange="T =this.value" size=2 
+  value=7 name=Ninput> 
+  <LI>Below, enter the distance between each city <em 
+  >i</em> and&nbsp;city <em>j</em> 
+  &nbsp;(<EM>d</EM><SUB>ij</SUB>): <BR 
+  ><FONT size=2>(<font color=#ff0000 
+  >Remark:</font> if, for example, you entered&nbsp; <EM 
+  >T</EM> =  &nbsp;7 (default), the program will ignore all 
+  connections to/from cities&nbsp;8 to 9, and so on...) </FONT></LI></UL>
+<p><font style="BACKGROUND-COLOR: lightgrey">City 1: <em>d</em><SUB>11</SUB> =  </font><INPUT id=Text128 
+onchange="d[11] =this.value" size=1 value=0 name=w1input><br><font 
+style="BACKGROUND-COLOR: white">City 2</font>: <em>d</em><SUB>21</SUB> = <INPUT id=Text8 
+onchange="d[21] =this.value" size=1 value=2 name=w1input>, 
+<em>d</em><sub>22</sub> = <INPUT 
+id=Text9 onchange="d[22] =this.value" size=1 value=0 name=x1input><br><font 
+style="BACKGROUND-COLOR: lightgrey">City 3: <em>d</em><SUB>31</SUB> =  </font><INPUT 
+id=Text11 onchange="d[31] =this.value" size=1 value=4 name=w1input> <font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>32</sub> =  </font><INPUT id=Text11 
+onchange="d[32] =this.value" size=1 value=nc name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>33</sub> =  </font><INPUT id=Text11 
+onchange="d[33] =this.value" size=1 value=0 name=x1input><br><font 
+style="BACKGROUND-COLOR: #ffffff">City 4</font>: <em>d</em><SUB>41</SUB> = <INPUT id=Text18 
+onchange="d[41] =this.value" size=1 value=10 name=w1input>, 
+<em>d</em><sub>42</sub> = <INPUT 
+id=Text18 onchange="d[42] =this.value" size=1 value=11 name=x1input>, <em>d</em><sub>43</sub> = <INPUT id=Text18 onchange="d[43] =this.value" 
+size=1 value=3 name=x1input>, <em>d</em><sub>44</sub> = <INPUT id=Text19 
+onchange="d[44] =this.value" size=1 value=0 name=x1input><br><font 
+style="BACKGROUND-COLOR: lightgrey">City 5: <em>d</em><SUB>51</SUB> =  </font><INPUT 
+id=Text25 onchange="d[51] =this.value" size=1 value=nc name=w1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>52</sub> =  </font><INPUT id=Text25 
+onchange="d[52] =this.value" size=1 value=5 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>53</sub> =  </font><INPUT id=Text25 
+onchange="d[53] =this.value" size=1 value=nc name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>54</sub> =  </font><INPUT id=Text26 
+onchange="d[54] =this.value" size=1 value=8 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>55</sub> =  </font><INPUT id=Text27 
+onchange="d[55] =this.value" size=1 value=0 name=x1input><br><font 
+style="BACKGROUND-COLOR: #ffffff">City 6</font>: <em>d</em><SUB>61</SUB> = <INPUT id=Text32 
+onchange="d[61] =this.value" size=1 value=nc name=w1input>, 
+<em>d</em><sub>62</sub> = <INPUT 
+id=Text32 onchange="d[62] =this.value" size=1 value=nc name=x1input>, <em>d</em><sub>63</sub> = <INPUT id=Text32 
+onchange="d[63] =this.value" size=1 value=1 name=x1input>, <em>d</em><sub>64</sub> = <INPUT id=Text33 
+onchange="d[64] =this.value" size=1 value=7 name=x1input>, 
+<em>d</em><sub>65</sub> = <INPUT 
+id=Text34 onchange="d[65] =this.value" size=1 value=nc name=x1input>, <em>d</em><sub>66</sub> = <INPUT id=Text35 
+onchange="d[66] =this.value" size=1 value=0 name=x1input><br><font 
+style="BACKGROUND-COLOR: lightgrey">City 7: <em>d</em><SUB>71</SUB> =  </font><INPUT 
+id=Text39 onchange="d[71] =this.value" size=1 value=333 name=w1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>72</sub> =  </font><INPUT id=Text39 
+onchange="d[72] =this.value" size=1 value=nc name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>73</sub> =  </font><INPUT id=Text39 
+onchange="d[73] =this.value" size=1 value=nc name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>74</sub> =  </font><INPUT id=Text40 
+onchange="d[74] =this.value" size=1 value=nc name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>75</sub> =  </font><INPUT id=Text41 
+onchange="d[75] =this.value" size=1 value=6 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>76</sub> =  </font><INPUT id=Text42 
+onchange="d[76] =this.value" size=1 value=6 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>77</sub> =  </font><INPUT id=Text43 
+onchange="d[77] =this.value" size=1 value=0 name=x1input><br><font 
+style="BACKGROUND-COLOR: #ffffff">City 8</font>: <em>d</em><SUB>81</SUB> = <INPUT id=Text46 
+onchange="d[81] =this.value" size=1 value=333 name=w1input>, <em>d</em><sub>82</sub> = <INPUT id=Text46 onchange="d[82] =this.value" 
+size=1 value=333 name=x1input>, <em>d</em><sub>83</sub> = <INPUT id=Text46 
+onchange="d[83] =this.value" size=1 value=333 name=x1input>, <em>d</em><sub>84</sub> = <INPUT id=Text47 onchange="d[84] =this.value" 
+size=1 value=333 name=x1input>, <em>d</em><sub>85</sub> = <INPUT id=Text48 
+onchange="d[85] =this.value" size=1 value=333 name=x1input>, <em>d</em><sub>86</sub> = <INPUT id=Text49 onchange="d[86] =this.value" 
+size=1 value=333 name=x1input>, <em>d</em><sub>87</sub> = <INPUT id=Text50 
+onchange="d[87] =this.value" size=1 value=333 name=x1input>, <em>d</em><sub>88</sub> = <INPUT id=Text51 onchange="d[88] =this.value" 
+size=1 value=0 name=x1input><br><font 
+style="BACKGROUND-COLOR: lightgrey">City 9: <em>d</em><SUB>91</SUB> =  </font><INPUT 
+id=Text53 onchange="d[91] =this.value" size=1 value=333 name=w1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>92</sub> =  </font><INPUT id=Text53 
+onchange="d[92] =this.value" size=1 value=333 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>93</sub> =  </font><INPUT id=Text53 
+onchange="d[93] =this.value" size=1 value=333 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>94</sub> =  </font><INPUT id=Text54 
+onchange="d[94] =this.value" size=1 value=333 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>95</sub> =  </font><INPUT id=Text55 
+onchange="d[95] =this.value" size=1 value=333 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>96</sub> =  </font><INPUT id=Text56 
+onchange="d[96] =this.value" size=1 value=333 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>97</sub> =  </font><INPUT id=Text57 
+onchange="d[97] =this.value" size=1 value=333 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>98</sub> =  </font><INPUT id=Text58 
+onchange="d[98] =this.value" size=1 value=333 name=x1input><font style="BACKGROUND-COLOR: lightgrey">, <em>d</em><sub>99</sub> =  </font><INPUT id=Text59 
+onchange="d[99] =this.value" size=1 value=0 name=x1input></p>
+<p><font size=2><font color=#ff0000><font color=black>[</font>Hint:</font> 
+if, there is no connection between city <em>i</em> and city 
+<em>j</em>, enter: <em>d</em><sub>ij</sub> =&nbsp;<font color=#008000>nc</font> (stands for 
+"not-connected")]</font><br><br><INPUT type=submit value="Show Results Now !" name=showresults> 
+<INPUT onclick=window.close() type=button value="Close Page" name=closewindow> 
+<INPUT id=GoMain onclick="openwindow('index.html')" type=button value="Main Page" name=GoMain> 
+<INPUT onclick="openwindow('glossary.html')" type=button value="Glossary of Terms" name=glossary> 
+</p></FORM>
+<hr>
+
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size=1>TM</font></SUP>&nbsp; All rights 
+reserved.</h5>
+
+</body></html>

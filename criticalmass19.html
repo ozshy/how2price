@@ -1,0 +1,150 @@
+<html>
+<head>
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+<META name=VI60_defaultClientScript content=JavaScript>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Single Market / Network Services / Critical Mass</title>
+
+<SCRIPT LANGUAGE=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+var a, b, d, p;
+function initialize() {
+a=12; b=10; d=1; p=30; //initializing variables
+}
+function writdata() { //writes the data provided by the user
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Single Market / Network Services / Critical Mass</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("Inverse demand function is given by: <EM>p</EM> = ",'<font color="fuchsia">', a ,'</font>', " + ",'<font color="fuchsia">', b,'</font>', " <EM>Q</EM>"," - ",'<font color="fuchsia">', d,'</font>', " <EM>Q</EM><SUP>2</SUP>", "<br>" );
+results.document.write("The proposed market price (subscription fee) is: ", '<font color="fuchsia">', p,'</font>', "<br>");
+}
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function writmass() { // peak price etc.
+writresult();
+results.document.write('<font color="#FF0000"> The critical-mass calculations are as follows:</font><br>');
+if (p > a/1+b*b/(4*d)) {
+	results.document.write("At the market price (subscription fee) ", '<font color="fuchsia"><EM>p</EM> = ', p,'</font> no consumer will subscribe to this service', "<br>");
+	results.document.write('In order to get some users to subscribe, the market price must drop below <font color="#0000FF">' + round(a/1+b*b/(4*d)) + '</font>', "<br>");
+}//end if
+else {
+	if ((b-Math.sqrt(4*a*d/1+b*b-4*d*p))/(2*d) > 0) cm=(b-Math.sqrt(4*a*d/1+b*b-4*d*p))/(2*d);
+	else cm=0
+	results.document.write("At the market price (subscription fee) ", '<font color="fuchsia"><EM>p</EM> = ', p,'</font> ');
+	results.document.write("the critical mass is: ");
+	results.document.write('<font color="#0000FF">' + round(cm) + '</font> subscribers', "<br>");
+	results.document.write("That is, if the price  "+'<font color="fuchsia"><EM>p</EM> = ', p,'</font>, there are at least ');
+	results.document.write('<font color="#0000FF">' + round(cm) + '</font> consumers who become subscribers, then more will follow and also subscribe to this service. '+"<br>");
+	results.document.write("Eventually, at the price  "+'<font color="fuchsia"><EM>p</EM> = ', p,'</font>, the number of subscribers will grow and settle at the level of: ');
+	results.document.write('<font color="#0000FF">' + round((b/1+Math.sqrt(4*a*d/1+b*b/1-4*d*p))/(2*d)) + '</font> subscribers. '+"<br>");
+	} //end else
+}
+
+function writanalysis() { // peak price etc.
+writresult();
+results.document.write('<font color="#FF0000"> The demand for this (network) service has the following properties:</font><br>');
+results.document.write("A zero subscription fee will generate a demand by: ");
+results.document.write('<font color="#0000FF">' + round((Math.sqrt(4*a*d+b*b)+b/1)/(2*d)) + '</font> subscribers', "<br>");
+results.document.write("No consumer will subscribe to this service, if the price (subscription fee) exceeds: ");
+results.document.write('<font color="#0000FF">' + round(a/1+b*b/(4*d)) + '</font> ', "<br>");
+}
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+writdata(); //writes the data function
+writmass(); writanalysis(); 
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+// end of all functions
+
+resultno=0; //initializing results counter
+</SCRIPT>
+</head>
+
+<body bgColor=white text="black">
+
+<h1 style="BACKGROUND-COLOR: aqua">Single Market / Network Services / Critical Mass</h1>
+<h2>[Class of demand for network services]</h2>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: &nbsp;To calculate the "critical mass"&nbsp;at 
+any price <EM>p</EM>    
+    
+    
+  ,&nbsp;generated by a demand for a&nbsp;&nbsp;network service (e.g., telecommunication service).</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br>
+
+<FORM NAME="data" onSubmit="calc()">
+<font color="#ff0000">
+Please, <STRONG>always</STRONG>
+  click 
+<INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>
+before changing or submitting the following parameters:
+</font>
+<ul>
+  <li>The intercept (<i>a</i>)&nbsp;of the&nbsp;inverse
+    demand function <i> p</i> = <i> a</i>&nbsp;+ <EM>b&nbsp;Q</EM> - <EM>d 
+  Q</EM><SUP>2</SUP>.<BR>
+    Enter
+    <i>a</i> in this box (<i>a</i> &gt;  0): <INPUT id="ainput" name="ainput" value=12 size=10 onChange= "a =this.value">
+  
+  <li> The absolute value of the&nbsp;1st coefficient&nbsp;(<i>b</i>) of the inverse demand 
+  function&nbsp; <EM>p</EM> = <EM>a</EM>&nbsp;+ <EM>b&nbsp;Q</EM> - <EM>d Q</EM><SUP>2</SUP>. <BR>
+    Enter <i>b</i> in this box (<i>b</i> &gt;  0): <INPUT id="binput" name="binput" value=10 size=10 onChange= "b =this.value">
+  
+  <li>The absolute value of the&nbsp;2nd coefficient&nbsp;(<i>d</i>) of the inverse demand 
+  function&nbsp; <EM>p</EM> = <EM>a</EM>&nbsp;+ <EM>b&nbsp;Q</EM> - <EM>d Q</EM><SUP>2</SUP>. <BR>
+  Enter&nbsp;<EM>d</EM> in this box (<i>d</i> &gt; 0): <INPUT id="dinput" name="dinput" value=1 size=10 onChange= "d =this.value">
+  
+  <li>The market price&nbsp;(<EM>p</EM>) for which you wish 
+  to calculate the critical mass. <BR>
+  Enter&nbsp; <EM>p</EM> in this box (<i>p</i> &gt; 0 
+  or&nbsp; <EM>p</EM> = 0): <INPUT id="pinput" name="pinput" value=30 size=10 onChange= "p =this.value"></li>
+</ul>
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !">
+<INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()">
+<INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')">
+<INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')">
+</FORM>
+<hr>
+<h5>
+Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.
+</h5>
+
+</body>
+
+</html>
+

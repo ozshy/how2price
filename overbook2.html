@@ -1,0 +1,226 @@
+<html><head>
+<title>Booking & Reservations / Overbooking / Single-class</title>
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+<META name=VI60_defaultClientScript content=JavaScript>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+
+<SCRIPT LANGUAGE=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+function fac(n) { //factorial
+if ((n == 0) || (n == 1))
+return 1
+else {
+result = (n * fac(n-1) )
+return result
+}//end else
+}
+
+var s, es, ns, b, ob, bmax, k, os, sp, r, c, m, l, revise;
+
+function initialize() {
+k=100; l=30; r=350; p=0.8; m=50; c=500; revise=false; //initializing variables
+}
+
+function writdata() { //writes the data provided by the user
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the results for the<br> Booking \& Reservations / Overbooking / Single-class</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("The capacity (maximum number of served customers) is: <EM>k</EM> = ", '<font color="fuchsia">', k, '</font>', "<br>");
+bmax= k/1+ Math.floor(k*l/100);
+results.document.write("The maximum legally-allowed number of bookings is: <EM>b<sub>max</sub></EM> = ", '<font color="fuchsia">', bmax, '</font> (i.e., overbooking of <font color="fuchsia">', bmax-k, '</font>)' , "<br>");
+results.document.write("The probability that a booked passenger will show up (survival probability) is: <EM>p</EM> = ", '<font color="fuchsia">', p, '</font>', "<br>");
+results.document.write("The revenue per served customer (price of a ticket) is: <EM>r</EM> = ", '<font color="fuchsia">', r, '</font>', "<br>");
+results.document.write("The (marginal) cost per served customer is: <EM>m</EM> = ", '<font color="fuchsia">', m, '</font>', "<br>");
+results.document.write("The (penalty inclusive) cost of an oversold customer is: <EM>c</EM> = ", '<font color="fuchsia">', c, '</font>', "<br>");
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function checkdata() {
+if (m >= r) { revise=true;
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, <i>r</i> = ' + r + ' < ' + m + ' = <i>m</i> (i.e., revenue per passenger is lower than the cost).</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}//end if m>r
+if (p <=0 || p >=1) { revise=true;
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, <i>p</i> = ' + p + ' which does not satisfy 0 < <i>p</i> < 1.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}//end if prob out of range
+}//end checkdata()
+
+function lhs(bk) {
+x=0;
+	for (var j = 0; j <= k-1; j++) {
+	x=x/1+fac(bk)*Math.pow(p,j)*Math.pow(1-p,bk-j)/(fac(j)*fac(bk-j))
+	}//end for j
+return x;
+}//end lhs()
+
+function overbook() {
+writresult();
+rhs=c/(r-m+c/1);
+if ( (lhs(k) > rhs) && (lhs(bmax) < rhs) ) { //intermediate overbooking
+b=k; var temp=0;
+	for (var i = k; i <= bmax-1; i++) {
+		temp=lhs(i); //problem here in lhs(i) !!!
+		if (temp > rhs) {	
+		b=i/1+1/1; 
+		}//end if >
+	}//end for i
+ob=b-k;
+results.document.write("The profit-maximizing number of bookings is: <EM>b</EM> = ",'<font color="#0000FF">' + round(b) + '</font>'+ "<br>" );
+results.document.write("The profit-maximizing number of overbookings is: <EM>ob</EM> = ",'<font color="#0000FF">' + round(ob) + '</font>, (or <font color="#0000FF">' + round(100*ob/k)+ '</font>%)'+ "<br>" );
+}//end if < <
+if (lhs(bmax) >= rhs) { //maximal overbooking
+b=bmax;
+results.document.write("The profit-maximizing number of bookings is: <EM>b</EM> = ",'<font color="#0000FF">' + round(b) + '</font>'+ "<br>" );
+results.document.write('That is, the seller should overbook to the maximum that is legally allowed.<br>' );
+}//end if >
+if (lhs(k) <= rhs) { //minimal overbooking
+b=k;
+results.document.write("The profit-maximizing number of bookings is: <EM>b</EM> = ",'<font color="#0000FF">' + round(b) + '</font>'+ "<br>" );
+results.document.write('That is, the seller should not overbook.<br>' );
+}//end if <
+}//end overbook
+
+function implications() {
+writresult();
+es=0;
+	for (var i = 1; i <= b; i++) {
+	es=es/1+fac(b)/(fac(i)*fac(b-i))*i*Math.pow(p,i)*Math.pow(1-p,b-i)/1;
+	}//end for i
+results.document.write("The expected number of booked customers who will show up for the service is: E<EM>s</EM> = ",'<font color="#0000FF">' + round(es) + '</font>'+ "<br>" );
+	if (k >= es) {
+	results.document.write("The expected undersold capacity (spoilage) is: E<EM>sp</EM> = ",'<font color="#0000FF">' + round(k-es) + '</font>'+ ' (or <font color="#0000FF">' + round(100*(k-es)/k) + '</font>%)'+ "<br>" );
+	results.document.write("The expected profit is: E<EM>profit</EM> = ",'<font color="#0000FF">' + round((r-m)*es) + '</font>'+ "<br>" );
+	}
+	if (k < es) {
+	results.document.write("The expected number of overbooked (oversold) customers is: E<EM>ob</EM> = ",'<font color="#0000FF">' + round(es-k) + '</font>'+ ' (or <font color="#0000FF">' + round(100*(es-k)/k) + '</font>%)'+ "<br>" );
+	results.document.write("The expected profit is: E<EM>profit</EM> = ",'<font color="#0000FF">' + round((r-m)*k-c*(es-k)) + '</font>'+ "<br>" );
+	}
+}//end implications
+
+function calc() { // start computation function (main function!)
+openresultswindow(); 
+writdata(); //writes data inputted
+checkdata();
+if (revise==false) { //main program
+overbook(); implications();
+} // end if revise==false (main program)
+// Now closing the output window
+
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP> &nbsp; All rights reserved.<h5>');
+
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+</SCRIPT>
+</head>
+
+
+<body bgColor=white text="black">
+
+<h1 style="BACKGROUND-COLOR: aqua">  Booking &amp; Reservations 
+/ Overbooking / Single-class       </h1>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b> :&nbsp; To calculate how the 
+profit-maximizing number of bookings (reservations) for a specific service to be provided at 
+a specific date. The user (you) input the probability of that of showing up, 
+the revenue and cost per consumer, and the cost (penalty) of an oversold 
+(bumped)&nbsp;consumer. Then<br><em>How-to-Price</em><sup>TM</sup> computes the 
+profit-maximizng number of bookings this service provider should allow.<br></p>
+<p><strong>Assumptions</strong>: (a) The reservation is fully refundable. That 
+is, those customers who do not show up, don't pay for the service. (b) The 
+seller bears&nbsp;costs of denying service to a&nbsp;booked (oversold) customer. 
+These costs include: goodwill and bad reputation, penalty mandated by the law, 
+addition compensation commonly provided. (c) A consumers' probability of showing 
+up is constant and uncorrelated.</p>
+<p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">    Inputting&nbsp;data:</b><br></p>
+
+<FORM NAME="data" onSubmit="calc()">
+<font color="#ff0000">
+Please, <STRONG>always</STRONG>
+  click 
+<INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>
+before changing or submitting the following parameters:
+</font>
+<UL>
+  <li>Enter the capacity (maximum number of served customers),&nbsp; 
+  <EM>k</EM> = 
+  <INPUT id=Text1 name="kinput" value=100 size=10 onChange= "k=this.value"> 
+  
+  <li>Enter the maximum legally-allowed percentage of overbooking,&nbsp; 
+  <EM>l</EM> = 
+  <INPUT id=Text2 name="linput" value=30 size=4 onChange= "l=this.value">% 
+      
+  <li>Enter the probability that a booked customer will show up for the service,&nbsp; 
+  <EM>p</EM>  (0 &lt; <EM>p</EM> &nbsp;&lt;  1) = 
+  <INPUT id="pinput" name="pinput" value=0.8 size=4 onChange= "p=this.value"> 
+  
+  <li>Enter the revenue per&nbsp;served customer, <em>r</em> = 
+  <INPUT id=rinput onchange="r=this.value" size=10 value=350 name=rinput>
+  
+  <li>Enter the (marginal) cost per customer, <em>m</em> = 
+  <INPUT id=minput onchange="m=this.value" size=10 value=50 name=minput>
+  
+  <LI>        Enter the cost&nbsp;of an oversold (bumped) consumer, <em>c</em> = 
+  <INPUT id=ciinput name=ciinput onchange= "c=this.value" size=10 value=500></LI>
+</UL>
+<P><font size=2>(<font color=#ff0000>Remark:</font> Be 
+patient! Computations may take a few seconds)</font> 
+</P>
+<p>
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !">
+<INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()">
+<INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')">
+<INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"> 
+</p>
+</FORM>
+<hr>
+<h5>
+Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.
+</h5>
+
+</body>
+
+</html>

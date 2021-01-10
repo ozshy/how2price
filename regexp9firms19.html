@@ -1,0 +1,160 @@
+<html><head><META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)"><META name=VI60_defaultClientScript content=JavaScript><meta http-equiv="Content-Language" content="en-us"><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><meta name="GENERATOR" content="Microsoft FrontPage 4.0"><meta name="ProgId" content="FrontPage.Editor.Document"><title>Regression / Linear Demand / 2-9 Observations</title>
+<SCRIPT LANGUAGE=javascript> function openwindow(filename) { window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {// rounds number to X decimal places, defaults to 2X = (!X ? 2 : X);return Math.round(number*Math.pow(10,X))/Math.pow(10,X);}
+var N, p = new Array(9), Q = new Array(9), A = new Array(9), revise, Qmax, Qmin, pmax, pmin, Amax, Amin, b, ep, ea,
+sumQ, sump, sumA, sumQp, sumQA, sumAp, 
+sumQ2, sumA2, sump2, sumAQ, sumpQ, sumpA, 
+meanQ, meanp, meanA, R, Rsquare, adjRsquare;
+function initialize() { N=6; p[1]=20; p[2]=18; p[3]=16; p[4]=14; p[5]=12; p[6]=10; p[7]=333; p[8]=333; p[9]=333; 
+ Q[1]=100; Q[2]=200; Q[3]=400; Q[4]=300; Q[5]=500; Q[6]=600; Q[7]=333; Q[8]=333; Q[9]=333; // A[1]=50; A[2]=60; A[3]=70; A[4]=60; A[5]=50; A[6]=40; A[7]=333; A[8]=333; A[9]=333;  
+ revise=false; Qmax=1; Qmin=1; pmax=1; pmin=1; Amax=1; Amin=1; b=0; ep=0; ea=0; sumQ=0; sump=0; sumA=0;  sumQp=0; sumQA=0; sumAp=0;  sumQ2=0; sumA2=0; sump2=0; sumAQ=0; sumpQ=0; sumpA=0;  meanQ=0; meanp=0; meanA=0; R=1, Rsquare=1; adjRsquare=1;  //initializing variables
+ }  function sortdata() { // finds the higest and lowest price obseration and quantity observationfor (var i = 2; i < N/1+1/1; i++) {
+	if (Q[i] > Q[Qmax]) Qmax=i;	if (Q[i] < Q[Qmin]) Qmin=i;	if (p[i] > p[pmax]) pmax=i;	if (p[i] < p[pmin]) pmin=i;//	if (A[i] > A[Amax]) Amax=i;//	if (A[i] < A[Amin]) Amin=i;} // end for statement
+}
+function writdata() { //writes the data provided by the user
+sortdata();results.document.write('<body text="black">');results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Regression / Exponential (Constant-Elasticity) Demand / 2-9 Observations</font><br>');results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("The number of observations is : ", '<EM>N</EM> = <font color="fuchsia">', N,'</font>', "<br>");
+for (var i = 1; i < N/1+1/1; i++) {
+results.document.write('Observation ' + i + ': Quantity is <EM>Q</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + Q[i] + '</font>, ' );
+results.document.write('Price is <EM>p</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + p[i] + '</font><br>' );
+// results.document.write('Advertising is <EM>A</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + A[i] + '</font> ' + "<br>" );} // end of for statementresults.document.write('The highest price is found in observation  <font color="fuchsia">' + pmax + '</font>' + "<br>" );
+results.document.write('The lowest price is found in observation  <font color="fuchsia">' + pmin + '</font>' + "<br>" );results.document.write('The highest quantity demanded is found in observation  <font color="fuchsia">' + Qmax + '</font>' + "<br>" );
+results.document.write('The lowest quantity demanded is found in observation  <font color="fuchsia">' + Qmin + '</font>' + "<br>" );
+results.document.write('The highest advertising expenditure is found in observation  <font color="fuchsia">' + Amax + '</font>' + "<br>" );
+results.document.write('The lowest advertising expenditure is found in observation  <font color="fuchsia">' + Amin + '</font>' + "<br>" );}
+function writresult() { //writes Result #: (red+underline)resultno=resultno+1;results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');}
+
+function revisedata(j) { // asks revision on data due to price below unit costwritresult();results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, observation ' + j + ' has a negative value.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+
+function checkprices() {for (var i = 1; i < N/1+1/1; i++) {
+	if (p[i] < 0) {revisedata(i); revise=true};
+} }function checkquantities() {for (var i = 1; i < N/1+1/1; i++) {
+	if (Q[i] < 0) {revisedata(i); revise=true};
+} }
+
+function checkad() {for (var i = 1; i < N/1+1/1; i++) {
+	if (A[i] < 0) {revisedata(i); revise=true};
+} }
+function writregression() { // writes regression resultswritresult();for (var i = 1; i < N/1+1/1; i++) { // calculating sums from datasumQ=sumQ/1+Math.log(Q[i])/1; sump=sump/1+Math.log(p[i])/1; // sumA=sumA/1+Math.log(A[i])/1;sumQ2=sumQ2/1+(Math.log(Q[i]))*(Math.log(Q[i]))/1;
+//sumA2=sumA2/1+(Math.log(A[i]))*(Math.log(A[i]))/1;
+sump2=sump2/1+(Math.log(p[i]))*(Math.log(p[i]))/1;
+//sumAQ=sumAQ/1+(Math.log(Q[i]))*(Math.log(A[i]))/1;
+sumpQ=sumpQ/1+(Math.log(Q[i]))*(Math.log(p[i]))/1;
+//sumpA=sumpA/1+(Math.log(A[i]))*(Math.log(p[i]))/1;
+} // end for//b=(-1)*(sumA*(sumAQ*sump2 - sumpA*sumpQ) + sumA2*(sump*sumpQ - sumQ*sump2) - sumpA*(sumAQ*sump - sumQ*sumpA))/(N*(sumA2*sump2 - sumpA*sumpA ) - sumA*sumA*sump2 + sump*(2*sumA*sumpA - sumA2*sump));
+//ep=(N*(sumA2*sumpQ - sumAQ*sumpA) - sumA*sumA*sumpQ + sumA*(sumAQ*sump + sumQ*sumpA) - sumA2*sumQ*sump )/(N*(sumA2*sump2 - sumpA*sumpA) - sumA*sumA*sump2 + sump*(2*sumA*sumpA - sumA2*sump));
+//ea=(N*(sumAQ*sump2 - sumpA*sumpQ) + sumA*(sump*sumpQ - sumQ*sump2) - sump*(sumAQ*sump - sumQ*sumpA) )/(N*(sumA2*sump2 - sumpA*sumpA ) - sumA*sumA*sump2 + sump*(2*sumA*sumpA - sumA2*sump));
+
+//Here, I run 2 var regression
+ep=(N*sumpQ-sumQ*sump)/(N*sump2-sump*sump);logb=(sumQ*sump2-sump*sumpQ)/(N*sump2-sump*sump);b=Math.exp(logb);
+results.document.write("The estimated exponential demand function is given by: <EM>Q</EM> = ",'<font color="#0000FF">', round(b) ,'</font>', " <EM>p</EM> ",'<font color="#0000FF"><SUP>', round(ep),'</SUP></font>', "<br>More precisely, " );
+results.document.write("the coefficient is: <EM>b</EM> = ",'<font color="#0000FF">', round(b,5) ,'</font> <br>');
+if (b < 0) results.document.write('<font color="#FF0000">Warning:</font> The multiplicative constant is negative! That is, <EM>b</EM> = ' + round(b) + ' is less than zero. <br>' );results.document.write("The price elasticity is: <EM>e<SUB>p</SUB></EM> = ",'<font color="#0000FF">', round(ep,5) ,'</font> ');
+if (ep<-1) results.document.write(' (elastic) <br>');if (ep == -1) results.document.write(' (unit elasticity) <br>');if (ep>-1) results.document.write(' (inelastic) <br>');
+// results.document.write("The advertising elasticity is: <EM>e<SUB>A</SUB></EM> = ",'<font color="#0000FF">', round(ea,5) ,'</font>', "<br>" );
+if (ep > 0) results.document.write('<font color="#FF0000">Warning:</font> This demand function is upward sloping (in the <EM>p</EM>,<EM>Q</EM> space)! That is, <EM>-e<SUB>p</SUB></EM> = ' + round(ep) + ' is greater than zero. <br>' );
+// if (ea < 0) results.document.write('<font color="#FF0000">Warning:</font> This demand function is downward sloping (in the <EM>p</EM>,<EM>A</EM> space)! That is, <EM>e<SUB>A</SUB></EM> = ' + round(ea) + ' is less than zero. This means that advertising reduces the demand (instead of enhancing it)! <br>' );} //end writregression()
+
+function writanalysis() { // computes R square
+writresult(); meanQ=(sumQ)/N;var Qhat=0; SSR=0; SST=0;for (var i = 1; i < N/1+1/1; i++) { // calculating deviation p-hat sumsQhat=logb/1 + ep*Math.log(p[i])/1; // + ea*Math.log(A[i]);
+SSR=SSR/1+Math.pow(Qhat-meanQ,2)/1;SST=SST/1+Math.pow(Math.log(Q[i])-meanQ,2)/1;
+} // end forRsquare=SSR/SST;
+adjRsquare=1-(1-Rsquare)*(N-1)/(N-2);F=(Rsquare/((1-Rsquare))*(N-2)/(2-1));
+results.document.write("The coefficient of determination is: <EM>R</EM><SUP>2</SUP> = ",'<font color="#0000FF">', round(Rsquare,3) ,'</font>', "<br>" );results.document.write("The adjusted coefficient of determination is: <EM><U>R</U></EM><SUP>2</SUP> = ",'<font color="#0000FF">', round(adjRsquare,3) ,'</font>', "<br>" );
+results.document.write("The <EM>F</EM> value is: <EM>F</EM> = ",'<font color="#0000FF">', round(F) ,'</font>', "<br>" );}
+function calc() { // start computation function (main function!)openresultswindow();
+if (N > 9) N = 9; //making sure that # Observations does not exceed 9
+if (N < 2) N = 2; //making sure that # Observations is at least 2
+writdata(); //writes the data function
+checkprices(); checkquantities(); checkad(); //checking for negative values	if (revise==false) { writregression(); writanalysis();
+	} //end if
+// Now closing the output windowif (resultno > 1)results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');} // end calc function
+// end of all functions
+resultno=0; //initializing results counter
+</SCRIPT>
+</head>
+<body bgColor=white text="black">
+<h1 style="BACKGROUND-COLOR: aqua"> 
+ Regression&nbsp;/&nbsp;Exponential Demand&nbsp;/&nbsp;2 to 9 Observations</h1>
+
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: To estimate the 
+paramters (<EM>b</EM> and&nbsp;<EM>e<SUB>p </SUB></EM>)&nbsp;of a exponential (constant-elasticity) demand function,&nbsp; <I>Q</I> =&nbsp; <EM>b 
+p<SUP>-ep</SUP></EM>, based on 
+price-quantity observations. 
+This page runs a doublelogarithmic least-squares estimation.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br><FORM NAME="data" onSubmit="calc()"><font color="#ff0000">Please, <STRONG>always</STRONG>  click <INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>&nbsp;before changing or submitting the following parameters:</font> 
+<UL>  
+
+<li>Enter the number of observations&nbsp; <EM>N</EM>&nbsp;in this&nbsp;box (2-9):&nbsp; <INPUT id=Ninput onchange="N =this.value" size=10 
+  value=6 name=Ninput>
+
+  <LI>     Below, enter the observed&nbsp;price&nbsp;(<EM>p</EM><SUB>i</SUB> &gt; 0), and the corresponding 
+  observed quantity demanded&nbsp;(<EM>Q</EM><SUB>i</SUB> &gt; 0)<BR>
+  <FONT size=2>(<font color="#ff0000">Remark:</font> if, for example, you entered <EM>N</EM> = 6 (default), the program will ignore all observations 7, 8, and 9, and so on...) </FONT><br>
+  
+  Observation 1:    
+  Enter <I>Q</I><SUB>1</SUB> : <INPUT id=Q1input onchange="Q[1] =this.value" size=10 value=100 name=Q1input>&nbsp; 
+  Enter <i>p</i><SUB>1</SUB> : <INPUT id="p1input" name="p1input" value=20 size=10 onChange= "p[1] =this.value">&nbsp; <BR>
+  
+  Observation 2: 
+  Enter <I>Q</I><SUB>2</SUB> : <INPUT id=Q2input onchange="Q[2] =this.value" size=10 value=200 name=m2input>&nbsp; 
+  Enter <I>p</I><SUB>2</SUB> : <INPUT id=p2input onchange="p[2] =this.value" size=10 value=18 name=p2input>&nbsp; <BR>
+  
+  Observation 3: 
+  Enter <I>Q</I><SUB>3</SUB> : <INPUT id=Q3input onchange="Q[3] =this.value" size=10 value=400 name=m3input>&nbsp; 
+  Enter <I>p</I><SUB>3</SUB> : <INPUT id=p3input onchange="p[3] =this.value" size=10 value=16 name=p3input>&nbsp; <BR>
+  
+  Observation 4: 
+  Enter <I>Q</I><SUB>4</SUB> : <INPUT id=Q4input onchange="Q[4] =this.value" size=10 value=300 name=Q4input>&nbsp; 
+  Enter <I>p</I><SUB>4</SUB> : <INPUT id=p1input onchange="p[4] =this.value" size=10 value=14 name=p4input>&nbsp; <BR>
+  
+  Observation 5: 
+  Enter <I>Q</I><SUB>5</SUB> : <INPUT id=Q5input   onchange="Q[5] =this.value" size=10 value=500 name=Q5input>&nbsp; 
+  Enter <I>p</I><SUB>5</SUB> : <INPUT id=p5input onchange="p[5] =this.value" size=10 value=12 name=p5input>&nbsp; <BR>
+  
+  Observation 6: 
+  Enter <I>Q</I><SUB>6</SUB> : <INPUT id=Q6input onchange="Q[6] =this.value" size=10 value=600 name=Q6input>&nbsp; 
+  Enter <I>p</I><SUB>6</SUB> : <INPUT id=p6input onchange="p[6] =this.value" size=10 value=10 name=p1input>&nbsp; <BR>
+  
+  Observation 7: 
+  Enter <I>Q</I><SUB>7</SUB> : <INPUT id=Q7input onchange="Q[7] =this.value" size=10 value=333 name=Q7input>&nbsp; 
+  Enter <I>p</I><SUB>7</SUB> : <INPUT id=p7input onchange="p[7] =this.value" size=10 value=333 name=p7input>&nbsp; <BR>
+  
+  Observation 8: 
+  Enter <I>Q</I><SUB>8</SUB> : <INPUT id=Q8input onchange="Q[8] =this.value" size=10 value=333 name=Q8input>&nbsp; 
+  Enter <I>p</I><SUB>8</SUB> : <INPUT id=p8input onchange="p[8] =this.value" size=10 value=333 name=p8input>&nbsp; <BR>
+  
+  Observation 9: 
+  Enter <I>Q</I><SUB>9</SUB> : <INPUT id=Q9input onchange="Q[9] =this.value" size=10 value=333 name=Q9input>&nbsp; 
+  Enter <I>p</I><SUB>9</SUB> : <INPUT id=p9input onchange="p[9] =this.value" size=10 value=333 name=p9input>&nbsp; 
+
+  <br> 
+  
+  </LI></UL>
+  
+  
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !"><INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()"><INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')"><INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"></FORM><hr>
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.</h5>
+
+</body></html>

@@ -1,0 +1,333 @@
+<html><head>
+<title>Forecasting / Demand / 2-25 Observations</title><META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)"><META name=VI60_defaultClientScript content=JavaScript><meta http-equiv="Content-Language" content="en-us"><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><meta name="GENERATOR" content="Microsoft FrontPage 4.0"><meta name="ProgId" content="FrontPage.Editor.Document">
+<SCRIPT LANGUAGE=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+var N, m, g, gplus, gminus, ma, mape,
+Q = new Array(25), F = new Array(25), Fplus = new Array(25), Fminus = new Array(25), 
+error = new Array(25), errorplus = new Array(25), errorminus = new Array(25), 
+revise, Qmax, Qmin;
+
+function initialize() {
+ N=6; m=4; g=0.5; gplus=g/1+(1-g)/2; gminus=g-g/2;
+Q[1]=110; Q[2]=80; Q[3]=70; Q[4]=120; Q[5]=150; Q[6]=100; Q[7]=333; Q[8]=333; Q[9]=333; Q[10]=333;
+Q[11]=333; Q[12]=333; Q[13]=333; Q[14]=333; Q[15]=333; Q[16]=333; Q[17]=333; Q[18]=333; Q[19]=333; Q[20]=333; 
+Q[21]=333; Q[22]=333; Q[23]=333; Q[24]=333; Q[25]=333; 
+ revise=false; Qmax=1; Qmin=1; //initializing variables
+ }
+ 
+function sortdata() { // finds the higest and lowest price obseration and quantity observation
+for (var i = 2; i < N/1+1/1; i++) {
+	if (Q[i] > Q[Qmax]) Qmax=i;
+	if (Q[i] < Q[Qmin]) Qmin=i;
+} // end for statement
+}
+
+function writdata() { //writes the data provided by the user
+sortdata(); gplus=g/1+(1-g)/2; gminus=g-g/2;
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Forecasting / Demand / 2-25 Observations</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("The number of observations in this time series is : ", '<EM>N</EM> = <font color="fuchsia">', N,'</font>', "<br>");
+results.document.write("The weight to be placed on the most-recent observation (smoothing paramter) is: ", '<EM>w</EM> = <font color="fuchsia">', g,'</font>', "<br>");
+results.document.write("The number of observations to be included in the moving average forecast is: ", '<EM>m</EM> = <font color="fuchsia">', m,'</font>', "<br>");
+for (var i = 1; i < N/1+1/1; i++) {
+results.document.write('Observation from period ' + i + ' is: <EM>Q</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + Q[i] + '</font> ' + "<br>" );
+} // end of for statement
+results.document.write('The highest quantity demanded is found in period  <font color="fuchsia">' + Qmax + '</font>' + "<br>" );
+results.document.write('The lowest quantity demanded is found in period  <font color="fuchsia">' + Qmin + '</font>' + "<br>" );
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function revisedata(j) { // asks revision on data due to price below unit cost
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, observation ' + j + ' has a negative value.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function checkquantities() {
+for (var i = 1; i < N/1+1/1; i++) {
+	if (Q[i] < 0) {revisedata(i); revise=true};
+} }
+
+function ma(k) { //moving average forecast of k-th demand
+var tempma=0;
+for (var l = k-m/1+1/1; l <= k; l++) {tempma=tempma+Q[l]/m;}//end for l 
+return tempma;
+}//end ma
+
+function forecast(j, weight) { //makes a forecast of the j-th demand
+return weight*Q[j-1]/1 + (1-weight)*ma(j-1)/1;
+}//end forecase[j]
+
+function writforecast() { // writes forecast
+writresult();
+results.document.write('<font color=#ff0000>One-Step Ahead Forecasts:</font><br>' );
+results.document.write('The naive forecast (equals to the your most-recent observation) is: <EM>F</EM><sub>' + round(N/1 + 1/1) + '</sub> = <font color="#0000FF">' + round(Q[N]) + '</font><br>' );
+results.document.write('The moving-average forecast (based on your <font color="fuchsia">' + m + '</font> most-recent observations) is: <EM>F</EM><sub>' + round(N/1 + 1/1) + '</sub> = <font color="#0000FF">' + round(ma(N)) + '</font><br>' );
+results.document.write('The one-step ahead smoothed forecast is: <EM>F</EM><sub>' + round(N/1 + 1/1) + '</sub> = <font color="#0000FF">' + round(forecast(N/1+1/1, g)) + '</font><br>' );
+} //end forecast()
+
+function writerror() { // writes forecast
+writresult();
+results.document.write('<font color=#ff0000>Analysis of Forecasting Errors:</font><br>' );
+if (m == N) {
+	results.document.write('<font color=#ff0000>Warning! </font>Error analysis cannot be conducted since the number of observations does not exceed the number periods for the moving average caclulations.</font><br>' );
+	results.document.write('To conduct an error analysis you must have <i>m</i> < <i>N</i> (instead of <i>m</i> = <font color="fuchsia">' + m + '</font> = <i>N</i>) <br>' );
+}//end if
+else{ mape=0; mapeplus=0; mapeminus=0;
+	for (var i = m/1+1/1; i <= N; i++) { // error term each period
+	F[i]=forecast(i, g); error[i]=Q[i]-F[i]; mape=mape/1+(Math.abs(Q[i]-F[i]))/(N*F[i]);
+	Fplus[i]=forecast(i, gplus); errorplus[i]=Q[i]-Fplus[i]; mapeplus=mapeplus/1+(Math.abs(Q[i]-Fplus[i]))/(N*Fplus[i]);
+	Fminus[i]=forecast(i, gminus); errorminus[i]=Q[i]-Fminus[i]; mapeminus=mapeminus/1+(Math.abs(Q[i]-Fminus[i]))/(N*Fminus[i]);
+	results.document.write('Period ' + i + ' observation is: <EM>Q</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + round(Q[i]) + '</font>, ' );
+	results.document.write('but, its forecasted value is: <EM>F</EM><SUB>' + i +'</SUB> =  <font color="#0000FF">' + round(F[i]) + '</font>, ' );
+	results.document.write('hence, the forecasting error is: <EM>e</EM><SUB>' + i +'</SUB> =  <font color="#0000FF">' + round(error[i]) + ', </font><br>' );
+}//end else
+results.document.write('The mean absolute percetage error is: <i>MAPE</i> = <font color="#0000FF">' + round(mape,4) + '</font><br>'); 
+} //end for i (error terms)
+} //end error
+
+function writerrorcorrection() { // writes error correction suggestion
+writresult();
+results.document.write('<font color=#ff0000>Suggestions for Reducing Forecasting Errors: </font><br>' );
+if (m == N) {
+	results.document.write('<font color=#ff0000>Warning! </font>Error correction analysis cannot be conducted since the number of observations does not exceed the number periods for the moving average caclulations.</font><br>' );
+	results.document.write('To conduct an error correction analysis you must have <i>m</i> < <i>N</i> (instead of <i>m</i> = <font color="fuchsia">' + m + '</font> = <i>N</i>) <br>' );
+}//end if
+else{ 
+	results.document.write('The mean absolute percetage error is: <i>MAPE</i> = <font color="#0000FF">' + round(mape,4) + '</font> for the assumed value of: <i>w</i> = <font color="fuchsia">' + g + '</font><br>'); 
+	results.document.write('The mean absolute percetage error is: <i>MAPE</i> = <font color="#0000FF">' + round(mapeplus,4) + '</font> if you increase the value of <i>w</i> to: <i>w</i> = <font color="fuchsia">' + gplus + '</font><br>'); 
+	results.document.write('The mean absolute percetage error is: <i>MAPE</i> = <font color="#0000FF">' + round(mapeminus,4) + '</font> if you decrease the value of <i>w</i> to: <i>w</i> = <font color="fuchsia">' + gminus + '</font><br>'); 
+	if (mapeplus < mape) results.document.write('The MAPE can be reduced by increasing the smoothing paramter to <i>w</i> = <font color="#0000FF">' + gplus + '</font><br>'); 
+	if (mapeminus < mape) results.document.write('The <i>MAPE</i> can be reduced by decreasing the smoothing paramter to <i>w</i> = <font color="#0000FF">' + gminus + '</font><br>'); 
+	if (mapeplus >= mape && mapeminus >= mape ) results.document.write('It seems that the <i>MAPE</i> can <font color=#ff0000>not</font> be reduced by changing the smoothing paramter <i>w</i> <br>'); 
+}//end else
+}//end function
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+if (N > 25) N = 25; //making sure that # Observations does not exceed 25
+if (N < 2) N = 2; //making sure that # Observations is at least 2
+if (m > N) m = N;
+if (m < 1) m = 1;
+if (g < 0) g = 0;
+if (g > 1) g = 1;
+writdata(); //writes the data function
+checkquantities(); //checking for negative values
+if (revise==false) { //main program
+ writforecast(); 
+ writerror();
+ writerrorcorrection();
+ } //end of main program
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+</head>
+<body bgColor=white text="black">
+<h1 style="BACKGROUND-COLOR: aqua">Forecasting&nbsp;/&nbsp;Demand&nbsp;/&nbsp;2 to&nbsp;25 Past&nbsp;Observations</h1>
+
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: To forecast demand based on past demand observations (time 
+series). The user (you) input past demand observations as well as the 
+forecasting method paramters, and <em>How-to-Price</em><sup>TM</sup> will
+provide you with a one-period forecast&nbsp;of the&nbsp;demand.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br><FORM NAME="data" onSubmit="calc()"><font color="#ff0000">Please, <STRONG>always</STRONG>  click <INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>&nbsp;before changing or submitting the following parameters:</font> 
+<ul>  
+
+<li>Enter the number of past observations&nbsp; <EM>N</EM>&nbsp;in this&nbsp;box (2-25):&nbsp; <INPUT id=Ninput onchange="N =this.value" size=10 
+  value=6 name=Ninput> 
+  
+  <li>Enter&nbsp;your&nbsp;desired&nbsp;weight&nbsp; to be placed on the last 
+  observation&nbsp;<em>w</em>&nbsp;in this&nbsp;box (0 &lt; 
+  <em>w</em>&nbsp;&nbsp;&lt; 1):&nbsp; 
+ <input id=Text1 onchange="g =this.value" 
+  size=10 value=0.5 name=winput> <br><font size=2>(<font color=#ff0000>Remark 
+  1:</font> If you enter <em>w</em>=1, the&nbsp;"naive"&nbsp;forecast is your 
+  last observation. If you enter <em>w</em>=0, the forecast will be based on 
+  past (moving average) observations) <br><font size=2>(<font 
+  color=#ff0000>Remark 2:</font> The parameter <em>w</em> is commonly referred 
+  to as the "smoothing parameter") </font></font>
+
+  <li>Enter (<em>m</em>)&nbsp;the number of 
+  the most-recent&nbsp;observations that you wish to include in the moving average forecast<br>Enter&nbsp;<em>m</em>&nbsp;in 
+  this&nbsp;box (<em>m</em>&nbsp;&lt; <em>N</em>):&nbsp; 
+ <input id=Text2 
+  onchange="m =this.value" size=10 value=4 name=minput>
+  <li>   Below, enter 
+  the past observed&nbsp;demand&nbsp;(<EM>Q</EM><SUB>i</SUB>)<br><font 
+  size=2>(<font color=#ff0000>Remark 1:</font> The order does matter! For 
+  example, if you enter daily observations, enter day 01 before day 02... 
+  <br>Observation <em>N</em>&nbsp;should be&nbsp;your most recently-observed 
+  demand, i.e. today's or yesterday's) </font><BR>
+  <FONT size=2>(<font color="#ff0000">Remark 2:</font> 
+  If, for example, you entered <EM>N</EM> =    6 (default), the program will ignore all observations 7 to 25, and so on...) </FONT><br>
+  
+  Observation from period&nbsp;01: 
+  Enter <I>Q</I><SUB>01</SUB> in this box: <INPUT id=Q1input onchange="Q[1] =this.value" size=10 value=110 name=Q1input>&nbsp; 
+  <BR>
+  
+  Observation from 
+  period&nbsp;02: 
+  Enter <I>Q</I><SUB>02</SUB> in this box: <INPUT id=Q2input onchange="Q[2] =this.value" 
+  size=10 value=80 name=Q2input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;03: 
+  Enter <I>Q</I><SUB>03</SUB> in this box: <INPUT id=Q3input 
+  onchange="Q[3] =this.value" size=10 value=70 name=Q3input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;04: 
+  Enter <I>Q</I><SUB>04</SUB> in this box: <INPUT id=Q4input onchange="Q[4] =this.value" 
+  size=10 value=120 name=Q4input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;05: 
+  Enter <I>Q</I><SUB>05</SUB> in this box: <INPUT id=Q5input 
+  onchange="Q[5] =this.value" size=10 value=150 name=Q5input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;06: 
+  Enter <I>Q</I><SUB>06</SUB> in this box: <INPUT id=Q6input onchange="Q[6] =this.value" 
+  size=10 value=100 name=Q6input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;07: 
+  Enter <I>Q</I><SUB>07</SUB> in this box: <INPUT id=Q7input 
+  onchange="Q[7] =this.value" size=10 value=333 name=Q7input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;08: 
+  Enter <I>Q</I><SUB>08</SUB> in this box: <INPUT id=Q8input onchange="Q[8] =this.value" 
+  size=10 value=333 name=Q8input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;09: 
+  Enter <I>Q</I><SUB>09</SUB> in this box: <INPUT id=Q9input onchange="Q[9] =this.value" size=10 value=333 name=Q9input>&nbsp; 
+  <br> 
+  
+  Observation from 
+  period&nbsp;10: 
+  Enter <I>Q</I><SUB>10</SUB> in this box: <INPUT id=Q10input onchange="Q[10] =this.value" size=10 value=333 name=Q10input>&nbsp; 
+  <BR>
+  
+  Observation from 
+  period&nbsp;11: 
+  Enter <I>Q</I><SUB>11</SUB> in this box: <INPUT id=Q11input onchange="Q[11] =this.value" size=10 value=333 name=Q11input>&nbsp; 
+  <BR>
+   
+  Observation from 
+  period&nbsp;12: 
+  Enter <I>Q</I><SUB>12</SUB> in this box: <INPUT id=Q12input onchange="Q[12] =this.value" 
+  size=10 value=333 name=Q12input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;13: 
+  Enter <I>Q</I><SUB>13</SUB> in this box: <INPUT id=Q13input 
+  onchange="Q[13] =this.value" size=10 value=333 name=Q13input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;14: 
+  Enter <I>Q</I><SUB>14</SUB> in this box: <INPUT id=Q14input onchange="Q[14] =this.value" 
+  size=10 value=333 name=Q14input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;15: 
+  Enter <I>Q</I><SUB>15</SUB> in this box: <INPUT id=Q15input 
+  onchange="Q[15] =this.value" size=10 value=333 name=Q15input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;16: 
+  Enter <I>Q</I><SUB>16</SUB> in this box: <INPUT id=Q16input onchange="Q[16] =this.value" 
+  size=10 value=333 name=Q16input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;17: 
+  Enter <I>Q</I><SUB>17</SUB> in this box: <INPUT id=Q17input 
+  onchange="Q[17] =this.value" size=10 value=333 name=Q17input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;18: 
+  Enter <I>Q</I><SUB>18</SUB> in this box: <INPUT id=Q18input onchange="Q[18] =this.value" 
+  size=10 value=333 name=Q18input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;19: 
+  Enter <I>Q</I><SUB>19</SUB> in this box: <INPUT id=Q19input onchange="Q[19] =this.value" size=10 value=333 name=Q19input>&nbsp; 
+  <br>
+  
+  Observation from 
+  period&nbsp;20: 
+  Enter <I>Q</I><SUB>20</SUB> in this box: <INPUT id=Q20input onchange="Q[20] =this.value" size=10 value=333 name=Q20input>&nbsp; 
+  <BR>
+  
+  Observation from 
+  period&nbsp;21: 
+  Enter <I>Q</I><SUB>21</SUB> in this box: <INPUT id=Q21input onchange="Q[21] =this.value" size=10 value=333 name=Q21input>&nbsp; 
+  <BR>
+   
+  Observation from 
+  period&nbsp;22: 
+  Enter <I>Q</I><SUB>22</SUB> in this box: <INPUT id=Q22input onchange="Q[22] =this.value" 
+  size=10 value=333 name=Q22input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;23: 
+  Enter <I>Q</I><SUB>23</SUB> in this box: <INPUT id=Q23input 
+  onchange="Q[23] =this.value" size=10 value=333 name=Q23input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;24: 
+  Enter <I>Q</I><SUB>24</SUB> in this box: <INPUT id=Q24input onchange="Q[24] =this.value" 
+  size=10 value=333 name=Q24input>&nbsp; <BR>
+  
+  Observation from 
+  period&nbsp;25: 
+  Enter <I>Q</I><SUB>25</SUB> in this box: <INPUT id=Q25input 
+  onchange="Q[25] =this.value" size=10 value=333 name=Q25input>&nbsp; <BR></li></ul>
+
+  
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !"><INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()"><INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')"><INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"></FORM><hr>
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.</h5>
+
+</body></html>

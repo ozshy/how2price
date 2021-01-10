@@ -1,0 +1,577 @@
+<html><head>
+<title>Single Seller / Tying / 4 Goods / 2-25 consumer types</title>
+<META content="Client (IE 4.0 DHTML)" name=VI60_DTCScriptingPlatform>
+<META content=JavaScript name=VI60_defaultClientScript>
+<meta http-equiv=Content-Language content=en-us>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta content="Microsoft FrontPage 4.0" name=GENERATOR>
+<meta content=FrontPage.Editor.Document name=ProgId>
+<SCRIPT language=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+function comparenumbers(a,b) { // needed for soring arrays
+return a - b
+}
+
+var T, F, cw, cx, cy, cz, g = new Array(25), x = new Array(25), y = new Array(25), z = new Array(25), 
+wxyz = new Array(25), n = new Array(25), 
+revise, nmax, nmin, wmax, wmin, xmax, xmin, ymax, ymin, zmax, zmin, totaln, resultno, 
+pw, px, py, pz, profitw, profitx, profity, profitz, 
+quantwtemp, quantxtemp, quantytemp, quantztemp, qw, qx, qy, qz, rw, rx, ry, rz, 
+quantwxyztemp, qwxyz, pwxyz, profitwxyz, rwxyz; //tied packages vars
+
+function initialize() {
+T=4; F=1000; cw=0; cx=0; cy=0; cz=0;
+g[1]=5; g[2]=2; g[3]=5; g[4]=2; g[5]=333; g[6]=333; g[7]=333; g[8]=333; g[9]=333; g[10]=333;
+g[11]=333; g[12]=333; g[13]=333; g[14]=333; g[15]=333; g[16]=333; g[17]=333; g[18]=333; g[19]=333; g[20]=333;
+g[21]=333; g[22]=333; g[23]=333; g[24]=333; g[25]=333; 
+x[1]=10; x[2]=10; x[3]=1; x[4]=1; x[5]=333; x[6]=333; x[7]=333; x[8]=333; x[9]=333; x[10]=333;
+x[11]=333; x[12]=333; x[13]=333; x[14]=333; x[15]=333; x[16]=333; x[17]=333; x[18]=333; x[19]=333; x[20]=333;
+x[21]=333; x[22]=333; x[23]=333; x[24]=333; x[25]=333; 
+y[1]=1; y[2]=1; y[3]=10; y[4]=10; y[5]=333; y[6]=333; y[7]=333; y[8]=333; y[9]=333; y[10]=333;
+y[11]=333; y[12]=333; y[13]=333; y[14]=333; y[15]=333; y[16]=333; y[17]=333; y[18]=333; y[19]=333; y[20]=333;
+y[21]=333; y[22]=333; y[23]=333; y[24]=333; y[25]=333; 
+z[1]=2; z[2]=5; z[3]=2; z[4]=5; z[5]=333; z[6]=333; z[7]=333; z[8]=333; z[9]=333; z[10]=333;
+z[11]=333; z[12]=333; z[13]=333; z[14]=333; z[15]=333; z[16]=333; z[17]=333; z[18]=333; z[19]=333; z[20]=333;
+z[21]=333; z[22]=333; z[23]=333; z[24]=333; z[25]=333; 
+n[1]=100; n[2]=100; n[3]=100; n[4]=100; n[5]=333; n[6]=333; n[7]=333; n[8]=333; n[9]=333; n[10]=333;
+n[11]=333; n[12]=333; n[13]=333; n[14]=333; n[15]=333; n[16]=333; n[17]=333; n[18]=333; n[19]=333; n[20]=333; 
+n[21]=333; n[22]=333; n[23]=333; n[24]=333; n[25]=333; 
+revise=false; nmax=1; nmin=1; wmax=1; wmin=1; xmax=1; xmin=1; ymax=1; ymin=1; zmax=1; zmin=1; totaln=0; resultno=0; //initializing variables
+}
+ 
+function sortdata() { // finds the higest and lowest valuations and sorts s array
+for (var i = 2; i < T/1+1/1; i++) {
+	if (n[i] > n[nmax]) nmax=i;
+	if (n[i] < n[nmin]) nmin=i;
+	if (g[i] > g[wmax]) wmax=i;
+	if (g[i] < g[wmin]) wmin=i;
+	if (x[i] > x[xmax]) xmax=i;
+	if (x[i] < x[xmin]) xmin=i;
+	if (y[i] > y[ymax]) ymax=i;
+	if (y[i] < y[ymin]) ymin=i;
+	if (z[i] > z[zmax]) zmax=i;
+	if (z[i] < z[zmin]) zmin=i;
+} // end for statement
+}
+
+function writdata() { //writes the data provided by the user
+sortdata();
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Single Seller / Tying / 4 Goods / 2-25 Consumer Types</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("Maginal production costs are: ", 
+'<i>c</i><sub>W</sub> = <font color="fuchsia">', cw,'</font> and ',
+'<i>c</i><sub>X</sub> = <font color="fuchsia">', cx,'</font> and ',
+'<i>c</i><sub>Y</sub> = <font color="fuchsia">', cy,'</font> and ', 
+'<i>c</i><sub>Z</sub> = <font color="fuchsia">', cz,'</font>', "<br>");
+results.document.write("Fixed production cost equals: ", '<font color="fuchsia">', F, '</font>', "<br>");
+results.document.write("The number of consumer types is : ", '<EM>T</EM> = <font color="fuchsia">', T,'</font>', "<br>");
+for (var i = 1; i < T/1+1/1; i++) {
+totaln=totaln/1+n[i]/1;
+wxyz[i]=x[i]/1+y[i]/1+z[i]/1+g[i]/1;
+results.document.write('<EM>n</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + n[i] + '</font> type ' + i + ' consumers: Willing to pay: ' );
+results.document.write('[<EM>w</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + g[i] + '</font> for <i>W</i>] ' );
+results.document.write('[<EM>x</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + x[i] + '</font> for <i>X</i>] ' );
+results.document.write('[<EM>y</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + y[i] + '</font> for <i>Y</i>] ' );
+results.document.write('[<EM>z</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + z[i] + '</font> for <i>Z</i>] ' );
+results.document.write('[<EM>x</EM><SUB>' + i + '</SUB>+<EM>y</EM><SUB>' + i + '</SUB>+</SUB><EM>z</EM><SUB>' + i + '</SUB>= <font color="fuchsia">' + wxyz[i] + '</font> for all] <br>' );
+} // end of for statement
+results.document.write('The highest willingness to pay for good <i>W</i> is by consumers type  <font color="fuchsia">' + wmax + '</font>' + "<br>" );
+results.document.write('The lowest willingness to pay for good <i>W</i> is by consumers type  <font color="fuchsia">' + wmin + '</font>' + "<br>" );
+results.document.write('The highest willingness to pay for good <i>X</i> is by consumers type  <font color="fuchsia">' + xmax + '</font>' + "<br>" );
+results.document.write('The lowest willingness to pay for good <i>X</i> is by consumers type  <font color="fuchsia">' + xmin + '</font>' + "<br>" );
+results.document.write('The highest willingness to pay for good <i>Y</i> is by consumers type  <font color="fuchsia">' + ymax + '</font>' + "<br>" );
+results.document.write('The lowest willingness to pay for good <i>Y</i> is by consumers type  <font color="fuchsia">' + ymin + '</font>' + "<br>" );
+results.document.write('The highest willingness to pay for good <i>Z</i> is by consumers type  <font color="fuchsia">' + zmax + '</font>' + "<br>" );
+results.document.write('The lowest willingness to pay for good <i>Z</i> is by consumers type  <font color="fuchsia">' + zmin + '</font>' + "<br>" );
+results.document.write('The largest number of consumers are type  <font color="fuchsia">' + nmax + '</font>' + "<br>" );
+results.document.write('The lowest number of consumers are type  <font color="fuchsia">' + nmin + '</font>' + "<br>" );
+results.document.write('The total number of consumers (all types combined) is  <font color="fuchsia">' + totaln + '</font>' + "<br>" );
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function revisedata(j) { // asks revision on data due to price below unit cost
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, observation ' + j + ' has a negative value.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function checkw() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (g[i] < 0) {revisedata(i); revise=true};
+} }
+function checkx() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (x[i] < 0) {revisedata(i); revise=true};
+} }
+function checky() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (y[i] < 0) {revisedata(i); revise=true};
+} }
+function checkz() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (z[i] < 0) {revisedata(i); revise=true};
+} }
+function checkn() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (n[i] < 0) {revisedata(i); revise=true};
+} }
+
+function writnotying() { //writes no-tying results
+writresult();
+results.document.write('<font color="#FF0000">No-Tying: Suppose that the seller is contrained to sell (and price) each product separatefly (i.e., no tied packages)</font>: <br>');
+profitw=0; profitx=0; profity=0; profitz=0; pw=0; px=0; py=0; pz=0;
+for (var i = 1; i < T/1+1/1; i++) { //loop to run over all prices of x and y
+	quantwtemp=0; quantxtemp=0; quantytemp=0; quantztemp=0;
+	for (var j = 1; j < T/1+1/1; j++) { // adding all n[j] for x[j] <= x[i]
+		if (g[j] >= g[i]) quantwtemp=quantwtemp/1+n[j]/1;
+		if (x[j] >= x[i]) quantxtemp=quantxtemp/1+n[j]/1;
+		if (y[j] >= y[i]) quantytemp=quantytemp/1+n[j]/1;
+		if (z[j] >= z[i]) quantztemp=quantztemp/1+n[j]/1;
+	} //end of for j
+	if ((g[i]-cw)*quantwtemp >= profitw) { // asigning max profit and prices w
+	profitw=(g[i]-cw)*quantwtemp; pw=g[i]; qw=quantwtemp; rw=pw*qw;
+	} //end if profit
+	if ((x[i]-cx)*quantxtemp >= profitx) { // asigning max profit and prices x
+	profitx=(x[i]-cx)*quantxtemp; px=x[i]; qx=quantxtemp; rx=px*qx;
+	} //end if profit
+	if ((y[i]-cy)*quantytemp >= profity) { // asigning max profit and prices y
+	profity=(y[i]-cy)*quantytemp; py=y[i]; qy=quantytemp; ry=py*qy;
+	} //end if profit
+	if ((z[i]-cz)*quantztemp >= profitz) { // asigning max profit and prices z
+	profitz=(z[i]-cz)*quantztemp; pz=z[i]; qz=quantztemp; rz=pz*qz;
+	} //end if profit
+}// end for i
+results.document.write('The seller should set the price of <em>W</em> to: '); //good w
+results.document.write('<i>p</i><sub>W</sub> = <font color="#0000FF">' + round(pw) + '</font><br>');
+var wserved=''; wunserved='';  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (g[i] < pw) {wunserved=wunserved+'type '+i+', ';}
+	else {wserved=wserved+'type '+i+', ';}
+}//end for 
+results.document.write("Under this price, the types of consumers who buy <em>W</em> are: ", '<font color="#0000FF">'+ wserved +'</font><br>');
+results.document.write('At this price, the number of units of <em>W</em> sold is: ');
+results.document.write('<i>q</i><sub>W</sub> = <font color="#0000FF">' + round(qw) + '</font><br>');
+results.document.write('The revenue collected from selling good <em>W</em> is: ');
+results.document.write('<i>R</i><sub>W</sub> = <font color="#0000FF">' + round(rw) + '</font><br>');
+results.document.write('Ignoring fixed costs, the profit made out of good <em>W</em> is: ');
+results.document.write('<i>Profit</i><sub>W</sub> = <font color="#0000FF">' + round(profitw) + '</font><br>');
+
+results.document.write('The seller should set the price of <em>X</em> to: '); //good x
+results.document.write('<i>p</i><sub>X</sub> = <font color="#0000FF">' + round(px) + '</font><br>');
+var xserved=''; xunserved='';  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (x[i] < px) {xunserved=xunserved+'type '+i+', ';}
+	else {xserved=xserved+'type '+i+', ';}
+}//end for 
+results.document.write("Under this price, the types of consumers who buy <em>X</em> are: ", '<font color="#0000FF">'+ xserved +'</font><br>');
+results.document.write('At this price, the number of units of <em>X</em> sold is: ');
+results.document.write('<i>q</i><sub>X</sub> = <font color="#0000FF">' + round(qx) + '</font><br>');
+results.document.write('The revenue collected from selling good <em>X</em> is: ');
+results.document.write('<i>R</i><sub>X</sub> = <font color="#0000FF">' + round(rx) + '</font><br>');
+results.document.write('Ignoring fixed costs, the profit made out of good <em>X</em> is: ');
+results.document.write('<i>Profit</i><sub>X</sub> = <font color="#0000FF">' + round(profitx) + '</font><br>');
+
+results.document.write('The seller should set the price of <em>Y</em> to: '); //good y
+results.document.write('<i>p</i><sub>Y</sub> = <font color="#0000FF">' + round(py) + '</font><br>');
+var yserved=''; yunserved='';  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (y[i] < py) {yunserved=yunserved+'type '+i+', ';}
+	else {yserved=yserved+'type '+i+', ';}
+}//end for 
+results.document.write("Under this price, the types of consumers who buy <em>Y</em> are: ", '<font color="#0000FF">'+ yserved +'</font><br>');
+results.document.write('At this price, the number of units of <em>Y</em> sold is: ');
+results.document.write('<i>q</i><sub>Y</sub> = <font color="#0000FF">' + round(qy) + '</font><br>');
+results.document.write('The revenue collected from selling good <em>Y</em> is: ');
+results.document.write('<i>R</i><sub>Y</sub> = <font color="#0000FF">' + round(ry) + '</font><br>');
+results.document.write('Ignoring fixed costs, the profit made out of good <em>Y</em> is: ');
+results.document.write('<i>Profit</i><sub>Y</sub> = <font color="#0000FF">' + round(profity) + '</font><br>');
+
+results.document.write('The seller should set the price of <em>Z</em> to: '); //good z
+results.document.write('<i>p</i><sub>Z</sub> = <font color="#0000FF">' + round(pz) + '</font><br>');
+var zserved=''; zunserved='';  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (z[i] < pz) {zunserved=zunserved+'type '+i+', ';}
+	else {zserved=zserved+'type '+i+', ';}
+}//end for 
+results.document.write("Under this price, the types of consumers who buy <em>Z</em> are: ", '<font color="#0000FF">'+ zserved +'</font><br>');
+results.document.write('At this price, the number of units of <em>Z</em> sold is: ');
+results.document.write('<i>q</i><sub>Z</sub> = <font color="#0000FF">' + round(qz) + '</font><br>');
+results.document.write('The revenue collected from selling good <em>Z</em> is: ');
+results.document.write('<i>R</i><sub>Z</sub> = <font color="#0000FF">' + round(rz) + '</font><br>');
+results.document.write('Ignoring fixed costs, the profit made out of good <em>Z</em> is: ');
+results.document.write('<i>Profit</i><sub>Z</sub> = <font color="#0000FF">' + round(profitz) + '</font><br>');
+
+results.document.write('The combined revenue collected from selling goods <em>W</em> and <em>X</em> and <em>Y</em> and <em>Z</em> is: '); // combined revenue
+results.document.write('<i>R</i><sub>W</sub>+<i>R</i><sub>X</sub>+<i>R</i><sub>Y</sub>+<i>R</i><sub>Z</sub> = <font color="#0000FF">' + round(rw/1+rx/1+ry/1+rz/1) + '</font><br>');
+results.document.write('Ignoring fixed costs, the combined profit made out of goods <em>W</em> and <em>X</em> and <em>Y</em> and <em>Z</em> is: '); // combined profit
+results.document.write('<i>Profit</i><sub>W</sub>+<i>Profit</i><sub>X</sub>+<i>Profit</i><sub>Y</sub>+<i>Profit</i><sub>Z</sub> = <font color="#0000FF">' + round(profitw/1+profitx/1+profity/1+profitz/1) + '</font><br>');
+if (profitw/1+profitx/1+profity/1+profitz/1 >= F)
+results.document.write("Taking fixed cost into account, the seller earns a total profit of: ", '<i>Profit</i><sub>W</sub>+<i>Profit</i><sub>X</sub>+<i>Profit</i><sub>Y</sub>+<i>Profit</i><sub>Z</sub>-<i>F</i>  = <font color="#0000FF">', round(profitw/1+profitx/1+profity/1+profitz/1-F), '</font><br>');
+else 
+results.document.write("Taking fixed cost into account, the seller makes a total loss of: ", '<EM>L</EM>  = <font color="#0000FF">', round(F-profitw-profitx-profity-profitz), '</font><br>');
+} //end of writnotying function
+
+function writpuretying() { //writes pure-tying results
+writresult();
+results.document.write('<font color="#FF0000">Pure-Tying: Suppose that the seller is contrained to sell all products in a single pacakge only </font>: <br>');
+profitwxyz=0; pwxyz=0;
+for (var i = 1; i < T/1+1/1; i++) { //loop to run over all prices of XYZ packages
+	quantwxyztemp=0;
+	for (var j = 1; j < T/1+1/1; j++) { // adding all n[j] for xyz[j] <= xyz[i]
+		if (wxyz[j] >= wxyz[i]) quantwxyztemp=quantwxyztemp/1+n[j]/1;
+	} //end of for j
+	if ((wxyz[i]-cw-cx-cy-cz)*quantwxyztemp >= profitwxyz) { // asigning max profit and prices
+	profitwxyz=(wxyz[i]-cw-cx-cy-cz)*quantwxyztemp; pwxyz=wxyz[i]; qwxyz=quantwxyztemp; rwxyz=pwxyz*qwxyz;
+	} //end if profit
+}// end for i
+results.document.write('The seller should set the price of the tied package <em>WXYZ</em> to: ');
+results.document.write('<i>p</i><sub>WXYZ</sub> = <font color="#0000FF">' + round(pwxyz) + '</font><br>');
+var wxyzserved=''; wxyzunserved='';  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (wxyz[i] < pwxyz) {wxyzunserved=wxyzunserved+'type '+i+', ';}
+	else {wxyzserved=wxyzserved+'type '+i+', ';}
+}//end for 
+results.document.write("Under this price, the types of consumers who buy the package <em>WXYZ</em> are: ", '<font color="#0000FF">'+ wxyzserved +'</font><br>');
+results.document.write('At this price, the number of packages <em>WXYZ</em> sold is: ');
+results.document.write('<i>q</i><sub>WXYZ</sub> = <font color="#0000FF">' + round(qwxyz) + '</font><br>');
+results.document.write('The revenue collected from selling the package <em>WXYZ</em> is: ');
+results.document.write('<i>R</i><sub>WXYZ</sub> = <font color="#0000FF">' + round(rwxyz) + '</font><br>');
+
+results.document.write('Ignoring fixed costs, the profit made from selling the package <em>WXYZ</em> is: ');
+results.document.write('<i>Profit</i><sub>WXYZ</sub> = <font color="#0000FF">' + round(profitwxyz) + '</font><br>');
+if (profitwxyz >= F)
+results.document.write("Taking fixed cost into account, the seller earns a total profit of: ", '<i>Profit</i><sub>WXYZ</sub>-<i>F</i> = <font color="#0000FF">', round(profitwxyz-F), '</font><br>');
+else 
+results.document.write("Taking fixed cost into account, the seller makes a total loss of: ", '<EM>L</EM>  = <font color="#0000FF">', round(F-profitwxyz), '</font><br>');
+}
+
+function writmixedtying() { //writes mixed tying results
+writresult();
+results.document.write('<font color="#FF0000">Mixed-Tying: Suppose that the seller can sell packages and/or each product separately </font>: <br>');
+results.document.write('Under Development: This feature of the software is not yet available! <br>');
+}
+
+function writcomparetying() { //compares and finds optimal strategy
+writresult();
+results.document.write('<font color="#FF0000">Profit Comparison: Is tying profitable? </font>: <br>');
+	if (profitwxyz > profitw/1+profitx/1+profity/1+profitz/1) {
+	results.document.write('Tying should be utilized, since pure-tying yields a higher profit than no-tying. <br>');
+	results.document.write('The difference in profit is: <i>Profit</i><sub>WXYZ</sub>-<i>Profit</i><sub>W</sub>-<i>Profit</i><sub>X</sub>-<i>Profit</i><sub>Y</sub>-<i>Profit</i><sub>Z</sub>  = <font color="#0000FF">', round(profitwxyz-profitw-profitx-profity-profitz), '</font><br>');
+	} //end if >
+	else {
+		if (profitwxyz == profitw/1+profitx/1+profity/1+profitz/1) {
+		results.document.write('Pure-tying and no-tying yield identical profit levels. <br>');
+		} //end if =
+		else { //meaning that < applies
+		results.document.write('Each product should be sold separately, since no-tying yields a higher profit than pure-tying. <br>');
+		results.document.write('The difference in profit is: <i>Profit</i><sub>W</sub>+<i>Profit</i><sub>X</sub>+<i>Profit</i><sub>Y</sub>+<i>Profit</i><sub>Z</sub>-<i>Profit</i><sub>XYZ</sub>  = <font color="#0000FF">', round(profitw/1+profitx/1+profity/1+profitz/1-profitwxyz), '</font><br>');
+		} // end else
+	}//end else >
+}
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+if (T > 25) T = 25; //making sure that # Observations does not exceed 9
+if (T < 2) T = 2; //making sure that # Observations is at least 2
+writdata(); //writes the data function
+checkw(); checkx(); checky(); checkz(); checkn(); //checking for negative values
+if (cw > g[wmax]) { //total shut down
+revise=true; writresult();
+results.document.write('<font color="#FF0000">The data you provided implies that good <i>W</i> should not be produced (sold) since <EM>w</EM><SUB>i</SUB> < <EM>c</EM><sub>W</sub> for all i. <br>This means that the marginal cost exceeds consumers\' willingness to pay.</font><br>' );
+results.document.write('<font color="#FF0000">Please, close this window and re-enter your data.</font><br>' ); 
+}
+if (cx > x[xmax]) { //total shut down
+revise=true; writresult();
+results.document.write('<font color="#FF0000">The data you provided implies that good <i>X</i> should not be produced (sold) since <EM>x</EM><SUB>i</SUB> < <EM>c</EM><sub>X</sub> for all i. <br>This means that the marginal cost exceeds consumers\' willingness to pay.</font><br>' );
+results.document.write('<font color="#FF0000">Please, close this window and re-enter your data.</font><br>' ); 
+}
+if (cy > y[ymax]) { //total shut down
+revise=true; writresult();
+results.document.write('<font color="#FF0000">The data you provided implies that good <i>Y</i> should not be produced (sold) since <EM>y</EM><SUB>i</SUB> < <EM>c</EM><sub>Y</sub> for all i. <br>This means that the marginal cost exceeds consumers\' willingness to pay. </font><br>' );
+results.document.write('<font color="#FF0000">Please, close this window and re-enter your data.</font><br>' ); 
+}
+if (cz > z[zmax]) { //total shut down
+revise=true; writresult();
+results.document.write('<font color="#FF0000">The data you provided implies that good <i>Z</i> should not be produced (sold) since <EM>z</EM><SUB>i</SUB> < <EM>c</EM><sub>Z</sub> for all i. <br>This means that the marginal cost exceeds consumers\' willingness to pay. </font><br>' );
+results.document.write('<font color="#FF0000">Please, close this window and re-enter your data.</font><br>' ); 
+}
+	if (revise==false) { // main calc begins
+	writnotying(); writpuretying();	writmixedtying(); writcomparetying(); //main program
+	} //end of if revise is false
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+</HEAD>
+<body text=black bgColor=white>
+<h1 style="BACKGROUND-COLOR: aqua">Single 
+Seller&nbsp;/&nbsp;Tying&nbsp;/&nbsp;4 Goods / 2 to&nbsp;25 Consumer Types</H1>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</B>: To compute the single-seller's 
+profit-maximizing strategy regarding tying of products and selling them as 
+packages. The user (you) input willingness to pay for each good by each consumer 
+type, as well as the number of consumers of each type, and the seller's cost 
+parameters. <br>Then, <em>How-to-Price</EM><sup>TM</SUP> 
+computes whether tying is profitable, and how to price the packages as well as 
+each product sold separately.</P>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and 
+technology data:</B><br>
+<FORM name=data onsubmit=calc()><font color=#ff0000>Please, <STRONG>always</STRONG> click <INPUT id=reset1 onclick=initialize() type=reset value="Reset !" name=reset1>&nbsp;before 
+changing or submitting the following parameters:</FONT> 
+<UL>
+  <LI>The marginal production cost of 
+  good <em>W</EM> (<em>c</EM><sub>W</SUB>), 
+  good <em>X</EM> (<em>c</EM><sub>X</SUB>), 
+  good <em>Y</EM> (<em>c</EM><sub>Y</SUB>), 
+  good <em>Z</EM> (<em>c</EM><sub>Z</SUB>). <br>
+  
+  Enter <em>c</EM><sub>W</SUB> = <INPUT id=Text102 onchange="cw =this.value" size=10 value=0 name=cwinput>, 
+  <em>c</EM><sub>X</SUB> = <INPUT id=cxinput onchange="cx =this.value" size=10 value=0 name=cxinput>, 
+  <em>c</EM><sub>Y</SUB> = <INPUT id=cyinput onchange="cy =this.value" size=10 value=0 name=cyinput>, 
+  <em>c</EM><sub>Z</SUB> = <INPUT id=Text76 onchange="cz =this.value" size=10 value=0 name=czinput >&nbsp; 
+  
+  <LI>Fixed production cost (<I>F</I>). <BR>
+  Enter <I>F</I> in this box (<I>F</I> &gt; 0 or <I>F</I> = 0): 
+  <INPUT id=Finput onchange="F =this.value" size=10 value=1000 name=Finput> 
+  
+  <li>Enter the number of consumer types 
+  <EM>T</EM>&nbsp;in this&nbsp;box (2-25):&nbsp; 
+  <INPUT id=Ninput onchange="T =this.value" size=10 value=4 name=Ninput> 
+  
+  <LI>Below, enter&nbsp;consumers' maximum willingness to pay for 
+  good <em>W</EM> (<em>w</EM><SUB>i</SUB> &gt; 0), for 
+  good <em>X</EM> (<em>x</EM><SUB>i</SUB> &gt; 0), for 
+  good <em>Y</EM> (<em>y</EM><sub>i</SUB> &gt; 0), for 
+  good <em>Z</EM> (<em>z</EM><SUB>i</SUB> &gt; 0), 
+  and the number of consumers of this type&nbsp;
+  (<EM>n</EM><SUB>i</SUB>):<BR><FONT size=2>
+  (<font color=#ff0000>Remark:</FONT> if, for example, you entered&nbsp; 
+  <EM>T</EM> = 4 (default), the program will ignore all&nbsp;consumer types&nbsp;5 to 25, and 
+  so on...) </FONT><br>
+  
+  Consumer-type&nbsp;01: Enter 
+  <i>w</i><SUB>01</SUB> = <INPUT id=Text128 onchange="g[1] =this.value" size=10 value=5 name=w1input>,&nbsp; 
+  <i>x</i><SUB>01</SUB> = <INPUT id=Text129 onchange="x[1] =this.value" size=10 value=10 name=x1input>,&nbsp; 
+  <i>y</i><SUB>01</SUB> = <INPUT id=Text129 onchange="y[1] =this.value" size=10 value=1 name=y1input>,&nbsp; 
+  <i>z</i><SUB>01</SUB> = <INPUT id=Text129 onchange="z[1] =this.value" size=10 value=2 name=z1input>,&nbsp; 
+  <I>n</I><SUB>01</SUB> = <INPUT id=Text129 onchange="n[1] =this.value" size=10 value=100 name=n1input><br>
+  
+  Consumer-type&nbsp;02: Enter 
+  <i>w</i><SUB>02</SUB> = <INPUT id=Text129 onchange="g[2] =this.value" size=10 value=2 name=w2input>,&nbsp; 
+  <i>x</i><SUB>02</SUB> = <INPUT id=Text130 onchange="x[2] =this.value" size=10 value=10 name=x2input>,&nbsp; 
+  <i>y</i><SUB>02</SUB> = <INPUT id=Text130 onchange="y[2] =this.value" size=10 value=1 name=y2input>,&nbsp; 
+  <i>z</i><SUB>02</SUB> = <INPUT id=Text130 onchange="z[2] =this.value" size=10 value=5 name=z2input>,&nbsp; 
+  <I>n</I><SUB>02</SUB> = <INPUT id=Text130 onchange="n[2] =this.value" size=10 value=100 name=n2input>&nbsp;<br>
+  
+  Consumer-type&nbsp;03: Enter 
+  <i>w</i><SUB>03</SUB> = <INPUT id=Text130 onchange="g[3] =this.value" size=10 value=5 name=w3input>,&nbsp; 
+  <i>x</i><SUB>03</SUB> = <INPUT id=Text131 onchange="x[3] =this.value" size=10 value=1 name=x3input>,&nbsp; 
+  <i>y</i><SUB>03</SUB> = <INPUT id=Text131 onchange="y[3] =this.value" size=10 value=10 name=y3input>,&nbsp; 
+  <i>z</i><SUB>03</SUB> = <INPUT id=Text131 onchange="z[3] =this.value" size=10 value=2 name=z3input>,&nbsp; 
+  <I>n</I><SUB>03</SUB> = <INPUT id=Text131 onchange="n[3] =this.value" size=10 value=100 name=n3input>&nbsp;<br>
+  
+  Consumer-type&nbsp;04: Enter 
+  <i>w</i><SUB>04</SUB> = <INPUT id=Text131 onchange="g[4] =this.value" size=10 value=2 name=w4input>,&nbsp; 
+  <i>x</i><SUB>04</SUB> = <INPUT id=Text132 onchange="x[4] =this.value" size=10 value=1 name=x4input>,&nbsp; 
+  <i>y</i><SUB>04</SUB> = <INPUT id=Text132 onchange="y[4] =this.value" size=10 value=10 name=y4input>,&nbsp; 
+  <i>z</i><SUB>04</SUB> = <INPUT id=Text132 onchange="z[4] =this.value" size=10 value=5 name=z4input>,&nbsp; 
+  <I>n</I><SUB>04</SUB> = <INPUT id=Text132 onchange="n[4] =this.value" size=10 value=100 name=n4input>&nbsp;<br>
+  
+  Consumer-type&nbsp;05: Enter 
+  <i>w</i><SUB>05</SUB> = <INPUT id=Text132 onchange="g[5] =this.value" size=10 value=333 name=w5input>,&nbsp; 
+  <i>x</i><SUB>05</SUB> = <INPUT id=Text133 onchange="x[5] =this.value" size=10 value=333 name=x5input>,&nbsp; 
+  <i>y</i><SUB>05</SUB> = <INPUT id=Text133 onchange="y[5] =this.value" size=10 value=333 name=y5input>,&nbsp; 
+  <i>z</i><SUB>05</SUB> = <INPUT id=Text133 onchange="z[5] =this.value" size=10 value=333 name=z5input>,&nbsp; 
+  <I>n</I><SUB>05</SUB> = <INPUT id=Text133 onchange="n[5] =this.value" size=10 value=333 name=n5input>&nbsp;<br>
+  
+  Consumer-type&nbsp;06: Enter 
+  <i>w</i><SUB>06</SUB> = <INPUT id=Text133 onchange="g[6] =this.value" size=10 value=333 name=w6input>,&nbsp; 
+  <i>x</i><SUB>06</SUB> = <INPUT id=Text134 onchange="x[6] =this.value" size=10 value=333 name=x6input>,&nbsp; 
+  <i>y</i><SUB>06</SUB> = <INPUT id=Text134 onchange="y[6] =this.value" size=10 value=333 name=y6input>,&nbsp; 
+  <i>z</i><SUB>06</SUB> = <INPUT id=Text134 onchange="z[6] =this.value" size=10 value=333 name=z6input>,&nbsp; 
+  <I>n</I><SUB>06</SUB> = <INPUT id=Text134 onchange="n[6] =this.value" size=10 value=333 name=n6input>&nbsp;<br>
+  
+  Consumer-type&nbsp;07: Enter 
+  <i>w</i><SUB>07</SUB> = <INPUT id=Text134 onchange="g[7] =this.value" size=10 value=333 name=w7input>,&nbsp; 
+  <i>x</i><SUB>07</SUB> = <INPUT id=Text135 onchange="x[7] =this.value" size=10 value=333 name=x7input>,&nbsp; 
+  <i>y</i><SUB>07</SUB> = <INPUT id=Text135 onchange="y[7] =this.value" size=10 value=333 name=y7input>,&nbsp; 
+  <i>z</i><SUB>07</SUB> = <INPUT id=Text135 onchange="z[7] =this.value" size=10 value=333 name=z7input>,&nbsp; 
+  <I >n</I><SUB>07</SUB> = <INPUT id=Text135 onchange="n[7] =this.value" size=10 value=333 name=n7input>&nbsp;<br>
+  
+  Consumer-type&nbsp;08: Enter 
+  <i>w</i><SUB>08</SUB> = <INPUT id=Text135 onchange="g[8] =this.value" size=10 value=333 name=w8input>,&nbsp; 
+  <i>x</i><SUB>08</SUB> = <INPUT id=Text136 onchange="x[8] =this.value" size=10 value=333 name=x8input>,&nbsp; 
+  <i>y</i><SUB>08</SUB> = <INPUT id=Text136 onchange="y[8] =this.value" size=10 value=333 name=y8input>,&nbsp; 
+  <i>z</i><SUB>08</SUB> = <INPUT id=Text136 onchange="z[8] =this.value" size=10 value=333 name=z8input>,&nbsp; 
+  <I>n</I><SUB>08</SUB> = <INPUT id=Text136 onchange="n[8] =this.value" size=10 value=333 name=n8input>&nbsp;<br>
+  
+  Consumer-type&nbsp;09: Enter 
+  <i>w</i><SUB>09</SUB> = <INPUT id=Text136 onchange="g[9] =this.value" size=10 value=333 name=w9input>,&nbsp; 
+  <i>x</i><SUB>09</SUB> = <INPUT id=Text137 onchange="x[9] =this.value" size=10 value=333 name=x9input>,&nbsp; 
+  <i>y</i><SUB>09</SUB> = <INPUT id=Text137 onchange="y[9] =this.value" size=10 value=333 name=y9input>,&nbsp; 
+  <i>z</i><SUB>09</SUB> = <INPUT id=Text137 onchange="z[9] =this.value" size=10 value=333 name=z9input>,&nbsp; 
+  <I>n</I><SUB>09</SUB> = <INPUT id=Text137 onchange="n[9] =this.value" size=10 value=333 name=n9input>&nbsp;<br>
+  
+  Consumer-type&nbsp;10: Enter 
+  <i>w</I><SUB>10</SUB> = <INPUT id=Text112 onchange="g[10] =this.value" size=10 value=333 name=w10input>,&nbsp; 
+  <i>x</I><SUB>10</SUB> = <INPUT id=Text28 onchange="x[10] =this.value"  size=10 value=333 name=x10input>,&nbsp; 
+  <i>y</I><SUB>10</SUB> = <INPUT id=Text29 onchange="y[10] =this.value" size=10 value=333 name=y10input>,&nbsp; 
+  <i>z</I><SUB>10</SUB> = <INPUT id=Text85 onchange="z[10] =this.value" size=10 value=333 name=z10input>,&nbsp; 
+  <I>n</I><SUB>10</SUB> = <INPUT id=Text30 onchange="n[10] =this.value" size=10 value=333 name=n10input>&nbsp;<br>
+  
+  Consumer-type&nbsp;11: Enter 
+  <i>w</I><SUB>11</SUB> = <INPUT id=Text113 onchange="g[11] =this.value" size=10 value=333 name=w11input>,&nbsp; 
+  <i>x</I><SUB>11</SUB> = <INPUT id=Text31 onchange="x[11] =this.value" size=10 value=333 name=x11input>,&nbsp; 
+  <i>y</I><SUB>11</SUB> = <INPUT id=Text32 onchange="y[11] =this.value" size=10 value=333 name=y11input>,&nbsp; 
+  <i>z</I><SUB>11</SUB> = <INPUT id=Text86 onchange="z[11] =this.value" size=10 value=333 name=z11input>,&nbsp; 
+  <I>n</I><SUB>11</SUB> = <INPUT id=Text33 onchange="n[11] =this.value" size=10 value=333 name=n11input>&nbsp;<br>
+  
+  Consumer-type&nbsp;12: Enter 
+  <i>w</I><SUB>12</SUB> = <INPUT id=Text114 onchange="g[12] =this.value" size=10 value=333 name=w12input>,&nbsp; 
+  <i>x</I><SUB>12</SUB> = <INPUT id=Text34 onchange="x[12] =this.value"  size=10 value=333 name=x12input>,&nbsp; 
+  <i>y</I><SUB>12</SUB> = <INPUT id=Text35 onchange="y[12] =this.value" size=10 value=333 name=y12input>,&nbsp; 
+  <i>z</I><SUB>12</SUB> = <INPUT id=Text88 onchange="z[12] =this.value" size=10 value=333 name=z12input>,&nbsp; 
+  <I>n</I><SUB>12</SUB> = <INPUT id=Text36 onchange="n[12] =this.value" size=10 value=333 name=n12input>&nbsp;<br>
+  
+  Consumer-type&nbsp;13: Enter 
+  <i>w</I><SUB>13</SUB> = <INPUT id=Text115 onchange="g[13] =this.value" size=10 value=333 name=w13input>,&nbsp; 
+  <i>x</I><SUB>13</SUB> = <INPUT id=Text37 onchange="x[13] =this.value"  size=10 value=333 name=x13input>,&nbsp; 
+  <i>y</I><SUB>13</SUB> = <INPUT id=Text38 onchange="y[13] =this.value" size=10 value=333 name=y13input>,&nbsp; 
+  <i>z</I><SUB>13</SUB> = <INPUT id=Text89 onchange="z[13] =this.value" size=10 value=333 name=z13input>,&nbsp; 
+  <I>n</I><SUB>13</SUB> = <INPUT id=Text39 onchange="n[13] =this.value" size=10 value=333 name=n13input>&nbsp;<br>
+  
+  Consumer-type&nbsp;14: Enter 
+  <i>w</I><SUB>14</SUB> = <INPUT id=Text116 onchange="g[14] =this.value" size=10 value=333 name=w14input>,&nbsp; 
+  <i>x</I><SUB>14</SUB> = <INPUT id=Text40 onchange="x[14] =this.value" size=10 value=333 name=x14input>,&nbsp; 
+  <i>y</I><SUB>14</SUB> = <INPUT id=Text41 onchange="y[14] =this.value" size=10 value=333 name=y14input>,&nbsp; 
+  <i>z</I><SUB>14</SUB> = <INPUT id=Text90 onchange="z[14] =this.value" size=10 value=333 name=z14input>,&nbsp; 
+  <I>n</I><SUB>14</SUB> = <INPUT id=Text42 onchange="n[14] =this.value" size=10 value=333 name=n14input>&nbsp;<br>
+  
+  Consumer-type&nbsp;15: Enter 
+  <i>w</I><SUB>15</SUB> = <INPUT id=Text117 onchange="g[15] =this.value" size=10 value=333 name=w15input>,&nbsp; 
+  <i>x</I><SUB>15</SUB> = <INPUT id=Text43 onchange="x[15] =this.value" size=10 value=333 name=x15input>,&nbsp; 
+  <i>y</I><SUB>15</SUB> = <INPUT id=Text44 onchange="y[15] =this.value" size=10 value=333 name=y15input>,&nbsp; 
+  <i>z</I><SUB>15</SUB> = <INPUT id=Text91 onchange="z[15] =this.value" size=10 value=333 name=z15input>,&nbsp; 
+  <I>n</I><SUB>15</SUB> = <INPUT id=Text45 onchange="n[15] =this.value" size=10 value=333 name=n15input>&nbsp;<br>
+  
+  Consumer-type&nbsp;16: Enter 
+  <i>w</I><SUB>16</SUB> = <INPUT id=Text118 onchange="g[16] =this.value" size=10 value=333 name=w16input>,&nbsp; 
+  <i>x</I><SUB>16</SUB> = <INPUT id=Text46 onchange="x[16] =this.value" size=10 value=333 name=x16input>,&nbsp; 
+  <i>y</I><SUB>16</SUB> = <INPUT id=Text47 onchange="y[16] =this.value" size=10 value=333 name=y16input>,&nbsp; 
+  <i>z</I><SUB>16</SUB> = <INPUT id=Text92 onchange="z[16] =this.value" size=10 value=333 name=z16input>,&nbsp; 
+  <I>n</I><SUB>16</SUB> = <INPUT id=Text48 onchange="n[16] =this.value" size=10 value=333 name=n16input>&nbsp;<br>
+  
+  Consumer-type&nbsp;17: Enter 
+  <i>w</I><SUB>17</SUB> = <INPUT id=Text119 onchange="g[17] =this.value" size=10 value=333 name=w17input>,&nbsp; 
+  <i>x</I><SUB>17</SUB> = <INPUT id=Text49 onchange="x[17] =this.value" size=10 value=333 name=x17input>,&nbsp; 
+  <i>y</I><SUB>17</SUB> = <INPUT id=Text50 onchange="y[17] =this.value" size=10 value=333 name=y17input>,&nbsp; 
+  <i>z</I><SUB>17</SUB> = <INPUT id=Text93 onchange="z[17] =this.value" size=10 value=333 name=z17input>,&nbsp; 
+  <I>n</I><SUB>17</SUB> = <INPUT id=Text51 onchange="n[17] =this.value" size=10 value=333 name=n17input>&nbsp;<br>
+  
+  Consumer-type&nbsp;18: Enter 
+  <i>w</I><SUB>18</SUB> = <INPUT id=Text120 onchange="g[18] =this.value" size=10 value=333 name=w18input>,&nbsp; 
+  <i>x</I><SUB>18</SUB> = <INPUT id=Text52 onchange="x[18] =this.value" size=10 value=333 name=x18input>,&nbsp; 
+  <i>y</I><SUB>18</SUB> = <INPUT id=Text53 onchange="y[18] =this.value" size=10 value=333 name=y18input>,&nbsp; 
+  <i>z</I><SUB>18</SUB> = <INPUT id=Text94 onchange="z[18] =this.value" size=10 value=333 name=z18input>,&nbsp; 
+  <I>n</I><SUB>18</SUB> = <INPUT id=Text54 onchange="n[18] =this.value" size=10 value=333 name=n18input>&nbsp;<br>
+  
+  Consumer-type&nbsp;19: Enter 
+  <i>w</I><SUB>19</SUB> = <INPUT id=Text121 onchange="g[19] =this.value" size=10 value=333 name=w19input>,&nbsp; 
+  <i>x</I><SUB>19</SUB> = <INPUT id=Text55 onchange="x[19] =this.value" size=10 value=333 name=x19input>,&nbsp; 
+  <i>y</I><SUB>19</SUB> = <INPUT id=Text56 onchange="y[19] =this.value" size=10 value=333 name=y19input>,&nbsp; 
+  <i>z</I><SUB>19</SUB> = <INPUT id=Text95 onchange="z[19] =this.value" size=10 value=333 name=z19input>,&nbsp; 
+  <I>n</I><SUB>19</SUB> = <INPUT id=Text57 onchange="n[19] =this.value" size=10 value=333 name=n19input>&nbsp;<br>
+  
+  Consumer-type&nbsp;20: Enter 
+  <i>w</I><SUB>20</SUB> = <INPUT id=Text122 onchange="g[20] =this.value" size=10 value=333 name=w20input>,&nbsp; 
+  <i>x</I><SUB>20</SUB> = <INPUT id=Text58 onchange="x[20] =this.value"  size=10 value=333 name=x20input>,&nbsp; 
+  <i>y</I><SUB>20</SUB> = <INPUT id=Text59 onchange="y[20] =this.value" size=10 value=333 name=y20input>,&nbsp; 
+  <i>z</I><SUB>20</SUB> = <INPUT id=Text96 onchange="z[1] =this.value" size=10 value=333 name=z20input>,&nbsp; 
+  <I>n</I><SUB>20</SUB> = <INPUT id=Text60 onchange="n[20] =this.value" size=10 value=333 name=n20input>&nbsp;<br>
+  
+  Consumer-type&nbsp;21: Enter 
+  <i>w</I><SUB>21</SUB> = <INPUT id=Text123 onchange="g[21] =this.value" size=10 value=333 name=w21input>,&nbsp; 
+  <i>x</I><SUB>21</SUB> = <INPUT id=Text61 onchange="x[21] =this.value" size=10 value=333 name=x21input>,&nbsp; 
+  <i>y</I><SUB>21</SUB> = <INPUT id=Text62 onchange="y[21] =this.value" size=10 value=333 name=y21input>,&nbsp; 
+  <i>z</I><SUB>21</SUB> = <INPUT id=Text97 onchange="z[21] =this.value" size=10 value=333 name=z21input>,&nbsp; 
+  <I>n</I><SUB>21</SUB> = <INPUT id=Text63 onchange="n[21] =this.value" size=10 value=333 name=n21input>&nbsp;<br>
+  
+  Consumer-type&nbsp;22: Enter 
+  <i>w</I><SUB>22</SUB> = <INPUT id=Text124 onchange="g[22] =this.value" size=10 value=333 name=w22input>,&nbsp; 
+  <i>x</I><SUB>22</SUB> = <INPUT id=Text64 onchange="x[22] =this.value"  size=10 value=333 name=x22input>,&nbsp; 
+  <i>y</I><SUB>22</SUB> = <INPUT id=Text65 onchange="y[22] =this.value" size=10 value=333 name=y22input>,&nbsp; 
+  <i>z</I><SUB>22</SUB> = <INPUT id=Text98 onchange="z[22] =this.value" size=10 value=333 name=z22input>,&nbsp; 
+  <I>n</I><SUB>22</SUB> = <INPUT id=Text66 onchange="n[22] =this.value" size=10 value=333 name=n22input>&nbsp;<br>
+  
+  Consumer-type&nbsp;23: Enter 
+  <i>w</I><SUB>23</SUB> = <INPUT id=Text125 onchange="g[23] =this.value" size=10 value=333 name=w23input>,&nbsp; 
+  <i>x</I><SUB>23</SUB> = <INPUT id=Text67 onchange="x[23] =this.value" size=10 value=333 name=x23input>,&nbsp; 
+  <i>y</I><SUB>23</SUB> = <INPUT id=Text68 onchange="y[23] =this.value" size=10 value=333 name=y23input>,&nbsp; 
+  <i>z</I><SUB>23</SUB> = <INPUT id=Text99 onchange="z[23] =this.value" size=10 value=333 name=z23input>,&nbsp; 
+  <I>n</I><SUB>23</SUB> = <INPUT id=Text69 onchange="n[23] =this.value" size=10 value=333 name=n23input>&nbsp;<br>
+  
+  Consumer-type&nbsp;24: Enter 
+  <i>w</I><SUB>24</SUB> = <INPUT id=Text126 onchange="g[24] =this.value" size=10 value=333 name=w24input>,&nbsp; 
+  <i>x</I><SUB>24</SUB> = <INPUT id=Text70 onchange="x[24] =this.value" size=10 value=333 name=x24input>,&nbsp; 
+  <i>y</I><SUB>24</SUB> = <INPUT id=Text71 onchange="y[24] =this.value" size=10 value=333 name=y24input>,&nbsp; 
+  <i>z</I><SUB>24</SUB> = <INPUT id=Text100 onchange="z[24] =this.value" size=10 value=333 name=z24input>,&nbsp; 
+  <I>n</I><SUB>24</SUB> = <INPUT id=Text72 onchange="n[24] =this.value" size=10 value=333 name=n24input>&nbsp;<br>
+  
+  Consumer-type&nbsp;25: Enter 
+  <i>w</I><SUB>25</SUB> = <INPUT id=Text127 onchange="g[25] =this.value" size=10 value=333 name=w25input>,&nbsp; 
+  <i>x</I><SUB>25</SUB> = <INPUT id=Text73 onchange="x[25] =this.value" size=10 value=333 name=x25input>,&nbsp; 
+  <i>y</I><SUB>25</SUB> = <INPUT id=Text74 onchange="y[25] =this.value" size=10 value=333 name=y25input>,&nbsp; 
+  <i>z</I><SUB>25</SUB> = <INPUT id=Text101 onchange="z[25] =this.value" size=10 value=333 name=z25input>,&nbsp; 
+  <I>n</I><SUB>25</SUB> = <INPUT id=Text75 onchange="n[25] =this.value" size=10 value=333 name=n25input>&nbsp;<br>
+  
+  </LI></UL>
+  
+  <INPUT type=submit value="Show Results Now !" name=showresults>
+  <INPUT onclick=window.close() type=button value="Close Page" name=closewindow>
+  <INPUT id=GoMain onclick="openwindow('index.html')" type=button value="Main Page" name=GoMain>
+  <INPUT onclick="openwindow('glossary.html')" type=button value="Glossary of Terms" name=glossary>
+  </FORM>
+<hr>
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.</h5>
+
+</body></HTML>

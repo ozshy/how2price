@@ -1,0 +1,247 @@
+<html>
+
+
+
+<head>
+
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+
+<META name=VI60_defaultClientScript content=JavaScript>
+
+<meta http-equiv="Content-Language" content="en-us">
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+
+<meta name="ProgId" content="FrontPage.Editor.Document">
+
+<title>Future-value calculations</title>
+
+
+
+<SCRIPT LANGUAGE=javascript> 
+
+function openwindow(filename) { 
+
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+
+// rounds number to X decimal places, defaults to 2
+
+X = (!X ? 2 : X);
+
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+
+}
+
+function pv(variable,periods,rate) {
+
+var t, disc, sum=0;
+
+disc=1/(1+rate/1);
+
+	for (t = 0; t < periods; t++) {
+
+	sum = sum + variable*Math.pow(disc,t);
+
+	} //end of for statement
+
+return sum;
+
+} // end of pv function
+
+function fv(variable,periods,rate) {
+
+var t, factor, sum=0;
+
+factor=1+rate/1;
+
+sum = variable*Math.pow(factor,periods);
+
+return sum;
+
+} // end of fv function
+
+var d, ni, r, i, n;
+
+function initialize() {
+
+d=100, ni=12, i=5, r=i/(ni*100), n=12; //initializing variables
+
+}
+
+function writdata() { //writes the data provided by the user
+
+results.document.write('<body text="black">');
+
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for present-value calculations</font><br>');
+
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+
+results.document.write("The invested amount is: <EM>d</EM> = ", '<font color="fuchsia">', d, '</font>', "<br>");
+
+results.document.write("The number of periods is: <EM>n</EM> = ", '<font color="fuchsia">', n, '</font>', "<br>");
+
+results.document.write("The nominal yearly interest rate is: <EM>i</EM> = ", '<font color="fuchsia">', i, '</font> %', "<br>");
+
+results.document.write("The number of periods in one year is: <EM>n<SUB>i</SUB></EM> = ", '<font color="fuchsia">', ni, '</font>', "<br>");
+
+}
+
+function writresult() { //writes Result #: (red+underline)
+
+resultno=resultno+1;
+
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+
+}
+
+function calc() { // start computation function (main function!)
+
+openresultswindow();
+
+r=i/(ni*100); //converting interest rate into a fraction
+
+writdata(); //writes data inputted
+
+writresult(); // calc variety of interest rates
+
+results.document.write('The per-period interest rate is: ');
+
+results.document.write('<font color="#0000FF">','<i>i<SUB>p</SUB></i> = '+ round(100*r,4)+ ' %</font>', "<br>");
+
+results.document.write('The compounded yearly interest rate is: ');
+
+results.document.write('<font color="#0000FF">','<i>i<SUB>c</SUB></i> = '+ round((Math.pow(1+r,ni)-1)*100,4)+ ' %</font>', "<br>");
+
+results.document.write('The yearly discount factor (based on compounded interest) is: ');
+
+results.document.write('<font color="#0000FF">','<i>DF</i> = '+ round(1/(1+r/1),4)+ '</font>', "<br>");
+
+results.document.write('The yearly discount factor (without compounding) is: ');
+
+results.document.write('<font color="#0000FF">','<i>DF</i> = '+ round(1/(1+i/100),4)+ '</font>', "<br>");
+
+
+
+writresult(); // FV results
+
+results.document.write('The future value of this investment at the end of the <font color="fuchsia">'+n+'</font>th period (based on compounded interest) is: ');
+
+results.document.write('<font color="#0000FF">','<i>FV<SUB>c</SUB></i> = ', round(fv(d,n,r)), '</font>', "<br>");
+
+results.document.write('Out of this sum, the total interest paid is: ');
+
+results.document.write('<font color="#0000FF">','<i>Int<SUB>c</SUB></i> = ', round(fv(d,n,r)-d), '</font>', "<br>");
+
+
+
+results.document.write('The future value of this investment at the end of the <font color="fuchsia">'+n+'</font>th period (without compounding) is: ');
+
+results.document.write('<font color="#0000FF">','<i>FV</i> = ', round(d/1+d*(n/ni)*i/100), '</font>', "<br>");
+
+results.document.write('Out of this sum, the total interest paid is: ');
+
+results.document.write('<font color="#0000FF">','<i>Int</i> = ', round(d/1+d*(n/ni)*i/100-d), '</font>', "<br>");
+
+
+
+results.document.write('The gain from utilizing compounded interest payment is: ');
+
+results.document.write('<font color="#0000FF">','<i>Int<SUB>c</SUB>-Int</i> = ', round(fv(d,n,r)-d-(d/1+d*(n/ni)*i/100-d)), '</font>', "<br>");
+
+
+
+// Now closing the output window
+
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP> &nbsp; All rights reserved.<h5>');
+
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+
+</head>
+
+
+<body bgColor=white text="black">
+
+<h1 style="BACKGROUND-COLOR: aqua">  Future Value 
+Calculations<BR>       </h1>
+<h2>    &nbsp;</h2>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>:&nbsp; To calculate the future value of&nbsp;an 
+interest-bearing investment.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">    Inputting&nbsp;data:</b><br>
+
+<FORM NAME="data" onSubmit="calc()">
+<font color="#ff0000">
+Please, <STRONG>always</STRONG>
+  click 
+<INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>
+before changing or submitting the following parameters:
+</font>
+<UL>
+  <li>Enter the invested amount, 
+  <EM>d</EM> (<EM>d</EM> &gt;  0): 
+  <INPUT id="dinput" name="dinput" value=100 size=10 onChange= "d=this.value">
+  <LI>
+  Enter the number of pay periods,&nbsp;<I>n</I> 
+  (<I>n</I>&nbsp;= 1, 2, ...): <INPUT id=ninput onchange="n=this.value" size=10 
+  value=12 name=ninput>
+    <li>Enter the yearly nominal interest rate,&nbsp;<I>i</I> (in %): <INPUT id=rinput onchange="i=this.value" size=10 
+  value=5 name=rinput>%
+  <LI> Enter number of periods&nbsp;in one year ,&nbsp;<EM>n<SUB>i</SUB></EM> 
+  (<EM>n<SUB>i</SUB></EM> &gt; 0): <INPUT id=niinput name=niinput onchange=ni=this.value 
+  size=10 value=12> <BR>      
+  <font size="2"> (Examples: 
+  If&nbsp;a period is one year enter <EM>n<SUB>i</SUB></EM> = 1; one week 
+   enter <EM>n<SUB>i</SUB></EM> = 52; one day enter <EM>n<SUB>i</SUB></EM> = 365.
+  Default setting: <EM>n<SUB>i</SUB></EM> = 12 months) </font></LI>
+  </UL>
+<P>
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !">
+<INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()">
+<INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')">
+<INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"> 
+</P>
+</FORM>
+<hr>
+<h5>
+Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.
+</h5>
+
+
+</body>
+
+</html>
+
+<!-- text below generated by server. PLEASE REMOVE --><!-- Counter/Statistics available at http://geocities.yahoo.com --><script language="JavaScript" src="http://us.geocities.com/js_source/geov2.js"></script><script language="javascript">geovisit();</script><noscript>

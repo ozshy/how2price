@@ -1,0 +1,411 @@
+<html>
+<head>
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+<META name=VI60_defaultClientScript content=JavaScript>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Regulation / Merger Guidelines / 2-25 Sellers</title>
+
+<SCRIPT LANGUAGE=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+var k, N, m = new Array(25), mergeindex = new Array(25), howmany, revise, mmax, mmin, summ, 
+ipostl, ipostm, iposth, // (adjustable) parameters for 3 guidelines thresholds
+deltaim, deltaih, // (adjustable) parameters for change in HHI due to merger
+ihh, ihhpost; // variables before and after hhi MAIN VAR
+
+function initialize() {
+ N=6; k=4; 
+ m[1]=15; m[2]=5; m[3]=30; m[4]=20; m[5]=10; m[6]=20; m[7]=0; m[8]=0; m[9]=0; m[10]=0;
+ m[11]=0; m[12]=0; m[13]=0; m[14]=0; m[15]=0; m[16]=0; m[17]=0; m[18]=0; m[19]=0; m[20]=0;
+ m[21]=0; m[22]=0; m[23]=0; m[24]=0; m[25]=0;
+ mergeindex[1]=0; mergeindex[2]=0; mergeindex[3]=0; mergeindex[4]=0; mergeindex[5]=0; mergeindex[6]=0; mergeindex[7]=0; mergeindex[8]=0; mergeindex[9]=0; mergeindex[10]=0;
+ mergeindex[11]=0; mergeindex[12]=0; mergeindex[13]=0; mergeindex[14]=0; mergeindex[15]=0; mergeindex[16]=0; mergeindex[17]=0; mergeindex[18]=0; mergeindex[19]=0; mergeindex[20]=0; 
+ mergeindex[21]=0; mergeindex[22]=0; mergeindex[23]=0; mergeindex[24]=0; mergeindex[25]=0;  
+ revise=false; mmax=1; mmin=1; summ=0; ihh=0; ihhpost=0; howmany=0; delta=1; //initializing variables
+ ipostl=1000; ipostm=1800; iposth=1800; deltaim=100; deltaih=50; // 1984 guidelines
+}
+
+function merge(k) { // index for firms that merge
+mergeindex[k]=1;
+}
+
+function maxmin() { // finds the higest and lowest market share seller
+for (var i = 2; i < N/1+1/1; i++) {
+	if (m[i] > m[mmax]) mmax=i;
+} // end for statment
+for (var i = 2; i < N/1+1/1; i++) {
+	if (m[i] < m[mmin]) mmin=i;
+} // end for statment
+}
+
+function writdata() { //writes the data provided by the user
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the <br>Regulation  / Merger Guidelines / 2-25 Sellers</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("The number of active sellers is : ", '<EM>N</EM> = <font color="fuchsia">', N,'</font>', "<br>");
+	for (var i = 1; i < N/1+1/1; i++) {
+	results.document.write('The market share of seller ' + i + ' is <EM>m</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + m[i] + '</font> %' + "<br>" );
+	} // end of for statement
+results.document.write('The highest market share is maintained by seller  <font color="fuchsia">' + mmax + '</font>' + "<br>" );
+results.document.write('The lowest market share is maintained by seller  <font color="fuchsia">' + mmin + '</font>' + "<br>" );
+results.document.write('<font color="fuchsia">Your </font>merger guidelines are as follows:  A merger should <font color="#FF0000"> not </font> be challenged if: ' + "<br>" );
+
+results.document.write('Either [<SUP>p</SUP><EM>I</EM><SUB>HH</SUB> \< <font color="fuchsia">' + ipostl + '</font>] ');
+results.document.write('or [<SUP>p</SUP><EM>I</EM><SUB>HH</SUB> \< <font color="fuchsia">' + ipostm + '</font> ');
+results.document.write('\& <EM>changeI</EM><SUB>HH</SUB> \< <font color="fuchsia">' + deltaim + '</font>] ' );
+results.document.write('or [<SUP>p</SUP><EM>I</EM><SUB>HH</SUB> \> <font color="fuchsia">' + iposth + '</font> ');
+results.document.write('\& <EM>changeI</EM><SUB>HH</SUB> \< <font color="fuchsia">' + deltaih + '</font>] <br>' );
+
+results.document.write('<font color="fuchsia">You</font> proposed to merge <font color="fuchsia">' + howmany + '</font> sellers (firms): ' );
+	for (var i = 1; i < N/1+1/1; i++) {
+	if (mergeindex[i]==1) results.document.write('\#<font color="fuchsia">' + i + '</font>,  ');
+	} // end of for statement
+	if (howmany < 2) results.document.write('<br><font color="#FF0000">Warning:</font> <font color="fuchsia">You</font> have not proposed any merger.  <font color="fuchsia">You</font> must check at least 2 boxes. ');
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function revisedata(j) { // asks revision on data due to price below unit cost
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, firm ' + j + ' maintains a negative market share.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function revisetotaldata() {
+writresult();
+if (summ > 100) results.document.write('<font color="#FF0000"> The sum of market shares of all sellers equals <font color="fuchsia">' + summ + '</font> % therefore exceeding 100%. </font><br>' );
+if (summ < 100) results.document.write('<font color="#FF0000"> The sum of market shares of all sellers equals <font color="fuchsia">' + summ + '</font> % which is lower than 100%. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function checkm() {
+for (var i = 1; i < N/1+1/1; i++) {
+	summ=summ/1+m[i]/1;
+	if (m[i] < 0) {revisedata(i); revise=true};
+}
+	if (summ != 100) {revisetotaldata(); revise=true};
+}
+
+function checkmerge() {
+	for (var i = 1; i < N/1+1/1; i++) {
+	howmany=howmany/1 + mergeindex[i];
+	} //end for
+}
+
+function checkguide() {
+if (ipostl < 0) { revise=true; writresult();
+results.document.write('<font color="#FF0000"> Merger guidlines cannot have negative values such as <font color="fuchsia">' + ipostl + '</font> that you have entered. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+if (ipostm < 0) { revise=true; writresult();
+results.document.write('<font color="#FF0000"> Merger guidlines cannot have negative values such as <font color="fuchsia">' + ipostm + '</font> that you have entered. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+if (iposth < 0) { revise=true; writresult();
+results.document.write('<font color="#FF0000"> Merger guidlines cannot have negative values such as <font color="fuchsia">' + iposth + '</font> that you have entered. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+if (deltaim < 0) { revise=true; writresult();
+results.document.write('<font color="#FF0000"> Merger guidlines cannot have negative values such as <font color="fuchsia">' + deltaim + '</font> that you have entered. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+if (deltaih < 0) { revise=true; writresult();
+results.document.write('<font color="#FF0000"> Merger guidlines cannot have negative values such as <font color="fuchsia">' + deltaih + '</font> that you have entered. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+if (ipostl > ipostm) { revise=true; writresult();
+results.document.write('<font color="#FF0000"> Your merger guidlines are inconsistent since <font color="fuchsia">' + ipostl + '</font> \><font color="fuchsia"> ' + ipostm +'. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+if (ipostm > iposth) { revise=true; writresult();
+results.document.write('<font color="#FF0000"> Your merger guidlines are inconsistent since <font color="fuchsia">' + ipostm + '</font> \><font color="fuchsia"> ' + iposth +'. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+if (ipostl > iposth) { revise=true; writresult();
+results.document.write('<font color="#FF0000"> Your merger guidlines are inconsistent since <font color="fuchsia">' + ipostl + '</font> \><font color="fuchsia"> ' + iposth +'. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+if (ipostm < iposth) { revise=true; writresult();
+results.document.write('<font color="#FF0000"> Your merger guidlines are incomplete since you left a gap between <font color="fuchsia">' + ipostl + '</font> and<font color="fuchsia"> ' + iposth +'. </font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+}
+
+function hhi() { // HHI
+var inner=0; outer=0; Npost=N-howmany+1/1 // measure squares of the two groups
+writresult();
+results.document.write('<font color="#FF0000"> Computations for the Herfindahl-Hirshman concentration indexes (0 < <EM>I</EM><SUB>HH</SUB> < 10,000):</font><br>');
+	for (var i = 1; i < N/1+1/1; i++) {
+	ihh=ihh/1+m[i]*m[i]/1;
+	if (mergeindex[i]==1) inner=inner/1+m[i]/1; // not squared
+	else outer=outer/1+m[i]*m[i]/1; // squared
+	}//end for
+ihhpost=inner*inner/1+outer/1;
+delta=ihhpost-ihh;
+results.document.write('The pre-merger concentration index for this <font color="fuchsia">' + N + '</font>-firm industry is: ');
+results.document.write('<font color="#0000FF"> <EM>I</EM><SUB>HH</SUB> =  ' + round(ihh) + ' </font>', "<br>");
+results.document.write('The post-merger concentration index for this <font color="fuchsia">' + Npost + '</font>-firm industry is: ');
+results.document.write('<font color="#0000FF"> <SUP>p</SUP><EM>I</EM><SUB>HH</SUB> =  ' + round(ihhpost) + ' </font>', "<br>");
+results.document.write('The change in concentration index resulting from this merger is: ');
+results.document.write('<font color="#0000FF"> <EM>changeI</EM><SUB>HH</SUB> =  ' + round(delta) + ' </font>', "<br>");
+results.document.write('The newly-merged firm will have a combined market share of: ');
+results.document.write('<font color="#0000FF"> ' + round(inner) + '</font> %', "<br>");
+}
+
+function writchallenge() {
+writresult();
+results.document.write('<font color="#FF0000"> Should the proposed merger be challenged?</font><br>');
+if (ihhpost <= ipostl) {
+results.document.write('This merger should not be challenged since <SUP>p</SUP><EM>I</EM><SUB>HH</SUB> < ' + ipostl + '<br>');
+} // end if
+if (ihhpost > ipostl && ihhpost <= ipostm) {
+	if (delta <= deltaim) {
+	results.document.write('This merger should <font color="#FF0000">not</font> be challenged since <SUP>p</SUP><EM>I</EM><SUB>HH</SUB> < ' + ipostm + ', but <EM>changeI</EM><SUB>HH</SUB> < ' + deltaim + ' or <EM>changeI</EM><SUB>HH</SUB> = ' + deltaim + '<br>');
+	}
+	else {
+	results.document.write('This merger <font color="#FF0000">may be</font> challenged since <SUP>p</SUP><EM>I</EM><SUB>HH</SUB> > ' + ipostl + ' and <EM>changeI</EM><SUB>HH</SUB> > ' + deltaim + '<br>');
+	} //end else
+} // end if
+if (ihhpost > iposth) {
+	if (delta <= deltaih) {
+	results.document.write('This merger should <font color="#FF0000">not</font> be challenged since <SUP>p</SUP><EM>I</EM><SUB>HH</SUB> > ' + ipostm + ', but <EM>changeI</EM><SUB>HH</SUB> < ' + deltaih + ' or <EM>changeI</EM><SUB>HH</SUB> = ' + deltaih + '<br>');
+	}
+	else {
+	results.document.write('This merger <font color="#FF0000">may</font> be challenged since <SUP>p</SUP><EM>I</EM><SUB>HH</SUB> > ' + iposth + ' and <EM>changeI</EM><SUB>HH</SUB> > ' + deltaih + '<br>');
+	} //end else
+} // end if
+
+}
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+if (N > 25) N = 25; //making sure that # sellers does not exceed 9
+if (N < 1) N = 1; //making sure that # sellers is at least 1
+if (k > N) k = N; //making sure that k < N
+if (k < 1) k = 1; //making sure that k > 0, otherwise set to 1
+maxmin(); // finds higestlowest m
+checkmerge(); // checks how many firms merge
+writdata(); //writes the data function
+checkm(); // checks m are positive and sum to 100%
+checkguide(); //validates merger guidelines
+	if (revise==false) { 
+	hhi(); // HHI measure
+	writchallenge(); // write to challenge?
+	} //end if revise=false 
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+
+</head>
+<body bgColor=white text="black">
+<h1 style="BACKGROUND-COLOR: aqua"> Regulation&nbsp;/&nbsp;Merger Guidelines&nbsp;/&nbsp;2 to&nbsp;25 Firms</h1>
+
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b> : To investigate whether a merger should be 
+challenged according to changes in the Herfindahl-Hirshman concentration 
+index.&nbsp; The user inputs pre-merger market shares, and which sellers (firms) 
+intend to form the merger.&nbsp; How-to-Price then replies with a statement whether 
+or not the proposed merger will (not) be challenged.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br><FORM NAME="data" onSubmit="calc()"><font color="#ff0000">Please, <STRONG>always</STRONG>  click <INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>&nbsp;before changing or submitting the following parameters:</font>
+<ul>  
+
+<li>Enter the number of sellers (firms) <EM>N</EM>&nbsp;in this market (2-25):&nbsp; <INPUT id=Ninput onchange="N =this.value" size=10 
+  value=6 name=Ninput> 
+  <LI>Enter the merger guidelines under which a merger 
+  will&nbsp;<FONT color=#ff0000>not</FONT> be challenged:<br>
+    <FONT size=2>(<font color="#ff0000">Remark:</font>  Default values
+    correspond to the 1984 guidelines suggested by the DOJ in the U.S.) </FONT>
+  <UL>
+    <LI>If the post-merger index satisfies: <SUP>p</SUP><i>I</i><sub>HH</sub>&nbsp;
+    &lt;&nbsp; <INPUT id=ipostlinput onchange="ipostl =this.value" 
+  size=10 value=1000 name=ipostlinput> 
+    <LI>
+    <P>If the post-merger index satisfies: <SUP>p</SUP><i>I</i><sub>HH</sub>&nbsp;
+    &lt;&nbsp; <INPUT id=ipostminput onchange="ipostm =this.value" 
+  size=10 value=1800 name=ipostminput> &nbsp; and:&nbsp; 
+    <I>changeI</I><SUB>HH</SUB>&nbsp; 
+    &lt;&nbsp; <INPUT id=deltaiminput onchange="deltaim =this.value" size=10 
+    value=100 name=deltaiminput>&nbsp;<br>
+    which is the change in this index (resulting from the 
+    proposed&nbsp;merger)</P>
+    <LI>
+    <P>If the post-merger index satisfies: <SUP>p</SUP><i>I</i><sub>HH</sub>
+    &nbsp;&gt;&nbsp; <INPUT id=iposthinput onchange="iposth =this.value" 
+  size=10 value=1800 name=iposthinput>  &nbsp; and:&nbsp; 
+    <I>changeI</I><SUB>HH</SUB> &nbsp;&lt;&nbsp; 
+    <INPUT id=deltaihinput onchange="deltaih =this.value" size=10 value=50 
+    name=deltaihinput> <br>
+    which is the change in this index (resulting 
+    from the proposed&nbsp;merger)</P></LI></UL></LI>
+
+  </ul>
+  
+  <p>
+<ul>  
+
+  <LI>     
+    Below, enter the market share <EM>m</EM><SUB>i</SUB>     
+  of&nbsp;each seller (0 &lt;<EM>m</EM><SUB>i</SUB>&lt;100)<BR>
+  <FONT size=2>(<font color="#ff0000">Remark:</font> if, for example, you entered <EM>N</EM> =  6 (default), the program will ignore all prices and market shares of sellers 7 to 25, and so on...) </FONT><br>
+  
+  Seller 01: Enter <I>m</I><SUB>01</SUB> in this box: <INPUT id=m1input onchange="m[1] =this.value" size=10 value=15 name=p1input>  &nbsp;%&nbsp;&nbsp; 
+  <INPUT id=checkbox1 type=checkbox name=checkbox1 onClick="merge(1)" >  
+  Check this box if seller 01 belongs to the merger <BR>
+  
+  Seller 02: Enter <I>m</I><SUB>02</SUB> in this box: <INPUT id=m2input onchange="m[2] =this.value" 
+  size=10 value=5 name=m2input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox2 type=checkbox name=checkbox2 onClick="merge(2)" >  
+  Check this box if seller 02 belongs to the merger <BR>
+    
+  Seller 03: Enter <I>m</I><SUB>03</SUB> in this box: <INPUT id=m3input 
+  onchange="m[3] =this.value" size=10 value=30 name=m3input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox3 type=checkbox name=checkbox3 onClick="merge(3)" >  
+  Check this box if seller 03 belongs to the merger <BR>
+    
+  Seller 04: Enter <I>m</I><SUB>04</SUB> in this box: <INPUT id=m4input onchange="m[4] =this.value" 
+  size=10 value=20 name=m4input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox4 type=checkbox name=checkbox4 onClick="merge(4)" >  
+  Check this box if seller 04 belongs to the merger <BR>
+    
+  Seller 05: Enter <I>m</I><SUB>05</SUB> in this box: <INPUT id=m5input onchange="m[5] =this.value" 
+  size=10 value=10 name=m5input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox5 type=checkbox name=checkbox5 onClick="merge(5)" >  
+  Check this box if seller 05 belongs to the merger <BR>
+    
+  Seller 06: Enter <I>m</I><SUB>06</SUB> in this box: <INPUT id=m6input onchange="m[6] =this.value" 
+  size=10 value=20 name=m6input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox6 type=checkbox name=checkbox6 onClick="merge(6)" >  
+  Check this box if seller 06 belongs to the merger <BR>
+  
+  Seller 07: Enter <I>m</I><SUB>07</SUB> in this box: <INPUT id=m7input 
+  onchange="m[7] =this.value" size=10 value=0 name=m7input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox7 type=checkbox name=checkbox7 onClick="merge(7)" >  
+  Check this box if seller 07 belongs to the merger <BR>
+  
+  Seller 08: Enter <I>m</I><SUB>08</SUB> in this box: <INPUT id=m8input onchange="m[8] =this.value" 
+  size=10 value=0 name=m8input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox8 type=checkbox name=checkbox8 onClick="merge(8)" >  
+  Check this box if seller 08 belongs to the merger <BR>
+  
+  Seller 09: Enter <I>m</I><SUB>09</SUB> in this box: <INPUT id=m9input onchange="m[9] =this.value" 
+  size=10 value=0 name=m9input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox9 type=checkbox name=checkbox9 onClick="merge(9)" >  
+  Check this box if seller 09 belongs to the merger <BR>
+  
+  Seller 10: Enter <I>m</I><SUB>10</SUB> in this box: <INPUT id=m10input onchange="m[10] =this.value" size=10 value=15 name=m10input>  &nbsp;%&nbsp;&nbsp; 
+  <INPUT id=checkbox10 type=checkbox name=checkbox10 onClick="merge(10)" >  
+  Check this box if seller 10 belongs to the merger <BR>
+
+  Seller 11: Enter <I>m</I><SUB>11</SUB> in this box: <INPUT id=m11input onchange="m[11] =this.value" size=10 value=15 name=m11input>  &nbsp;%&nbsp;&nbsp; 
+  <INPUT id=checkbox11 type=checkbox name=checkbox11 onClick="merge(11)" >  
+  Check this box if seller 11 belongs to the merger <BR>
+  
+  Seller 12: Enter <I>m</I><SUB>12</SUB> in this box: <INPUT id=m12input onchange="m[12] =this.value" 
+  size=10 value=5 name=m12input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox12 type=checkbox name=checkbox12 onClick="merge(12)" >  
+  Check this box if seller 12 belongs to the merger <BR>
+    
+  Seller 13: Enter <I>m</I><SUB>13</SUB> in this box: <INPUT id=m13input 
+  onchange="m[13] =this.value" size=10 value=30 name=m13input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox13 type=checkbox name=checkbox13 onClick="merge(13)" >  
+  Check this box if seller 13 belongs to the merger <BR>
+    
+  Seller 14: Enter <I>m</I><SUB>14</SUB> in this box: <INPUT id=m14input onchange="m[14] =this.value" 
+  size=10 value=20 name=m14input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox14 type=checkbox name=checkbox14 onClick="merge(14)" >  
+  Check this box if seller 14 belongs to the merger <BR>
+    
+  Seller 15: Enter <I>m</I><SUB>15</SUB> in this box: <INPUT id=m15input onchange="m[15] =this.value" 
+  size=10 value=10 name=m15input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox15 type=checkbox name=checkbox15 onClick="merge(15)" >  
+  Check this box if seller 15 belongs to the merger <BR>
+    
+  Seller 16: Enter <I>m</I><SUB>16</SUB> in this box: <INPUT id=m16input onchange="m[16] =this.value" 
+  size=10 value=20 name=m16input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox16 type=checkbox name=checkbox16 onClick="merge(16)" >  
+  Check this box if seller 16 belongs to the merger <BR>
+  
+  Seller 17: Enter <I>m</I><SUB>17</SUB> in this box: <INPUT id=m17input 
+  onchange="m[17] =this.value" size=10 value=0 name=m17input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox17 type=checkbox name=checkbox17 onClick="merge(17)" >  
+  Check this box if seller 17 belongs to the merger <BR>
+  
+  Seller 18: Enter <I>m</I><SUB>18</SUB> in this box: <INPUT id=m18input onchange="m[18] =this.value" 
+  size=10 value=0 name=m18input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox18 type=checkbox name=checkbox18 onClick="merge(18)" >  
+  Check this box if seller 18 belongs to the merger <BR>
+  
+  Seller 19: Enter <I>m</I><SUB>19</SUB> in this box: <INPUT id=m19input onchange="m[19] =this.value" 
+  size=10 value=0 name=m19input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox19 type=checkbox name=checkbox19 onClick="merge(19)" >  
+  Check this box if seller 19 belongs to the merger <BR>
+
+  Seller 20: Enter <I>m</I><SUB>10</SUB> in this box: <INPUT id=m10input onchange="m[10] =this.value" size=10 value=15 name=m20input>  &nbsp;%&nbsp;&nbsp; 
+  <INPUT id=checkbox10 type=checkbox name=checkbox10 onClick="merge(10)" >  
+  Check this box if seller 10 belongs to the merger <BR>
+
+  Seller 21: Enter <I>m</I><SUB>21</SUB> in this box: <INPUT id=m21input onchange="m[21] =this.value" size=10 value=15 name=m21input>  &nbsp;%&nbsp;&nbsp; 
+  <INPUT id=checkbox21 type=checkbox name=checkbox21 onClick="merge(21)" >  
+  Check this box if seller 21 belongs to the merger <BR>
+  
+  Seller 22: Enter <I>m</I><SUB>22</SUB> in this box: <INPUT id=m22input onchange="m[22] =this.value" 
+  size=10 value=5 name=m22input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox22 type=checkbox name=checkbox22 onClick="merge(22)" >  
+  Check this box if seller 22 belongs to the merger <BR>
+    
+  Seller 23: Enter <I>m</I><SUB>23</SUB> in this box: <INPUT id=m23input 
+  onchange="m[23] =this.value" size=10 value=30 name=m23input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox23 type=checkbox name=checkbox23 onClick="merge(23)" >  
+  Check this box if seller 23 belongs to the merger <BR>
+    
+  Seller 24: Enter <I>m</I><SUB>24</SUB> in this box: <INPUT id=m24input onchange="m[24] =this.value" 
+  size=10 value=20 name=m24input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox24 type=checkbox name=checkbox24 onClick="merge(24)" >  
+  Check this box if seller 24 belongs to the merger <BR>
+    
+  Seller 25: Enter <I>m</I><SUB>25</SUB> in this box: <INPUT id=m25input onchange="m[25] =this.value" 
+  size=10 value=10 name=m25input>&nbsp; %&nbsp;&nbsp;
+  <INPUT id=checkbox25 type=checkbox name=checkbox25 onClick="merge(25)" >  
+  Check this box if seller 25 belongs to the merger <BR>
+    
+  </LI>
+
+  </ul>
+  
+  
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !"><INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()"><INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')"><INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"></FORM><hr>
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.</h5>
+
+</body></HTML>

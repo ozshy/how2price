@@ -1,0 +1,193 @@
+<html>
+
+
+
+<head>
+
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+
+<META name=VI60_defaultClientScript content=JavaScript>
+
+<meta http-equiv="Content-Language" content="en-us">
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+
+<meta name="ProgId" content="FrontPage.Editor.Document">
+
+<title>Single-Market / Single Market (Exponential Demand Case)</title>
+
+
+
+<SCRIPT LANGUAGE=javascript> // collecting user-inserted demand data functions
+
+function openwindow(filename) { 
+
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+
+// rounds number to X decimal places, defaults to 2
+
+X = (!X ? 2 : X);
+
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+
+}
+
+var a, e, c, F;
+
+function initialize() {
+
+a=12; e=2; c=1; F=4; //initializing variables
+
+}
+
+function writdata() { //writes the data provided by the user
+
+results.document.write('<body text="black">');
+
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> single-seller / single-market (exponential demand) case</font><br>');
+
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+
+results.document.write('Inverse demand function is given by: <EM>q</EM> = <font color="fuchsia">', a ,'</font> <EM>p</EM>','<SUP>-<font color="fuchsia">',e,'</SUP></font>', '<br>' );
+
+results.document.write("Maginal cost equals: ", '<font color="fuchsia">', c,'</font>', "<br>");
+
+results.document.write("Fixed cost equals: ", '<font color="fuchsia">', F, '</font>', "<br>");
+
+}
+
+function writresult() { //writes Result #: (red+underline)
+
+resultno=resultno+1;
+
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+
+}
+
+function writ1monopexp() { // writes 1 mkt monop exp
+
+writresult();
+
+results.document.write("Ignoring fixed cost, the monopoly should set the price : ");
+
+results.document.write('<font color="#0000FF"><i>p</i> = ', round(c*e/(e-1)),'</font>', "<br>");
+
+results.document.write('Ignoring fixed cost, the monopoly should sell: ');
+
+results.document.write('<font color="#0000FF">','<i>q</i> = ', round(a*Math.pow(c*e/(e-1),-e)), '</font>', " units<br>");
+
+results.document.write("Ignoring all costs, the revenue (turnover) collected is: ");
+
+results.document.write('<font color="#0000FF">','<i>R</i> = ', round((c*e/(e-1))*a*Math.pow(c*e/(e-1),-e)) , '</font>', "<br>");
+
+results.document.write("Ignoring fixed cost, the monopoly earns a profit: ");
+
+results.document.write('<font color="#0000FF">', "<EM>Profit</EM> = ", round(((c*e/(e-1))-c)*a*Math.pow(c*e/(e-1),-e)), '</font>', "<br>");
+
+if (((c*e/(e-1))-c)*a*Math.pow(c*e/(e-1),-e) >= F)
+
+results.document.write("Taking fixed cost into account, the monopoly earns a total profit of: ", '<font color="#0000FF">', "<EM>Profit</EM> = ", round(((c*e/(e-1))-c)*a*Math.pow(c*e/(e-1),-e)-F), '</font>');
+
+else 
+
+results.document.write("Taking fixed cost into account, the monopoly makes a total loss of: ", '<font color="#0000FF">', "<EM>L</EM> = ", round(F-((c*e/(e-1))-c)*a*Math.pow(c*e/(e-1),-e)), '</font>');
+
+}
+
+function calc() { // start computation function (main function!)
+
+openresultswindow();
+
+writdata(); //writes the data function 
+
+writ1monopexp();
+
+// Now closing the output window
+
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="#00FFFF">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<form><hr><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2001 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP> &nbsp; All rights reserved.<h5>');
+
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+
+</head>
+
+
+<body bgColor=white text="black">
+
+<h1 style="BACKGROUND-COLOR: aqua">Single Seller / Single Market</h1>
+<h2>[Class of exponential (hyperbola) demand functions]</h2>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: To calculate the profit-maximizing price and quantity
+produced by a single firm selling one product in a single market.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br>
+
+<FORM NAME="data" onSubmit="calc()">
+<font color="#ff0000">
+Please, <STRONG>always</STRONG>
+  click 
+<INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>
+before changing or submitting the following parameters:
+</font>
+<ul>
+  <li>The coefficient (<i>a</i>) of each demand function <i> q</i> = <i> a</i> <i>p</i><i><SUP>-e</i></SUP>.
+    <BR>Enter
+    <i>a</i> in this box (<i>a</i> &gt;  0): <INPUT id="ainput" name="ainput" value=12 size=10 onChange= "a =this.value">
+  <li>The price-elasticity (<i>e</i>) of each demand function <i> q</i> = <i> a</i> <i>p</i><i><SUP>-e</i></SUP>. 
+   <BR>Enter
+    <i>e</i> in this box (<i>e</i> &gt;  1): <INPUT id="einput" name="einput" value=2 size=10 onChange= "e =this.value">
+  <li>The marginal production cost (<i>c</i>). 
+  <BR>Enter 
+     <EM>c</EM> in this box (<i>c</i> &gt;  0 or <i>c</i> = 0): <INPUT id="cinput" name="cinput" value=1 size=10 onChange= "c =this.value">
+  <li>Fixed production cost (<i>F</i>). 
+  <BR>Enter
+   <i>F</i> in this box (<i>F</i> &gt;  0 or <i>F</i> = 0): <INPUT id="Finput" name="Finput" value=4 size=10 onChange= "F =this.value"></li>
+</ul>
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !">
+<INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()">
+<INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')">
+<INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')">
+</FORM>
+<hr>
+<h5>
+Copyright © 2001&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.
+</h5>
+
+
+</body>
+
+</html>
+
+
+<!-- text below generated by server. PLEASE REMOVE --><!-- Counter/Statistics available at http://geocities.yahoo.com --><script language="JavaScript" src="http://us.geocities.com/js_source/geov2.js"></script><script language="javascript">geovisit();</script><noscript>

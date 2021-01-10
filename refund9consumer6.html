@@ -1,0 +1,435 @@
+<html><head>
+<title>Bookings & Reservations / Refundability vs. Non-refundability / Unlimited Capacity / 1-9 Consumer Types</title>
+<META content="Client (IE 4.0 DHTML)" name=VI60_DTCScriptingPlatform>
+<META content=JavaScript name=VI60_defaultClientScript>
+<meta http-equiv=Content-Language content=en-us>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta content="Microsoft FrontPage 4.0" name=GENERATOR>
+<meta content=FrontPage.Editor.Document name=ProgId>
+<SCRIPT language=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+function comparenumbers(a,b) { // needed for soring arrays
+return a - b
+}
+
+var expnorefund, noqrefund, expqrefund, qrefund, fee, k, T, F, cop, cr, s = new Array(9), u = new Array(9), n = new Array(9), revise, smin, smax, nmax, nmin, vmax, vmin, profmax, totaln, profit, noprofit;
+
+function initialize() {
+T=6; F=1200; cop=0; cr=10; fee=10;
+noprofitu=new Array(T); profitu=new Array(T); revenueu=new Array(T);
+u[1]=10; u[2]=20; u[3]=30; u[4]=40; u[5]=50; u[6]=60; u[7]=333; u[8]=333; u[9]=333;
+s[1]=0.8; s[2]=0.8; s[3]=0.8; s[4]=0.8; s[5]=0.8; s[6]=0.2; s[7]=333; s[8]=333; s[9]=333;
+n[1]=100; n[2]=100; n[3]=100; n[4]=100; n[5]=100; n[6]=100; n[7]=333; n[8]=333; n[9]=333; 
+revise=false; nmax=1; nmin=1; vmax=1; vmin=1; smax=1; smin=1; profmax=1; totaln=0; //initializing variables
+}
+ 
+function sortdata() { // finds the higest and lowest valuations and sorts s array
+for (var i = 2; i < T/1+1/1; i++) {
+	if (n[i] > n[nmax]) nmax=i;
+	if (n[i] < n[nmin]) nmin=i;
+	if (u[i] > u[vmax]) vmax=i;
+	if (u[i] < u[vmin]) vmin=i;
+	if (s[i] > s[smax]) smax=i;
+	if (s[i] < u[smin]) smin=i;
+} // end for statement
+//below is a sorting procedure, not needed
+//for (var i = 1; i < T/1+1/1; i++) { //
+//s[i-1]=u[i];
+//} //end for
+//s.sort(comparenumbers); s.reverse();
+//for (var i = 0; i < T; i++) { // lists the sorted array, save for debugging
+//results.document.write(s[i] + "<br>" ); } // end for
+}
+
+function writdata() { //writes the data provided by the user
+sortdata();
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Bookings & Reservations / Refundable vs. Non-refundable / Unlimited Capacity / 1-9 Consumer Types</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("Maginal operation production cost is: <i>c<sub>op</sub></i> = ", '<font color="fuchsia">', cop,'</font>', "<br>");
+results.document.write("Operator's cost of taking a reservation is: <i>c<sub>r</sub></i> = ", '<font color="fuchsia">', cr,'</font>', "<br>");
+results.document.write("Fixed production cost is: <i>F</i> = ", '<font color="fuchsia">', F, '</font>', "<br>");
+results.document.write("The number of consumer types is: ", '<EM>T</EM> = <font color="fuchsia">', T,'</font>', "<br>");
+results.document.write("Consumer's cancellation fee is: ", '<EM>fee</EM> = <font color="fuchsia">', fee,'</font>', "<br>");
+for (var i = 1; i <= T; i++) {
+totaln += n[i]/1;
+results.document.write('<EM>n</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + n[i] + '</font> ');
+results.document.write('type ' + i + ' consumers, maximal willingness to pay is <EM>v</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + u[i] + '</font>, ' );
+results.document.write('showing-up probability is <EM>s</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + s[i] + '</font>, <br>' );
+
+} // end of for statement
+results.document.write('The highest willingness to pay is by consumers type  <font color="fuchsia">' + vmax + '</font>' + "<br>" );
+results.document.write('The lowest willingness to pay is by consumers type  <font color="fuchsia">' + vmin + '</font>' + "<br>" );
+results.document.write('The most-likely to show up (highly-reliable) consumers are type  <font color="fuchsia">' + smax + '</font>' + "<br>" );
+results.document.write('The least-likely to show up (highly-unreliable) consumers are type  <font color="fuchsia">' + smin + '</font>' + "<br>" );
+results.document.write('The largest number of consumers are type  <font color="fuchsia">' + nmax + '</font>' + "<br>" );
+results.document.write('The lowest number of consumers are type  <font color="fuchsia">' + nmin + '</font>' + "<br>" );
+results.document.write('The total number of consumers (all types combined) is  <font color="fuchsia">' + totaln + '</font>' + "<br>" );
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function revisedata(j) { // asks revision on data due to price below unit cost
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, observation ' + j + ' has an out-of-range value.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function checkprices() {
+for (var i = 1; i <= T; i++) {
+	if (u[i] < 0) {revisedata(i); revise=true};
+} }
+
+function checkquantities() {
+for (var i = 1; i <= T; i++) {
+	if (n[i] < 0) {revisedata(i); revise=true};
+} }
+
+function checkshowup() {
+for (var i = 1; i <= T; i++) {
+	if ((s[i] < 0) || (s[i] > 1)) {revisedata(i); revise=true};
+} }
+
+function calcprofitvirefund(mcop, mcr,index) { // calculates the profit when p=vi and mc=c
+var tempp=u[index]-(1-s[index])*fee
+profitu[index]=s[index]*n[index]*(tempp-mcop)-n[index]*mcr+n[index]*(1-s[index])*fee/1;
+	for (var k = 1; k < T/1+1/1; k++) {
+		if (k != index && u[k]-(1-s[k])*fee >= u[index]-(1-s[index])*fee) {
+		profitu[index]+= s[k]*n[k]*(tempp-mcop)-n[k]*mcr+n[k]*(1-s[k])*fee;
+		} // augmenting all vi>vindex
+	} //end for
+} //end function
+
+function writrefund() { 
+writresult(); profmax=1; expqrefund=0; qrefund=0;
+results.document.write('<font color="#FF0000"> Computations for the case of (partially and fully) refundable bookings:</font><br>');
+for (var j = 1; j < T/1+1/1; j++) {
+calcprofitvirefund(cop, cr,j); // calculates the profit when p=vi and mc=c
+} // end for
+for (var i = 1; i < T/1+1/1; i++) {
+	if (profitu[i] > profitu[profmax]) profmax=i;
+//results.document.write(profitu[i] +'<br>'); //testing
+} // end for statement
+var price=u[profmax]-(1-s[profmax])*fee;
+profit=profitu[profmax];
+results.document.write("The profit-maximizing booking price is: <EM>p</EM> = ",'<font color="#0000FF">' + round(price) + '</font>'+ "<br>" );
+var served=''; unserved=''; none=true; nserved=0; nunserved=0;  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (u[i]-(1-s[i])*fee < price) {unserved += 'type '+i+', '; nunserved += n[i]/1;}
+	else {served=served+'type '+i+', '; none=false; nserved+=n[i]/1; qrefund+=n[i]/1; expqrefund+=s[i]*n[i]/1}
+}//end for 
+	if (none==true) results.document.write("Under this price, the types of consumers who make reservations are: ", '<font color="#0000FF"> NONE</font><br>');
+	else {results.document.write("Under this price, the types of consumers who make reservations are: ", '<font color="#0000FF">'+ served +'</font><br>');
+	results.document.write("Hence, the total number of bookings is: ", '<font color="#0000FF">'+ nserved +'</font>, constituting <font color="#0000FF">' + round(100*nserved/totaln) + ' \% </font>of potential buyers<br>');
+	results.document.write("Hence, the operator's cost of making these reservations is: ", '<font color="#0000FF">'+ round(nserved*cr) +'</font><br>');
+	}
+	if (none==true) results.document.write("Under this price, the types of consumers who do not make reservations are: ", '<font color="#0000FF"> ALL types</font><br>');
+	else { results.document.write("Under this price, the types of consumers who do not make reservations are: ", '<font color="#0000FF">'+ unserved +'</font><br>');
+	results.document.write("Hence, the total number of consumers who do not make reservations is: ", '<font color="#0000FF">'+ round(nunserved) +'</font>, constituting <font color="#0000FF">' + round(100*nunserved/totaln) + ' \% </font>of potential buyers<br>');
+	}
+results.document.write("The expected number of show-ups (expected sales) is: ", '<font color="#0000FF">'+ round(expqrefund) +'</font>, constituting <font color="#0000FF">' + round(100*expqrefund/nserved) + ' \% </font>of the number of bookings made<br>');
+results.document.write("The expected number of no-shows (expected cancellations) is: ", '<font color="#0000FF">'+ round(nserved-expqrefund) +'</font>, constituting <font color="#0000FF">' + round(100*(nserved-expqrefund)/nserved) + ' \% </font>of the number of bookings made<br>');
+results.document.write("The expected revenue generated from cancellation fees is: ", '<font color="#0000FF">'+ round((nserved-expqrefund)*fee) +'</font><br>');
+
+results.document.write("Ignoring fixed cost, expected profit of this service provider is: ")
+results.document.write('<EM>Profit</EM>  = <font color="#0000FF">', round(profit), '</font>', "<br>")
+if (profit >= F)
+results.document.write("Taking fixed cost into account, the expected profit is: ", '<EM>Profit</EM>  = <font color="#0000FF">', round(profit-F), '</font><br>');
+else 
+results.document.write("Taking fixed cost into account, the expected loss is: ", '<EM>L</EM>  = <font color="#0000FF">', round(F-profit), '</font><br>');
+} //end 
+
+function calcprofitvinorefund(mcop, mcr,index) { // calculates the profit when p=vi and mc=c
+var tempp=s[index]*u[index]
+noprofitu[index]=n[index]*(tempp-s[index]*mcop)-n[index]*mcr;
+	for (var k = 1; k < T/1+1/1; k++) {
+		if (k != index && s[k]*u[k] >= tempp) {
+		noprofitu[index]+= n[k]*(tempp-s[k]*mcop)-n[k]*mcr;
+		} // augmenting all vi>vindex
+	} //end for
+} //end function
+
+function writnorefund() { 
+writresult(); profmax=1; noqrefund=0; expnoqrefund=0;
+results.document.write('<font color="#FF0000"> Computations for the case of non-refundable bookings:</font><br>');
+for (var j = 1; j < T/1+1/1; j++) {
+calcprofitvinorefund(cop, cr,j); // calculates the profit when p=vi and mc=c
+} // end for
+for (var i = 1; i < T/1+1/1; i++) {
+	if (noprofitu[i] > noprofitu[profmax]) profmax=i;
+//results.document.write(profitu[i] +'<br>'); //testing
+} // end for statement
+var noprice=s[profmax]*u[profmax]; 
+noprofit=noprofitu[profmax];
+results.document.write("The profit-maximizing booking price is: <EM>p</EM> = ",'<font color="#0000FF">' + round(noprice) + '</font>'+ "<br>" );
+var served=''; unserved=''; none=true; nserved=0; nunserved=0;  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (s[i]*u[i] < noprice) {unserved += 'type '+i+', '; nunserved += n[i]/1;}
+	else {served += 'type '+i+', '; none=false; nserved+=n[i]/1; noqrefund+=n[i]/1; expnoqrefund+=s[i]*n[i]/1;}
+}//end for 
+	if (none==true) results.document.write("Under this price, the types of consumers who make reservations are: ", '<font color="#0000FF"> NONE</font><br>');
+	else {results.document.write("Under this price, the types of consumers who make reservations are: ", '<font color="#0000FF">'+ served +'</font><br>');
+	results.document.write("Hence, the total number of bookings is: ", '<font color="#0000FF">'+ nserved +'</font>, constituting <font color="#0000FF">' + round(100*nserved/totaln) + ' \% </font>of potential buyers<br>');
+	results.document.write("Hence, the operator's cost of making these reservations is: ", '<font color="#0000FF">'+ round(nserved*cr) +'</font><br>');
+	}
+	if (none==true) results.document.write("Under this price, the types of consumers who do not make reservations are: ", '<font color="#0000FF"> ALL types</font><br>');
+	else { results.document.write("Under this price, the types of consumers who do not make reservations are: ", '<font color="#0000FF">'+ unserved +'</font><br>');
+	results.document.write("Hence, the total number of consumers who do not make reservations is: ", '<font color="#0000FF">'+ nunserved +'</font>, constituting <font color="#0000FF">' + round(100*nunserved/totaln) + ' \% </font>of potential buyers<br>');
+	}
+results.document.write("The expected number of show-ups (expected sales) is: ", '<font color="#0000FF">'+ expnoqrefund +'</font>, constituting <font color="#0000FF">' + round(100*expnoqrefund/nserved) + ' \% </font>of the number of bookings made<br>');
+results.document.write("The expected number of no-shows (expected cancellations) is: ", '<font color="#0000FF">'+ (nserved-expqrefund) +'</font>, constituting <font color="#0000FF">' + round(100*(nserved-expnoqrefund)/nserved) + ' \% </font>of the number of bookings made<br>');
+results.document.write("Ignoring fixed cost, expected profit of this service provider is: ")
+results.document.write('<EM>Profit</EM>  = <font color="#0000FF">', round(noprofit), '</font>', "<br>")
+if (noprofit >= F)
+results.document.write("Taking fixed cost into account, the expected profit is: ", '<EM>Profit</EM>  = <font color="#0000FF">', round(noprofit-F), '</font><br>');
+else 
+results.document.write("Taking fixed cost into account, the expected loss is: ", '<EM>L</EM>  = <font color="#0000FF">', round(F-noprofit), '</font><br>');
+} //end 
+
+function writcompare() { 
+writresult();
+if (fee > 0)
+results.document.write('<font color="#FF0000"> A comparison of refundable bookings (with  cancellation fee of <font color="fuchsia">' + fee +'</font>) with non-refundable bookings:</font><br>');
+else
+results.document.write('<font color="#FF0000"> A comparison of fully-refundable bookings (no cancellation fees) with non-refundable bookings:</font><br>');
+
+if (profit > noprofit){
+results.document.write('The refundable booking strategy (with a cancellation fee of <font color="fuchsia">' + fee +'</font>) is more profitable than the non-refundable booking strategy. <br>');
+results.document.write('The difference in expected profit is: <font color="#0000FF">', round(profit-noprofit), '</font><br>');
+}//end if profit > noprofit
+if (profit == noprofit){
+results.document.write('The refundable booking strategy (with a cancellation fee of <font color="fuchsia">' + fee +'</font>) yields the same profit level as the non-refundable booking strategy. <br>');
+}//end if profit = noprofit
+if (profit < noprofit){
+results.document.write('The non-refundable booking strategy is more profitable than the refundable booking strategy (with a cancellation fee of <font color="fuchsia">' + fee +'</font>). <br>');
+results.document.write('The difference in expected profit is: <font color="#0000FF">', round(noprofit-profit), '</font><br>');
+}//end if profit < noprofit
+
+if (qrefund > noqrefund){
+results.document.write('The refundable booking strategy (with a cancellation fee of <font color="fuchsia">' + fee +'</font>) generates more bookings than the non-refundable booking strategy. <br>');
+results.document.write('The difference in the number of bookings is: <font color="#0000FF">', round(qrefund-noqrefund), '</font><br>');
+}//end if  > 
+if (qrefund == noqrefund){
+results.document.write('The refundable booking strategy (with a cancellation fee of <font color="fuchsia">' + fee +'</font>) yields the same number of bookings as the non-refundable booking strategy. <br>');
+}//end if  = 
+if (qrefund < noqrefund){
+results.document.write('The non-refundable booking strategy yields more bookings than the refundable booking strategy (with a cancellation fee of <font color="fuchsia">' + fee +'</font>). <br>');
+results.document.write('The difference in the number of bookings is: <font color="#0000FF">', round(noqrefund-qrefund), '</font><br>');
+}//end if  < 
+
+}//end writcompare()
+
+function writsegment() { 
+writresult();
+results.document.write('<font color="#FF0000"> Computations for dual offerings of refundable and non-refundable bookings:</font><br>');
+results.document.write('Sorry! This feature of the program (market segmentation) is not yet available. <br>');
+}//end writsegment
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+if (T > 9) T = 9; //making sure that # Observations does not exceed 9
+if (T < 1) T = 1; //making sure that # Observations is at least 1
+writdata(); //writes the data function
+checkprices(); checkquantities(); checkshowup(); //checking for out-of-range
+if (revise==false) { 
+	if (cop/1+cr/1 >= u[vmax]) { //total shut down
+	writresult();
+	results.document.write('<font color="#0000FF">The monopoly should shut down (not produce anything) since marginal production cost exceeds consumers\' willingness to pay. That is, the necessary requirement that (<EM>v</EM><SUB>i</SUB> > <EM>c</EM>) is not satisfied according to the data you provided.</font>' );}
+	else { // else of c>max vi
+	writrefund(); writnorefund(); writcompare(); writsegment(); //Results
+	}//end else
+} //end of if revise is false
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+</head>
+<body text=black bgColor=white>
+<h1 style="BACKGROUND-COLOR: aqua"> Booking &amp; 
+Reservations / Refundable vs. Nonrefundable / Unlimited Capacity / 1&nbsp;to&nbsp;9 Consumer 
+Types</h1>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: To compute the service-provider's profit 
+maximizing booking refund strategy, and&nbsp;how to price&nbsp;refundable and 
+non-refundable tickets&nbsp;in a market&nbsp;where consumers make a reservation 
+and buy&nbsp;(at most) one unit of the good/service.&nbsp;&nbsp;The user (you) 
+input willingness to pay and the probability of showing up when the service is 
+scheduled to be delivered for each consumer type, and the number of consumers of 
+each type, as well as the seller's cost parameters. <br>Then, <em>How-to-Price</em><sup>TM</sup> computes whether to allow for refundable 
+reservations and how to price refundable and non-refundable bookings.<br></p>
+<p><strong>Assumptions</strong> : (a) 
+Customers with refundable tickets pay only if they show 
+up for the service at the delivery time (cancellation fee may apply). (b) Customers 
+with non-refundable tickets lose their money if they don't show up for 
+the service. (c) The service provider has unlimited capacity.</p>
+<p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and 
+technology data:</b><br>
+<p></p>
+<FORM name=data onsubmit=calc()><font color=#ff0000>Please, <STRONG>always</STRONG> click <INPUT id=reset1 onclick=initialize() type=reset value="Reset !" name=reset1>&nbsp;before 
+changing or submitting the following parameters:</font> 
+<ul>
+  <li>The marginal operation production cost,&nbsp; <I 
+  >c<sub>op</sub></I> = <INPUT 
+  id=cinput onchange="cop =this.value" size=10 value=0 name=cinput 
+  >&nbsp; <font size=2>(paid only if 
+  the customer shows up)</font> 
+  <LI>Operator's cost of taking a reservation,&nbsp; <em 
+  >c<sub>r</sub></em> = <input 
+  id=Text75 onchange="cr =this.value" size=10 value=10 name=cinput 
+  >&nbsp; <font size=2>(must be paid&nbsp;whether 
+  the customer shows up or not)</font> 
+  <li>Fixed production cost,&nbsp; <I 
+  >F</I> = <INPUT id=Finput onchange="F =this.value" size=10 
+  value=1200 name=Finput> 
+  <li>Enter the number of consumer types <EM 
+  >T</EM>&nbsp;in this&nbsp;box (1-9):&nbsp; <INPUT 
+  id=Ninput onchange="T =this.value" size=4 value=6 name=Ninput 
+  > 
+  <li>Enter consumer's cancellation fee <EM>fee</EM>&nbsp;in this&nbsp;box:&nbsp; <INPUT 
+  id=Text76 onchange="fee =this.value" size=10 value=10 name=feeinput> <font size=2>(applies to refundable bookings only)</font> 
+  <LI>Below, for each consumer type <em 
+  >i</em>&nbsp;enter:<br>(a) consumers' 
+  maximum willingness to pay for a fully-refundable ticket (i.e., valuation of 
+  the service,<EM>v</EM><SUB>i</SUB> 
+  &gt; 0) <br>(b) the probability of showing up (0 &lt; <em 
+  >s</em><sub>i </sub>&lt; 1)<br 
+  >(c) the number of consumers of this type&nbsp;(<EM 
+  >n</EM><SUB>i</SUB>)<BR 
+  ><FONT size=2>(<font color=#ff0000 
+  > Remark:</font> if, for example, you entered&nbsp; <EM 
+  >T</EM> =         6 (default), the program will ignore 
+  all&nbsp;consumer types&nbsp;7 to 9, and so on...) </FONT><br 
+  >
+  
+  Consumer-type&nbsp;01:&nbsp; <i>v</i><SUB>01</SUB> = <INPUT 
+  id=p1input onchange="u[1] =this.value" size=5 value=10 name=p1input 
+  >&nbsp;,&nbsp; 
+  <I>n</I><SUB>01</SUB> = <INPUT id=Q1input onchange="n[1] =this.value" 
+  size=5 value=100 name=Q1input>&nbsp;,&nbsp; <I 
+  >s</I><SUB>01</SUB> = <INPUT 
+  id=Text74 onchange="s[1] =this.value" size=5 value=0.8 name=s1input 
+  >&nbsp;,&nbsp; <BR>
+  
+  Consumer-type&nbsp;02:&nbsp; <i 
+  >v</i><SUB>02</SUB> = <INPUT id=Text2 
+  onchange="u[2] =this.value" size=5 value=20 name=p2input 
+  >&nbsp;,&nbsp; <I>n</I><SUB 
+  >02</SUB> = <INPUT id=Text3 onchange="n[2] =this.value" 
+  size=5 value=100 name=Q2input>&nbsp;,&nbsp; <I 
+  >s</I><SUB>02</SUB> = <INPUT id=Text4 
+  onchange="s[2] =this.value" size=5 value=0.8 name=s2input 
+  >&nbsp;,&nbsp; <BR>
+  
+  Consumer-type&nbsp;03:&nbsp; <i 
+  >v</i><SUB>03</SUB> = <INPUT id=Text5 
+  onchange="u[3] =this.value" size=5 value=30 name=p3input 
+  >&nbsp;,&nbsp; <I>n</I><SUB 
+  >03</SUB> = <INPUT id=Text6 onchange="n[3] =this.value" 
+  size=5 value=100 name=Q3input>&nbsp;,&nbsp; <I 
+  >s</I><SUB>03</SUB> = <INPUT id=Text7 
+  onchange="s[3] =this.value" size=5 value=0.8 name=s3input 
+  >&nbsp;,&nbsp; <BR>
+  
+  Consumer-type&nbsp;04:&nbsp; <i 
+  >v</i><SUB>04</SUB> = <INPUT id=Text8 
+  onchange="u[4] =this.value" size=5 value=40 name=p4input 
+  >&nbsp;,&nbsp; <I>n</I><SUB 
+  >04</SUB> = <INPUT id=Text9 onchange="n[4] =this.value" 
+  size=5 value=100 name=Q4input>&nbsp;,&nbsp; <I 
+  >s</I><SUB>04</SUB> = <INPUT 
+  id=Text10 onchange="s[4] =this.value" size=5 value=0.8 name=s4input 
+  >&nbsp;,&nbsp; <BR>
+  
+  Consumer-type&nbsp;05:&nbsp; <i 
+  >v</i><SUB>05</SUB> = <INPUT 
+  id=Text11 onchange="u[5] =this.value" size=5 value=50 name=p5input 
+  >&nbsp;,&nbsp; <I>n</I><SUB 
+  >05</SUB> = <INPUT id=Text12 onchange="n[5] =this.value" 
+  size=5 value=100 name=Q5input>&nbsp;,&nbsp; <I 
+  >s</I><SUB>05</SUB> = <INPUT 
+  id=Text13 onchange="s[5] =this.value" size=5 value=0.8 name=s5input 
+  >&nbsp;,&nbsp; <BR>
+  
+  Consumer-type&nbsp;06:&nbsp; <i 
+  >v</i><SUB>06</SUB> = <INPUT 
+  id=Text14 onchange="u[6] =this.value" size=5 value=60 name=p6input 
+  >&nbsp;,&nbsp; <I>n</I><SUB 
+  >06</SUB> = <INPUT id=Text15 onchange="n[6] =this.value" 
+  size=5 value=100 name=Q6input>&nbsp;,&nbsp; <I 
+  >s</I><SUB>06</SUB> = <INPUT 
+  id=Text16 onchange="s[6] =this.value" size=5 value=0.2 name=s6input 
+  >&nbsp;,&nbsp; <BR>
+  
+  Consumer-type&nbsp;07:&nbsp; <i 
+  >v</i><SUB>07</SUB> = <INPUT 
+  id=Text17 onchange="u[7] =this.value" size=5 value=333 name=p7input 
+  >&nbsp;,&nbsp; <I>n</I><SUB 
+  >07</SUB> = <INPUT id=Text18 onchange="n[7] =this.value" 
+  size=5 value=333 name=Q7input>&nbsp;,&nbsp; <I 
+  >s</I><SUB>07</SUB> = <INPUT 
+  id=Text19 onchange="s[7] =this.value" size=5 value=333 name=s7input 
+  >&nbsp;,&nbsp; <BR 
+  >Consumer-type&nbsp;08:&nbsp; <i 
+  >v</i><SUB>08</SUB> = <INPUT 
+  id=Text20 onchange="u[8] =this.value" size=5 value=333 name=p8input 
+  >&nbsp;,&nbsp; <I>n</I><SUB 
+  >08</SUB> = <INPUT id=Text21 onchange="n[8] =this.value" 
+  size=5 value=333 name=Q8input>&nbsp;,&nbsp; <I 
+  >s</I><SUB>08</SUB> = <INPUT 
+  id=Text22 onchange="s[8] =this.value" size=5 value=333 name=s1input 
+  >&nbsp;,&nbsp; <BR 
+  >Consumer-type&nbsp;09:&nbsp; <i 
+  >v</i><SUB>09</SUB> = <INPUT 
+  id=Text23 onchange="u[9] =this.value" size=5 value=333 name=p9input 
+  >&nbsp;,&nbsp; <I>n</I><SUB 
+  >09</SUB> = <INPUT id=Text24 onchange="n[9] =this.value" 
+  size=5 value=333 name=Q9input>&nbsp;,&nbsp; <I 
+  >s</I><SUB>09</SUB> = <INPUT 
+  id=Text25 onchange="s[9] =this.value" size=5 value=333 name=s9input 
+  >&nbsp;,&nbsp; <BR></LI></ul>
+  <INPUT id=Submit1 type=submit value="Show Results Now !" name=showresults><INPUT id=Button1 onclick=window.close() type=button value="Close Page" name=closewindow><INPUT id=GoMain onclick="openwindow('index.html')" type=button value="Main Page" name=GoMain><INPUT id=Button2 onclick="openwindow('glossary.html')" type=button value="Glossary of Terms" name=glossary></FORM>
+<hr>
+
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size=1>TM</font></SUP>&nbsp; All rights 
+reserved.</h5>
+
+</body></html>

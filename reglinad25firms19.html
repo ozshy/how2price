@@ -1,0 +1,260 @@
+<html><head><META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)"><META name=VI60_defaultClientScript content=JavaScript><meta http-equiv="Content-Language" content="en-us"><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><meta name="GENERATOR" content="Microsoft FrontPage 4.0"><meta name="ProgId" content="FrontPage.Editor.Document"><title>Regression / Linear Demand / Advertising / 2-25 Observations</title>
+<SCRIPT LANGUAGE=javascript> function openwindow(filename) { window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {// rounds number to X decimal places, defaults to 2X = (!X ? 2 : X);return Math.round(number*Math.pow(10,X))/Math.pow(10,X);}
+var N, p = new Array(25), Q = new Array(25), A = new Array(25), revise, Qmax, Qmin, pmax, pmin, Amax, Amin, a, b, c,
+sumQ, sump, sumA, sumQp, sumQA, sumAp, 
+sumQ2, sumA2, sump2, sumQA2, sumQp2, sumAp2, sumphat2,
+meanQ, meanp, meanA, R, Rsquare, adjRsquare;
+function initialize() { N=6; p[1]=20; p[2]=19; p[3]=18; p[4]=17; p[5]=16; p[6]=15; p[7]=333; p[8]=333; p[9]=333; p[10]=333; p[11]=333; p[12]=333; p[13]=333; p[14]=333; p[15]=333; p[16]=333; p[17]=333; p[18]=333; p[19]=333; p[20]=333; p[21]=333; p[22]=333; p[23]=333; p[24]=333; p[25]=333;
+ Q[1]=100; Q[2]=200; Q[3]=400; Q[4]=300; Q[5]=500; Q[6]=600; Q[7]=333; Q[8]=333; Q[9]=333; Q[10]=333; Q[11]=333; Q[12]=333; Q[13]=333; Q[14]=333; Q[15]=333; Q[16]=333; Q[17]=333; Q[18]=333; Q[19]=333; Q[20]=333; Q[21]=333; Q[22]=333; Q[23]=333; Q[24]=333; Q[25]=333; A[1]=50; A[2]=60; A[3]=70; A[4]=60; A[5]=50; A[6]=40; A[7]=333; A[8]=333; A[9]=333;  A[10]=333; A[11]=333; A[12]=333; A[13]=333; A[14]=333; A[15]=333; A[16]=333; A[17]=333; A[18]=333; A[19]=333; A[20]=333; A[21]=333; A[22]=333; A[23]=333; A[24]=333; A[25]=333;
+ revise=false; Qmax=1; Qmin=1; pmax=1; pmin=1; Amax=1; Amin=1; a=0; b=0; c=0; sumQ=0; sump=0; sumA=0;  sumQp=0; sumQA=0; sumAp=0;  sumQ2=0; sumA2=0; sump2=0; sumQA2=0; sumQp2=0; sumAp2=0; sumphat2=0; meanQ=0; meanp=0; meanA=0; R=1, Rsquare=1; adjRsquare=1; //initializing variables
+ }  function sortdata() { // finds the higest and lowest price obseration and quantity observationfor (var i = 2; i < N/1+1/1; i++) {
+	if (Q[i] > Q[Qmax]) Qmax=i;	if (Q[i] < Q[Qmin]) Qmin=i;	if (p[i] > p[pmax]) pmax=i;	if (p[i] < p[pmin]) pmin=i;	if (A[i] > A[Amax]) Amax=i;	if (A[i] < A[Amin]) Amin=i;} // end for statement
+}
+function writdata() { //writes the data provided by the user
+sortdata();results.document.write('<body text="black">');results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Regression / Linear Demand / Advertising / 2-25 Observations</font><br>');results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("The number of observations is : ", '<EM>N</EM> = <font color="fuchsia">', N,'</font>', "<br>");
+for (var i = 1; i < N/1+1/1; i++) {
+results.document.write('Observation ' + i + ': Price is <EM>p</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + p[i] + '</font>, ' );
+results.document.write('Quantity is <EM>Q</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + Q[i] + '</font>, ' );
+results.document.write('Advertising is <EM>A</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + A[i] + '</font> ' + "<br>" );} // end of for statementresults.document.write('The highest price is found in observation  <font color="fuchsia">' + pmax + '</font>' + "<br>" );
+results.document.write('The lowest price is found in observation  <font color="fuchsia">' + pmin + '</font>' + "<br>" );results.document.write('The highest quantity demanded is found in observation  <font color="fuchsia">' + Qmax + '</font>' + "<br>" );
+results.document.write('The lowest quantity demanded is found in observation  <font color="fuchsia">' + Qmin + '</font>' + "<br>" );
+results.document.write('The highest advertising expenditure is found in observation  <font color="fuchsia">' + Amax + '</font>' + "<br>" );
+results.document.write('The lowest advertising expenditure is found in observation  <font color="fuchsia">' + Amin + '</font>' + "<br>" );}
+function writresult() { //writes Result #: (red+underline)resultno=resultno+1;results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');}
+
+function revisedata(j) { // asks revision on data due to price below unit costwritresult();results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, observation ' + j + ' has a negative value.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+
+function checkprices() {for (var i = 1; i < N/1+1/1; i++) {
+	if (p[i] < 0) {revisedata(i); revise=true};
+} }function checkquantities() {for (var i = 1; i < N/1+1/1; i++) {
+	if (Q[i] < 0) {revisedata(i); revise=true};
+} }
+
+function checkad() {for (var i = 1; i < N/1+1/1; i++) {
+	if (A[i] < 0) {revisedata(i); revise=true};
+} }
+function writregression() { // writes switching costswritresult();for (var i = 1; i < N/1+1/1; i++) { // calculating sums from datasumQ=sumQ/1+Q[i]/1; sump=sump/1+p[i]/1; sumA=sumA/1+A[i]/1;
+} // end for
+meanQ=sumQ/N; meanp=sump/N; meanA=sumA/N; // meansfor (var i = 1; i < N/1+1/1; i++) { // calculating deviation sumssumQ2=sumQ2/1+(Q[i]-meanQ)*(Q[i]-meanQ)/1;
+sumA2=sumA2/1+(A[i]-meanA)*(A[i]-meanA)/1;
+sump2=sump2/1+(p[i]-meanp)*(p[i]-meanp)/1;
+sumQA2=sumQA2/1+(Q[i]-meanQ)*(A[i]-meanA)/1;
+sumQp2=sumQp2/1+(Q[i]-meanQ)*(p[i]-meanp)/1;
+sumAp2=sumAp2/1+(A[i]-meanA)*(p[i]-meanp)/1;} // end for
+
+b=(sumQp2*sumA2-sumAp2*sumQA2)/(sumQ2*sumA2-sumQA2*sumQA2);
+c=(sumAp2*sumQ2-sumQp2*sumQA2)/(sumQ2*sumA2-sumQA2*sumQA2);a=meanp - b*meanQ - c*meanA;if (b < 0)
+results.document.write("The estimated inverse demand function is given by: <EM>p</EM> = ",'<font color="#0000FF">', round(a) ,'</font>', " - ",'<font color="#0000FF">', round(-b),'</font>', " <EM>Q</EM>", " + ",'<font color="#0000FF">', round(c),'</font>', " <EM>A</EM>", "<br>" );
+else 
+results.document.write("The estimated inverse demand function is given by: <EM>p</EM> = ",'<font color="#0000FF">', round(a) ,'</font>', " + ",'<font color="#0000FF">', round(b),'</font>', " <EM>Q</EM>",  " + ",'<font color="#0000FF">', round(c),'</font>', " <EM>A</EM>", "<br>" );results.document.write("More precisely, the intercept is: <EM>a</EM> = ",'<font color="#0000FF">', round(a,5) ,'</font>',  "<br>" );results.document.write("The slope (in the <EM>p</EM>,<EM>Q</EM> space) is: <EM>-b</EM> = ",'<font color="#0000FF">', round(b,5),'</font>', "<br>" );results.document.write("The slope (in the <EM>p</EM>,<EM>A</EM> space) is: <EM>c</EM> = ",'<font color="#0000FF">', round(c,5),'</font>', "<br>" );
+if (b > 0) results.document.write('<font color="#FF0000">Warning:</font> This demand function is upward sloping (in the <EM>p</EM>,<EM>Q</EM> space)! That is, <EM>-b</EM> = ' + round(b) + ' is greater than zero. <br>' );
+if (c < 0) results.document.write('<font color="#FF0000">Warning:</font> This demand function is downward sloping (in the <EM>p</EM>,<EM>A</EM> space)! That is, <EM>b</EM> = ' + round(c) + ' is greater than zero. This means that advertising reduces the demand (instead of enhancing it)! <br>' );} //end writregression()
+
+function writanalysis() { // computes R square
+writresult();var phat=0;
+for (var i = 1; i < N/1+1/1; i++) { // calculating deviation p-hat sumsphat=a+b*Q[i]/1+c*A[i]/1;
+sumphat2=sumphat2/1+ (phat-meanp)*(phat-meanp);
+} // end forRsquare=sumphat2/sump2;
+adjRsquare=1-(1-Rsquare)*(N-1)/(N-3);F=(Rsquare/((1-Rsquare))*(N-3)/2);
+results.document.write("The coefficient of determination is: <EM>R</EM><SUP>2</SUP> = ",'<font color="#0000FF">', round(Rsquare,3) ,'</font>', "<br>" );results.document.write("The adjusted coefficient of determination is: <EM><U>R</U></EM><SUP>2</SUP> = ",'<font color="#0000FF">', round(adjRsquare,3) ,'</font>', "<br>" );
+results.document.write("The <EM>F</EM> value is: <EM>F</EM> = ",'<font color="#0000FF">', round(F) ,'</font>', "<br>" );}
+function calc() { // start computation function (main function!)openresultswindow();
+if (N > 25) N = 25; //making sure that # Observations does not exceed 9
+if (N < 2) N = 2; //making sure that # Observations is at least 2
+writdata(); //writes the data function
+checkprices(); checkquantities(); checkad(); //checking for negative values	if (revise==false) { writregression(); writanalysis();
+	} //end if
+// Now closing the output windowif (resultno > 1)results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');} // end calc function
+// end of all functions
+resultno=0; //initializing results counter
+</SCRIPT>
+</head>
+<body bgColor=white text="black">
+<h1 style="BACKGROUND-COLOR: aqua">Regression&nbsp;/ Advertising /&nbsp;Linear Demand&nbsp;/&nbsp;2 to&nbsp;25 Observations</h1>
+
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: To estimate the 
+paramters (<EM>a</EM> , <EM>b</EM>, and <EM>c</EM>)&nbsp;of a linear demand function, <I>p</I> = <I>a</I> - <EM>b&nbsp;Q</EM> + <EM>c A</EM>, based on price-quantity-advertising observations.
+This page runs a linear least-squares estimation.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br><FORM NAME="data" onSubmit="calc()"><font color="#ff0000">Please, <STRONG>always</STRONG>  click <INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>&nbsp;before changing or submitting the following parameters:</font> 
+<UL>  
+
+<li>Enter the number of observations&nbsp; <EM>N</EM>&nbsp;in this&nbsp;box (2-25):&nbsp; <INPUT id=Ninput onchange="N =this.value" size=10 
+  value=6 name=Ninput>
+
+  <LI>     Below, enter the observed&nbsp;price&nbsp;(<EM>p</EM><SUB>i</SUB> &gt; 0), the corresponding 
+  observed quantity demanded&nbsp;(<EM>Q</EM><SUB>i</SUB> &gt; 0) and advertisng expenditure 
+  (<EM>A</EM><SUB>i</SUB> &gt; 0)<BR>
+  <FONT size=2>(<font color="#ff0000">Remark:</font> if, for example, you entered <EM>N</EM> =  6 (default), the program will ignore all observations 7 to 25, and so on...) </FONT><br>
+  
+  Observation 01:    Enter    <i>p</i><SUB>01</SUB>    : <INPUT id="p1input" name="p1input" value=20 size=10 onChange= "p[1] =this.value">&nbsp; 
+  Enter <I>Q</I><SUB>01</SUB>   : <INPUT id=Q1input onchange="Q[1] =this.value" size=10 value=100 name=Q1input>&nbsp; 
+  Enter <I>A</I><SUB>01</SUB>   : <INPUT id=A1input onchange="A[1] =this.value" size=10 value=50 name=A1input>&nbsp; 
+  <BR>
+  
+  Observation 02: Enter <I>p</I><SUB>02</SUB>   : <INPUT id=p2input 
+  onchange="p[2] =this.value" size=10 value=19 name=p2input>&nbsp; 
+  Enter <I>Q</I><SUB>02</SUB>   : <INPUT id=Q2input onchange="Q[2] =this.value" 
+  size=10 value=200 name=Q2input>&nbsp; 
+  Enter <I>A</I><SUB>02</SUB>   : <INPUT id=A2input onchange="A[2] =this.value" size=10 value=60 name=A2input>&nbsp; <BR>
+  
+  Observation 03: Enter <I>p</I><SUB>03</SUB> 
+    : <INPUT id=p3input onchange="p[3] =this.value" size=10 value=18 
+  name=p3input>&nbsp; 
+  Enter <I>Q</I><SUB>03</SUB>   : <INPUT id=Q3input 
+  onchange="Q[3] =this.value" size=10 value=400 name=Q3input>&nbsp; 
+  Enter <I>A</I><SUB>03</SUB>   : <INPUT id=A3input onchange="A[3] =this.value" size=10 value=70 name=A3input>&nbsp; <BR>
+  
+  Observation 04: Enter <I>p</I><SUB>04</SUB>   : <INPUT id=p1input 
+  onchange="p[4] =this.value" size=10 value=17 name=p4input>&nbsp; 
+  Enter <I>Q</I><SUB>04</SUB>   : <INPUT id=Q4input onchange="Q[4] =this.value" 
+  size=10 value=300 name=Q4input>&nbsp; 
+  Enter <I>A</I><SUB>04</SUB>   : <INPUT id=A4input onchange="A[4] =this.value" size=10 value=60 name=A4input>&nbsp; <BR>
+  
+  Observation 05: Enter <I>p</I><SUB>05</SUB>  : <INPUT id=p5input onchange="p[5] =this.value" size=10 value=16
+  name=p5input>&nbsp; 
+  Enter <I>Q</I><SUB>05</SUB>   : <INPUT id=Q5input 
+  onchange="Q[5] =this.value" size=10 value=500 name=Q5input>&nbsp; 
+  Enter <I>A</I><SUB>05</SUB>   : <INPUT id=A5input onchange="A[5] =this.value" size=10 value=50 name=A5input>&nbsp; <BR>
+  
+  Observation 06: Enter <I>p</I><SUB>06</SUB>   : <INPUT id=p6input 
+  onchange="p[6] =this.value" size=10 value=15 name=p1input>&nbsp; 
+  Enter <I>Q</I><SUB>06</SUB>   : <INPUT id=Q6input onchange="Q[6] =this.value" 
+  size=10 value=600 name=Q6input>&nbsp; 
+  Enter <I>A</I><SUB>06</SUB>   : <INPUT id=A6input onchange="A[6] =this.value" size=10 value=40 name=A6input>&nbsp; <BR>
+  
+  Observation 07: Enter <I>p</I><SUB>07</SUB> : <INPUT id=p7input onchange="p[7] =this.value" size=10 value=333 name=p7input>&nbsp; 
+  Enter <I>Q</I><SUB>07</SUB>   : <INPUT id=Q7input 
+  onchange="Q[7] =this.value" size=10 value=333 name=Q7input>&nbsp; 
+  Enter <I>A</I><SUB>07</SUB>   : <INPUT id=A7input onchange="A[7] =this.value" size=10 value=333 name=A7input>&nbsp; <BR>
+  
+  Observation 08: Enter <I>p</I><SUB>08</SUB>   : <INPUT id=p8input 
+  onchange="p[8] =this.value" size=10 value=333 name=p8input>&nbsp; 
+  Enter <I>Q</I><SUB>08</SUB>   : <INPUT id=Q8input onchange="Q[8] =this.value" 
+  size=10 value=333 name=Q8input>&nbsp; 
+  Enter <I>A</I><SUB>08</SUB>   : <INPUT id=A8input onchange="A[8] =this.value" size=10 value=333 name=A8input>&nbsp; <BR>
+  
+  Observation 09: Enter <I>p</I><SUB>09</SUB>   : <INPUT id=p9input onchange="p[9] =this.value" size=10 value=333 
+  name=p9input>&nbsp; 
+  Enter <I>Q</I><SUB>09</SUB>   : <INPUT id=Q9input onchange="Q[9] =this.value" size=10 value=333 name=Q9input>&nbsp; 
+  Enter <EM>A</EM><SUB>09</SUB>   : <INPUT id=A9input onchange="A[9] =this.value" size=10 value=333 name=A9input>&nbsp; 
+  <br> 
+
+  Observation 10:    Enter    <i>p</i><SUB>10</SUB>    : <INPUT id="p1input" name="p10input" value=333 size=10 onChange= "p[10] =this.value">&nbsp; 
+  Enter <I>Q</I><SUB>10</SUB>   : <INPUT id=Q10input onchange="Q[10] =this.value" size=10 value=333 name=Q10input>&nbsp; 
+  Enter <I>A</I><SUB>10</SUB>   : <INPUT id=A10input onchange="A[10] =this.value" size=10 value=333 name=A10input>&nbsp; 
+  <BR>
+    
+  Observation 11:    Enter    <i>p</i><SUB>11</SUB>    : <INPUT id="p11input" name="p11input" value=333 size=10 onChange= "p[11] =this.value">&nbsp; 
+  Enter <I>Q</I><SUB>11</SUB>   : <INPUT id=Q11input onchange="Q[11] =this.value" size=10 value=333 name=Q11input>&nbsp; 
+  Enter <I>A</I><SUB>11</SUB>   : <INPUT id=A11input onchange="A[11] =this.value" size=10 value=333 name=A11input>&nbsp; 
+  <BR>
+  
+  Observation 12: Enter <I>p</I><SUB>12</SUB>   : <INPUT id=p12input 
+  onchange="p[12] =this.value" size=10 value=333 name=p12input>&nbsp; 
+  Enter <I>Q</I><SUB>12</SUB>   : <INPUT id=Q12input onchange="Q[12] =this.value" 
+  size=10 value=333 name=Q12input>&nbsp; 
+  Enter <I>A</I><SUB>12</SUB>   : <INPUT id=A12input onchange="A[12] =this.value" size=10 value=333 name=A12input>&nbsp; <BR>
+  
+  Observation 13: Enter <I>p</I><SUB>13</SUB> : <INPUT id=p13input onchange="p[13] =this.value" size=10 value=333 
+  name=p13input>&nbsp; 
+  Enter <I>Q</I><SUB>13</SUB>   : <INPUT id=Q13input onchange="Q[13] =this.value" size=10 value=333 name=Q13input>&nbsp; 
+  Enter <I>A</I><SUB>13</SUB>   : <INPUT id=A13input onchange="A[13] =this.value" size=10 value=333 name=A13input>&nbsp; <BR>
+  
+  Observation 14: Enter <I>p</I><SUB>14</SUB>   : <INPUT id=p14input 
+  onchange="p[14] =this.value" size=10 value=333 name=p14input>&nbsp; 
+  Enter <I>Q</I><SUB>14</SUB>   : <INPUT id=Q14input onchange="Q[14] =this.value" 
+  size=10 value=333 name=Q14input>&nbsp; 
+  Enter <I>A</I><SUB>14</SUB>   : <INPUT id=A14input onchange="A[14] =this.value" size=10 value=333 name=A14input>&nbsp; <BR>
+  
+  Observation 15: Enter <I>p</I><SUB>15</SUB>  : <INPUT id=p15input onchange="p[15] =this.value" size=10 value=333
+  name=p15input>&nbsp; 
+  Enter <I>Q</I><SUB>15</SUB>   : <INPUT id=Q15input 
+  onchange="Q[15] =this.value" size=10 value=333 name=Q15input>&nbsp; 
+  Enter <I>A</I><SUB>15</SUB>   : <INPUT id=A15input onchange="A[15] =this.value" size=10 value=333 name=A15input>&nbsp; <BR>
+  
+  Observation 16: Enter <I>p</I><SUB>16</SUB>   : <INPUT id=p16input 
+  onchange="p[16] =this.value" size=10 value=333 name=p16input>&nbsp; 
+  Enter <I>Q</I><SUB>16</SUB>   : <INPUT id=Q16input onchange="Q[16] =this.value" 
+  size=10 value=333 name=Q16input>&nbsp; 
+  Enter <I>A</I><SUB>16</SUB>   : <INPUT id=A16input onchange="A[16] =this.value" size=10 value=333 name=A16input>&nbsp; <BR>
+  
+  Observation 17: Enter <I>p</I><SUB>17</SUB> : <INPUT id=p17input onchange="p[17] =this.value" size=10 value=333 name=p17input>&nbsp; 
+  Enter <I>Q</I><SUB>17</SUB>   : <INPUT id=Q17input 
+  onchange="Q[17] =this.value" size=10 value=333 name=Q17input>&nbsp; 
+  Enter <I>A</I><SUB>17</SUB>   : <INPUT id=A17input onchange="A[17] =this.value" size=10 value=333 name=A17input>&nbsp; <BR>
+  
+  Observation 18: Enter <I>p</I><SUB>18</SUB>   : <INPUT id=p18input 
+  onchange="p[18] =this.value" size=10 value=333 name=p18input>&nbsp; 
+  Enter <I>Q</I><SUB>18</SUB>   : <INPUT id=Q18input onchange="Q[18] =this.value" 
+  size=10 value=333 name=Q18input>&nbsp; 
+  Enter <I>A</I><SUB>18</SUB>   : <INPUT id=A18input onchange="A[18] =this.value" size=10 value=333 name=A18input>&nbsp; <BR>
+  
+  Observation 19: Enter <I>p</I><SUB>19</SUB>   : <INPUT id=p19input onchange="p[19] =this.value" size=10 value=333 
+  name=p19input>&nbsp; 
+  Enter <I>Q</I><SUB>19</SUB>   : <INPUT id=Q19input onchange="Q[19] =this.value" size=10 value=333 name=Q19input>&nbsp; 
+  Enter <EM>A</EM><SUB>19</SUB>   : <INPUT id=A19input onchange="A[19] =this.value" size=10 value=333 name=A19input>&nbsp; 
+  <br> 
+
+  Observation 20:    Enter    <i>p</i><SUB>20</SUB>    : <INPUT id="p20input" name="p20input" value=333 size=10 onChange= "p[20] =this.value">&nbsp; 
+  Enter <I>Q</I><SUB>20</SUB>   : <INPUT id=Q20input onchange="Q[20] =this.value" size=10 value=333 name=Q20input>&nbsp; 
+  Enter <I>A</I><SUB>20</SUB>   : <INPUT id=A20input onchange="A[20] =this.value" size=10 value=333 name=A20input>&nbsp; 
+  <BR>
+    
+  Observation 21:    Enter    <i>p</i><SUB>21</SUB>    : <INPUT id="p21input" name="p21input" value=333 size=10 onChange= "p[21] =this.value">&nbsp; 
+  Enter <I>Q</I><SUB>21</SUB>   : <INPUT id=Q21input onchange="Q[21] =this.value" size=10 value=333 name=Q21input>&nbsp; 
+  Enter <I>A</I><SUB>21</SUB>   : <INPUT id=A21input onchange="A[211] =this.value" size=10 value=333 name=A21input>&nbsp; 
+  <BR>
+  
+  Observation 22: Enter <I>p</I><SUB>22</SUB>   : <INPUT id=p22input 
+  onchange="p[22] =this.value" size=10 value=333 name=p22input>&nbsp; 
+  Enter <I>Q</I><SUB>22</SUB>   : <INPUT id=Q22input onchange="Q[22] =this.value" 
+  size=10 value=333 name=Q22input>&nbsp; 
+  Enter <I>A</I><SUB>22</SUB>   : <INPUT id=A22input onchange="A[22] =this.value" size=10 value=333 name=A22input>&nbsp; <BR>
+  
+  Observation 23: Enter <I>p</I><SUB>23</SUB> : <INPUT id=p23input onchange="p[23] =this.value" size=10 value=333 
+  name=p23input>&nbsp; 
+  Enter <I>Q</I><SUB>23</SUB>   : <INPUT id=Q23input onchange="Q[23] =this.value" size=10 value=333 name=Q23input>&nbsp; 
+  Enter <I>A</I><SUB>23</SUB>   : <INPUT id=A23input onchange="A[23] =this.value" size=10 value=333 name=A23input>&nbsp; <BR>
+  
+  Observation 24: Enter <I>p</I><SUB>24</SUB>   : <INPUT id=p24input 
+  onchange="p[24] =this.value" size=10 value=333 name=p24input>&nbsp; 
+  Enter <I>Q</I><SUB>24</SUB>   : <INPUT id=Q24input onchange="Q[24] =this.value" 
+  size=10 value=333 name=Q24input>&nbsp; 
+  Enter <I>A</I><SUB>24</SUB>   : <INPUT id=A24input onchange="A[24] =this.value" size=10 value=333 name=A24input>&nbsp; <BR>
+  
+  Observation 25: Enter <I>p</I><SUB>25</SUB>  : <INPUT id=p25input onchange="p[25] =this.value" size=10 value=333
+  name=p25input>&nbsp; 
+  Enter <I>Q</I><SUB>25</SUB>   : <INPUT id=Q25input 
+  onchange="Q[25] =this.value" size=10 value=333 name=Q25input>&nbsp; 
+  Enter <I>A</I><SUB>25</SUB>   : <INPUT id=A25input onchange="A[25] =this.value" size=10 value=333 name=A25input>&nbsp; <BR>
+  
+  </LI></UL>
+  
+  
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !"><INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()"><INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')"><INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"></FORM><hr>
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.</h5>
+
+</body></html>

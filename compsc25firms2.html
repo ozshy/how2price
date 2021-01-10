@@ -1,0 +1,240 @@
+<html><head>
+<title>Competition / Switching Costs / Equilibrium Prices / 2-25 Sellers</title><META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)"><META name=VI60_defaultClientScript content=JavaScript><meta http-equiv="Content-Language" content="en-us"><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><meta name="GENERATOR" content="Microsoft FrontPage 4.0"><meta name="ProgId" content="FrontPage.Editor.Document">
+<SCRIPT LANGUAGE=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+var N, c, p = new Array(25), m = new Array(25), s, revise, mmax, mmin;
+
+function initialize() {
+ N=6; c=0; s=4;
+ m[1]=15; m[2]=5; m[3]=30; m[4]=20; m[5]=10; m[6]=20; m[7]=333; m[8]=333; m[9]=333; m[10]=333;
+ m[11]=333; m[12]=333; m[13]=333; m[14]=333; m[15]=333; m[16]=333; m[17]=333; m[18]=333; m[19]=333; m[20]=333;
+ m[21]=333; m[22]=333; m[23]=333; m[24]=333; m[25]=333;
+ revise=false; mmax=1; mmin=1; //initializing variables
+}
+
+function sortm() { // finds the higest and lowest market share seller
+for (var i = 2; i < N/1+1/1; i++) {
+	if (m[i] > m[mmax]) mmax=i;
+//	if (m[i] == m[mmax] && p[i] > p[mmax]) mmax=i;
+} // end for statment
+for (var i = 2; i < N/1+1/1; i++) {
+	if (m[i] < m[mmin]) mmin=i;
+//	if (m[i] == m[mmin] && p[i] < p[mmin]) mmin=i;
+} // end for statment
+}
+
+function writdata() { //writes the data provided by the user
+var totalm=0; // sum of all market shares
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Competition / Switching Costs / Equilibrium Prices / 2-25 Sellers</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("Maginal cost equals: <EM>c</EM> = ", '<font color="fuchsia">'+ c + '</font>', "<br>");
+results.document.write("Consumer switching costs are: <EM>s</EM> = ", '<font color="fuchsia">' + s + '</font>', "<br>");
+results.document.write("The number of active sellers is : ", '<EM>N</EM> = <font color="fuchsia">', N,'</font>', "<br>");
+for (var i = 1; i < N/1+1/1; i++) {
+totalm=totalm/1 + m[i]/1; //aggregate market share
+results.document.write('Seller ' + i + ': maintains a market share of <EM>m</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + m[i] + '</font> %' + "<br>" );
+} // end of for statement
+results.document.write('The highest market share is maintained by seller  <font color="fuchsia">' + mmax + '</font>' + "<br>" );
+results.document.write('The lowest market share is maintained by seller  <font color="fuchsia">' + mmin + '</font>' + "<br>" );
+if (totalm > 100) results.document.write('<font color="#FF0000">Remark:</font> The sum of the market shares of all sellers exceeds 100%. Therefore, the results provided below are based calculations utilizing relative market shares . <br>' );
+if (totalm < 100) results.document.write('<font color="#FF0000">Remark:</font> The sum of the market shares of all sellers is lower than 100%. Therefore, the results provided below are based calculations utilizing relative market shares . <br>' );
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function writupe() { // writes UPE prices
+writresult();
+mmaxmminconst=m[mmax]*m[mmax]/1 + m[mmax]*m[mmin]/1 + m[mmin]*m[mmin]/1; //denominator constant
+p[mmax]=c + s*(m[mmax]/1+m[mmin]/1)*(m[mmax]/1+2*m[mmin]/1)/mmaxmminconst;
+p[mmin]=c + s*(m[mmax]/1+m[mmin]/1)*(2*m[mmax]/1+m[mmin]/1)/mmaxmminconst;
+	for (var i = 1; i < N/1+1/1; i++) {
+		if (i!=mmax && i!=mmin)
+		p[i]=((c/1+s/1)*m[i]/1 + m[mmin]*(p[mmin]/1+s/1))/(m[i]/1+m[mmin]/1);
+	} //end for
+	for (var i = 1; i < N/1+1/1; i++) { //now, writing down UPE prices
+	results.document.write('The undercut-proof equilibrium price of seller ' + i + ' is: ');
+	results.document.write('<EM>p</EM><SUB>'+ i+'</SUB> =<font color="#0000FF">  ' + round(p[i]) + '</font>', "<br>");
+	} //end for writing UPE prices
+results.document.write('<hr><font color="#FF0000">Remark 1:</font> Under these (undercut-proof) prices, no seller could increase his profit by lowering the price below any rival\' price minus the switching cost thereby grabbing the rival\'s customers. <br>' );
+results.document.write('<font color="#FF0000">Remark 2:</font> Notice that undercut-proof equilibrium prices imply that the seller with the lowest market share charges the highest price (since he is not a very desireable prey target for being undercut). <br>' );
+} //end writsc()
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+if (N > 25) N = 25; //making sure that # sellers does not exceed 25
+if (N < 2) N = 2; //making sure that # sellers is at least 2
+if (c < 0) c = 0; //making sure non-neg cost
+sortm();
+writdata(); //writes the data function
+writupe(); // UPE prices
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+</head>
+<body bgColor=white text="black">
+<h1 style="BACKGROUND-COLOR: aqua">Competition / Switching Costs / Equilibrium Prices / 2 to 25 Sellers</h1>
+
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: To calculate the equilibrium prices under 
+which each firm continues to maintian its existing market share. The model assume that consumers bear switching costs of switching brands. The
+user (you) inputs&nbsp;market shares, marginal cost, and swtiching costs,&nbsp;and <EM>How-to-Price</EM> computes equilibrium prices (the so-called undercut-proof equilibrium).</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br><FORM NAME="data" onSubmit="calc()"><font color="#ff0000">Please, <STRONG>always</STRONG>  click <INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>&nbsp;before changing or submitting the following parameters:</font>
+<ul>  
+
+<li>Enter the number of sellers (firms) <EM>N</EM>&nbsp;in this market (2-25):&nbsp; <INPUT id=Ninput onchange="N =this.value" size=10 
+  value=6 name=Ninput> 
+
+  <LI>The marginal production cost (<I>c</I>). Enter <EM>c</EM> in this box 
+  (<I>c</I> &gt; 0 or <I>c</I> = 0): <INPUT id=cinput onchange="c =this.value" 
+  size=10 value=0 name=cinput> 
+  <li>Enter the switching cost parameter&nbsp;<em>s</em>&nbsp;in this box:&nbsp; 
+  <input id=sinput onchange="s =this.value" size=10 value=4 name=sinput>&nbsp; 
+  (i.e., cost of switching brands) 
+
+  <LI>Below, please enter the existing&nbsp;market share&nbsp;of each seller&nbsp;(0&lt;<EM>m</EM><SUB>i</SUB>&lt;100):<BR>
+  <FONT size=2>(<font color="#ff0000">Remark:</font> if, for example, you entered <EM>N</EM> =    6 (default), the program will ignore all prices and market shares of sellers 7, 8, and 9, and so on...) </FONT><br>
+
+   
+  Seller 01: 
+  Enter <I>m</I><SUB>01</SUB> in this box: <INPUT id=m1input onchange="m[1] =this.value" size=10 value=15 name=p1input>&nbsp; 
+  %<BR>
+  
+  Seller 02: 
+  Enter <I>m</I><SUB>02</SUB> in this box: <INPUT id=m2input onchange="m[2] =this.value" 
+  size=10 value=5 name=m2input>&nbsp; %<BR>
+  
+  Seller 03: 
+  Enter <I>m</I><SUB>03</SUB> in this box: <INPUT id=m3input 
+  onchange="m[3] =this.value" size=10 value=30 name=m3input>&nbsp; %<BR>
+  
+  Seller 04: 
+  Enter <I>m</I><SUB>04</SUB> in this box: <INPUT id=m4input onchange="m[4] =this.value" 
+  size=10 value=20 name=m4input>&nbsp; %<BR>
+  
+  Seller 05: 
+  Enter <I>m</I><SUB>05</SUB> in this box: <INPUT id=m5input 
+  onchange="m[5] =this.value" size=10 value=10 name=m5input>&nbsp; %<BR>
+  
+  Seller 06: 
+  Enter <I>m</I><SUB>06</SUB> in this box: <INPUT id=m6input onchange="m[6] =this.value" 
+  size=10 value=20 name=m6input>&nbsp; %<BR>
+  
+  Seller 07: 
+  Enter <I>m</I><SUB>07</SUB> in this box: <INPUT id=m7input 
+  onchange="m[7] =this.value" size=10 value=333 name=m7input>&nbsp; %<BR>
+  
+  Seller 08: 
+  Enter <I>m</I><SUB>08</SUB> in this box: <INPUT id=m8input onchange="m[8] =this.value" 
+  size=10 value=333 name=m8input>&nbsp; %<BR>
+  
+  Seller 09: 
+  Enter <I>m</I><SUB>09</SUB> in this box: <INPUT id=m9input onchange="m[9] =this.value" size=10 value=333 name=m9input>&nbsp; %<BR>
+
+  Seller 10: 
+  Enter <I>m</I><SUB>10</SUB> in this box: <INPUT id=m10input onchange="m[10] =this.value" size=10 value=333 name=m10input>&nbsp; %<BR>
+
+  Seller 11: 
+  Enter <I>m</I><SUB>11</SUB> in this box: <INPUT id=m11input onchange="m[11] =this.value" size=10 value=333 name=p11input>&nbsp; 
+  %<BR>
+  
+  Seller 12: 
+  Enter <I>m</I><SUB>12</SUB> in this box: <INPUT id=m12input onchange="m[12] =this.value" 
+  size=10 value=333 name=m12input>&nbsp; %<BR>
+  
+  Seller 13: 
+  Enter <I>m</I><SUB>13</SUB> in this box: <INPUT id=m13input 
+  onchange="m[13] =this.value" size=10 value=333 name=m13input>&nbsp; %<BR>
+  
+  Seller 14: 
+  Enter <I>m</I><SUB>14</SUB> in this box: <INPUT id=m14input onchange="m[14] =this.value" 
+  size=10 value=333 name=p14input>&nbsp; %<BR>
+  
+  Seller 15: 
+  Enter <I>m</I><SUB>15</SUB> in this box: <INPUT id=m15input 
+  onchange="m[15] =this.value" size=10 value=333 name=m15input>&nbsp; %<BR>
+  
+  Seller 16: 
+  Enter <I>m</I><SUB>16</SUB> in this box: <INPUT id=m16input onchange="m[16] =this.value" 
+  size=10 value=333 name=m16input>&nbsp; %<BR>
+  
+  Seller 17: 
+  Enter <I>m</I><SUB>17</SUB> in this box: <INPUT id=m17input 
+  onchange="m[17] =this.value" size=10 value=333 name=m17input>&nbsp; %<BR>
+  
+  Seller 18: 
+  Enter <I>m</I><SUB>18</SUB> in this box: <INPUT id=m18input onchange="m[18] =this.value" 
+  size=10 value=333 name=m18input>&nbsp; %<BR>
+  
+  Seller 19: 
+  Enter <I>m</I><SUB>19</SUB> in this box: <INPUT id=m19input onchange="m[19] =this.value" size=10 value=333 name=m19input>&nbsp; %<BR>
+
+  Seller 20: 
+  Enter <I>m</I><SUB>20</SUB> in this box: <INPUT id=m20input onchange="m[20] =this.value" size=10 value=333 name=m20input>&nbsp; %<br>
+
+  Seller 21: 
+  Enter <I>m</I><SUB>21</SUB> in this box: <INPUT id=m21input onchange="m[21] =this.value" size=10 value=333 name=p21input>&nbsp; 
+  %<BR>
+  
+  Seller 22: 
+  Enter <I>m</I><SUB>22</SUB> in this box: <INPUT id=m22input onchange="m[22] =this.value" 
+  size=10 value=333 name=m22input>&nbsp; %<BR>
+  
+  Seller 23: 
+  Enter <I>m</I><SUB>23</SUB> in this box: <INPUT id=m23input 
+  onchange="m[23] =this.value" size=10 value=333 name=m23input>&nbsp; %<BR>
+  
+  Seller 24: 
+  Enter <I>m</I><SUB>24</SUB> in this box: <INPUT id=m24input onchange="m[24] =this.value" 
+  size=10 value=333 name=p24input>&nbsp; %<BR>
+  
+  Seller 25: 
+  Enter <I>m</I><SUB>25</SUB> in this box: <INPUT id=m25input 
+  onchange="m[25] =this.value" size=10 value=333 name=m25input>&nbsp; %<BR></LI>
+  
+  </ul>
+
+  
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !"><INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()"><INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')"><INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"></FORM><hr>
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.</h5>
+
+</body></html>

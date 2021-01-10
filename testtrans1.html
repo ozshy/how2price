@@ -1,0 +1,222 @@
+<html>
+<head>
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+<META name=VI60_defaultClientScript content=JavaScript>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Single Seller / Discrete Demand / 2-9 consumer types</title>
+<SCRIPT LANGUAGE=javascript> 
+
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {// rounds number to X decimal places, defaults to 2X = (!X ? 2 : X);return Math.round(number*Math.pow(10,X))/Math.pow(10,X);}
+
+function comparenumbers(a,b) { // needed for soring arrays
+return a - b
+}
+var T, F, c, v = new Array(9), n = new Array(9), revise, nmax, nmin, vmax, vmin, profmax, totaln;
+function initialize() {T=6; F=1200; c=8; profitv=new Array(T); revenuev=new Array(T);
+v[1]=20; v[2]=25; v[3]=30; v[4]=40; v[5]=5; v[6]=10; v[7]=333; v[8]=333; v[9]=333; v[10]=333;v[11]=333; v[12]=333; v[13]=333; v[14]=333; v[15]=333; v[16]=333; v[17]=333; v[18]=333; v[19]=333; v[20]=333;v[21]=333; v[22]=333; v[23]=333; v[24]=333; v[25]=333; 
+n[1]=100; n[2]=200; n[3]=400; n[4]=300; n[5]=600; n[6]=500; n[7]=333; n[8]=333; n[9]=333; n[10]=333;n[11]=333; n[12]=333; n[13]=333; n[14]=333; n[15]=333; n[16]=333; n[17]=333; n[18]=333; n[19]=333; n[20]=333; n[21]=333; n[22]=333; n[23]=333; n[24]=333; n[25]=333; 
+ revise=false; nmax=1; nmin=1; vmax=1; vmin=1; profmax=1; totaln=0; //initializing variables
+ } function sortdata() { // finds the higest and lowest valuations and sorts s arrayfor (var i = 2; i < T/1+1/1; i++) {
+	if (n[i] > n[nmax]) nmax=i;	if (n[i] < n[nmin]) nmin=i;	if (v[i] > v[vmax]) vmax=i;	if (v[i] < v[vmin]) vmin=i;} // end for statement//below is a sorting procedure, not needed
+//for (var i = 1; i < T/1+1/1; i++) { ////s[i-1]=v[i];//} //end for
+//s.sort(comparenumbers); s.reverse();
+//for (var i = 0; i < T; i++) { // lists the sorted array, save for debugging
+//results.document.write(s[i] + "<br>" ); } // end for}
+function writdata() { //writes the data provided by the user
+sortdata();results.document.write('<body text="black">');results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Single Seller / Discrete Demand / 2-9 Observations</font><br>');results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');results.document.write("Maginal production cost equals: ", '<font color="fuchsia">', c,'</font>', "<br>");
+results.document.write("Fixed production cost equals: ", '<font color="fuchsia">', F, '</font>', "<br>");
+results.document.write("The number of consumer types is : ", '<EM>T</EM> = <font color="fuchsia">', T,'</font>', "<br>");
+for (var i = 1; i < T/1+1/1; i++) {totaln=totaln+n[i];
+results.document.write('Consumers type ' + i + ': Maximal willingness to pay is <EM>v</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + v[i] + '</font>, ' );
+results.document.write('and there are <EM>n</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + n[i] + '</font> consumers of this type ' + "<br>" );} // end of for statementresults.document.write('The highest willingness to pay is by consumers type  <font color="fuchsia">' + vmax + '</font>' + "<br>" );
+results.document.write('The lowest willingness to pay is by consumers type  <font color="fuchsia">' + vmin + '</font>' + "<br>" );results.document.write('The largest number of consumers are type  <font color="fuchsia">' + nmax + '</font>' + "<br>" );
+results.document.write('The lowest number of consumers are type  <font color="fuchsia">' + nmin + '</font>' + "<br>" );
+results.document.write('The total number of consumers (all types combined) is  <font color="fuchsia">' + totaln + '</font>' + "<br>" );}
+function writresult() { //writes Result #: (red+underline)resultno=resultno+1;results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');}
+
+function revisedata(j) { // asks revision on data due to price below unit costwritresult();results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, observation ' + j + ' has a negative value.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); }
+
+function checkprices() {for (var i = 1; i < T/1+1/1; i++) {
+	if (v[i] < 0) {revisedata(i); revise=true};
+} }function checkquantities() {for (var i = 1; i < T/1+1/1; i++) {
+	if (n[i] < 0) {revisedata(i); revise=true};
+} }
+
+function calcprofitvi(mc,index) { // calculates the profit when p=vi and mc=cprofitv[index]=n[index]*(v[index]-mc);
+	for (var k = 1; k < T/1+1/1; k++) {
+	if (k != index && v[k] >= v[index]) {profitv[index]=profitv[index]/1 + n[k]*(v[index]-mc)/1;} // augmenting all vi>vindex
+	} //end for} //end functionfunction writrevenue() { writresult(); profmax=1;for (var j = 1; j < T/1+1/1; j++) {
+calcprofitvi(0,j); // calculates the profit when p=vi and mc=c
+} // end for
+for (var i = 1; i < T/1+1/1; i++) {
+	if (profitv[i] > profitv[profmax]) profmax=i;
+//results.document.write(profitv[i] +'<br>'); //testing} // end for statement
+var price=v[profmax]; profit=profitv[profmax];results.document.write("The revenue-maximizing price is: <EM>p</EM> = ",'<font color="#0000FF">' + round(price) + '</font>'+ "<br>" );results.document.write("The revenue generated by this is: ")
+results.document.write('<EM>R</EM>  = <font color="#0000FF">', round(profit), '</font>', "<br>")
+var served=''; unserved=''; none=true; nserved=0; nunserved=0; //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (v[i] < v[profmax]) {unserved=unserved+'type '+i+', ';  nunserved=nunserved+n[i];}
+	else {served=served+'type '+i+', '; none=false;  nserved=nserved+n[i];}
+}//end for 
+	if (none==true) results.document.write("Under this price, the types of consumers served are: ", '<font color="#0000FF"> NONE</font><br>');
+	else {results.document.write("Under this price, the types of consumers served are: ", '<font color="#0000FF">'+ served +'</font><br>');
+	results.document.write("Hence, the total number of consumers served (hence number of units sold) is: ", '<font color="#0000FF">'+ nserved +'</font>, constituting <font color="#0000FF">' + round(100*nserved/totaln) + ' \% </font>of potential buyers<br>');
+	}
+	if (none==true) results.document.write("Under this price, the types of consumers who are not served are: ", '<font color="#0000FF"> ALL types</font><br>');
+	else {results.document.write("Under this price, the types of consumers who are not served are: ", '<font color="#0000FF">'+ unserved +'</font><br>');
+	results.document.write("Hence, the total number of consumers who are not served is: ", '<font color="#0000FF">'+ nunserved +'</font>, constituting <font color="#0000FF">' + round(100*nunserved/totaln) + ' \% </font>of potential buyers<br>');
+	}
+} //end 
+function writprofit() { writresult(); profmax=1;for (var j = 1; j < T/1+1/1; j++) {
+calcprofitvi(c,j); // calculates the profit when p=vi and mc=c
+} // end for
+for (var i = 1; i < T/1+1/1; i++) {
+	if (profitv[i] > profitv[profmax]) profmax=i;
+//results.document.write(profitv[i] +'<br>'); //testing} // end for statement
+var price=v[profmax],  profit=profitv[profmax];results.document.write("The profit-maximizing price is: <EM>p</EM> = ",'<font color="#0000FF">' + round(price) + '</font>'+ "<br>" );results.document.write("Ignoring fixed cost, the monopoly earns a profit: ")
+results.document.write('<EM>Profit</EM>  = <font color="#0000FF">', round(profit), '</font>', "<br>")
+if (profit >= F)
+results.document.write("Taking fixed cost into account, the monopoly earns a total profit of: ", '<EM>Profit</EM>  = <font color="#0000FF">', round(profit-F), '</font><br>');
+else 
+results.document.write("Taking fixed cost into account, the monopoly makes a total loss of: ", '<EM>L</EM>  = <font color="#0000FF">', round(F-profit), '</font><br>');
+var served=''; unserved=''; none=true; nserved=0; nunserved=0;  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (v[i] < v[profmax]) {unserved=unserved+'type '+i+', '; nunserved=nunserved+n[i];}
+	else {served=served+'type '+i+', '; none=false; nserved=nserved+n[i];}
+}//end for 
+	if (none==true) results.document.write("Under this price, the types of consumers served are: ", '<font color="#0000FF"> NONE</font><br>');
+	else {results.document.write("Under this price, the types of consumers served are: ", '<font color="#0000FF">'+ served +'</font><br>');
+	results.document.write("Hence, the total number of consumers served (hence number of units sold) is: ", '<font color="#0000FF">'+ nserved +'</font>, constituting <font color="#0000FF">' + round(100*nserved/totaln) + ' \% </font>of potential buyers<br>');
+	}
+	if (none==true) results.document.write("Under this price, the types of consumers who are not served are: ", '<font color="#0000FF"> ALL types</font><br>');
+	else { results.document.write("Under this price, the types of consumers who are not served are: ", '<font color="#0000FF">'+ unserved +'</font><br>');
+	results.document.write("Hence, the total number of consumers who are not served is: ", '<font color="#0000FF">'+ nunserved +'</font>, constituting <font color="#0000FF">' + round(100*nunserved/totaln) + ' \% </font>of potential buyers<br>');
+	}
+} //end 
+function calc() { // start computation function (main function!)openresultswindow();
+if (T > 9) T = 9; //making sure that # Observations does not exceed 9
+if (T < 2) T = 2; //making sure that # Observations is at least 2
+writdata(); //writes the data function
+checkprices(); checkquantities(); //checking for negative valuesif (revise==false) { 
+writrevenue();
+	if (c >= v[vmax]) { //total shut down
+	writresult();
+	results.document.write('<font color="#0000FF">The monopoly should shut down (not produce anything) since marginal production cost exceeds consumers\' willingness to pay. That is, the necessary requirement that (<EM>v</EM><SUB>i</SUB> > <EM>c</EM>) is not satisfied according to the data you provided.</font>' );}
+	else { // else of c>max vi
+	writprofit();
+	}//end else
+} //end of if revise is false
+// Now closing the output windowif (resultno > 1)results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');} // end calc function
+// end of all functions
+resultno=0; //initializing results counter
+</SCRIPT>
+</head>
+<body bgColor=white text="black">
+<h1 style="BACKGROUND-COLOR: aqua">Single 
+Seller&nbsp;/&nbsp;Discrete Demand&nbsp;/&nbsp;2 to&nbsp;9 Consumer Types</h1>
+
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: To compute the single-seller's profit 
+maximizing price in a market&nbsp;where consumers buy&nbsp;(at most) one 
+unit.&nbsp;&nbsp;You input willingness to pay for each consumer type, and the number of consumers of
+each type, and the sellers' cost parameters.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br><FORM NAME="data" onSubmit="calc()"><font color="#ff0000">Please, <STRONG>always</STRONG>  click <INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>&nbsp;before changing or submitting the following parameters:</font> 
+<UL>
+  <LI>The marginal production cost (<I>c</I>). <BR>Enter <EM>c</EM> in this box 
+  (<I>c</I> &gt; 0 or <I>c</I> = 0): <INPUT id=cinput onchange="c =this.value" 
+  size=10 value=8 name=cinput> 
+  <LI>Fixed production cost (<I>F</I>). <BR>Enter <I>F</I> in this box (<I>F</I> 
+  &gt; 0 or <I>F</I> = 0): <INPUT id=Finput onchange="F =this.value" size=10 
+  value=1200 name=Finput>  
+
+<li>Enter the number of consumer types <EM>T</EM>&nbsp;in this&nbsp;box (2-9):&nbsp; <INPUT id=Ninput onchange="N =this.value" size=10 
+  value=6 name=Ninput>
+
+  <LI>     Below, enter&nbsp;consumers' maximum willingness to 
+  pay (valuation,<EM>v</EM><SUB>i</SUB> &gt; 0), and 
+  the number of consumers 
+  of this type&nbsp;(<EM>n</EM><SUB>i</SUB>)<BR>
+  <FONT size=2>(<font color="#ff0000">Remark:</font> 
+  if, for example, you entered&nbsp; <EM>T</EM> = 6 
+  (default), the program will ignore all observations&nbsp;7, 8, &amp; 9, and so on...) </FONT><br>
+  
+  Consumer-type&nbsp;01: Enter <i>v</i><SUB>01</SUB> in this  box: <INPUT id="p1input" name="p1input" value=20 size=10 onChange= "v[1] =this.value">,&nbsp; 
+  Enter <I>n</I><SUB>01</SUB> in this box: <INPUT id=Q1input onchange="n[1] =this.value" size=10 value=100 name=Q1input>&nbsp; 
+  <BR>
+  
+  Consumer-type 02: Enter <I>v</I><SUB>02</SUB> in this box: <INPUT id=p2input 
+  onchange="v[2] =this.value" size=10 value=25 name=p2input>,&nbsp; 
+  Enter <I>n</I><SUB>02</SUB> in this box: <INPUT id=Q2input onchange="n[2] =this.value" 
+  size=10 value=200 name=Q2input>&nbsp; <BR>
+  
+  Consumer-type 03: Enter <I>v</I><SUB>03</SUB> 
+  in this box: <INPUT id=p3input onchange="v[3] =this.value" size=10 value=30 
+  name=p3input>,&nbsp; 
+  Enter <I>n</I><SUB>03</SUB> in this box: <INPUT id=Q3input 
+  onchange="n[3] =this.value" size=10 value=400 name=Q3input>&nbsp; <BR>
+  
+  Consumer-type 04: Enter <I>v</I><SUB>04</SUB> in this box: <INPUT id=p1input 
+  onchange="v[4] =this.value" size=10 value=40 name=p4input>,&nbsp; 
+  Enter <I>n</I><SUB>04</SUB> in this box: <INPUT id=Q4input onchange="n[4] =this.value" 
+  size=10 value=300 name=Q4input>&nbsp; <BR>
+  
+  Consumer-type 05: Enter <I>v</I><SUB>05</SUB> 
+  in this box: <INPUT id=p5input onchange="v[5] =this.value" size=10 value=5
+  name=p5input>,&nbsp; 
+  Enter <I>n</I><SUB>05</SUB> in this box: <INPUT id=Q5input 
+  onchange="n[5] =this.value" size=10 value=600 name=Q5input>&nbsp; <BR>
+  
+  Consumer-type 06: Enter <I>v</I><SUB>06</SUB> in this box: <INPUT id=p6input 
+  onchange="v[6] =this.value" size=10 value=10 name=p1input>,&nbsp; 
+  Enter <I>n</I><SUB>06</SUB> in this box: <INPUT id=Q6input onchange="n[6] =this.value" 
+  size=10 value=500 name=Q6input>&nbsp; <BR>
+  
+  Consumer-type 07: Enter <I>v</I><SUB>07</SUB> 
+  in this box: <INPUT id=p7input onchange="v[7] =this.value" size=10 value=333 name=p7input>,&nbsp; 
+  Enter <I>n</I><SUB>07</SUB> in this box: <INPUT id=Q7input 
+  onchange="n[7] =this.value" size=10 value=333 name=Q7input>&nbsp; <BR>
+  
+  Consumer-type 08: Enter <I>v</I><SUB>08</SUB> in this box: <INPUT id=p8input 
+  onchange="v[8] =this.value" size=10 value=333 name=p8input>,&nbsp; 
+  Enter <I>n</I><SUB>08</SUB> in this box: <INPUT id=Q8input onchange="n[8] =this.value" 
+  size=10 value=333 name=Q8input>&nbsp; <BR>
+  
+  Consumer-type 09: Enter <I>v</I><SUB>09</SUB> in this box: <INPUT id=p9input onchange="v[9] =this.value" size=10 value=333 
+  name=p9input>,&nbsp; 
+  Enter <I>n</I><SUB>09</SUB> in this box: <INPUT id=Q9input onchange="n[9] =this.value" size=10 value=333 name=Q9input>&nbsp; 
+  <br> 
+  
+ 
+  </LI></UL>
+
+  
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !"><INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()"><INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')"><INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"></FORM><hr>
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.</h5>
+
+</body></html>

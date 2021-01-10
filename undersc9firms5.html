@@ -1,0 +1,263 @@
+<html><head>
+<title>Competition / Switching Costs / 1-9 Competing Sellers</title>
+<META content="Client (IE 4.0 DHTML)" name=VI60_DTCScriptingPlatform>
+<META content=JavaScript name=VI60_defaultClientScript>
+<meta http-equiv=Content-Language content=en-us>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta content="Microsoft FrontPage 4.0" name=GENERATOR>
+<meta content=FrontPage.Editor.Document name=ProgId>
+<SCRIPT language=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+var N, c, p = new Array(26), m = new Array(26), s, revise, mmax, mmin, totalm, pmax, pmin, profit0;
+
+function initialize() {
+ N=5; c=1; s=4;
+ p[1]=8; p[2]=12; p[3]=4; p[4]=6; p[5]=7; p[6]=333; p[7]=333; p[8]=333; p[9]=333; p[10]=333;
+ p[11]=333; p[12]=333; p[13]=333; p[14]=333; p[15]=333; p[16]=333; p[17]=333; p[18]=333; p[19]=333; p[20]=333;
+ p[21]=333; p[22]=333; p[23]=333; p[24]=333; p[25]=333;
+ m[1]=30; m[2]=10; m[3]=25; m[4]=15; m[5]=20; m[6]=333; m[7]=333; m[8]=333; m[9]=333; m[10]=333;
+ m[11]=333; m[12]=333; m[13]=333; m[14]=333; m[15]=333; m[16]=333; m[17]=333; m[18]=333; m[19]=333; m[20]=333;
+ m[21]=333; m[22]=333; m[23]=333; m[24]=333; m[25]=333;
+  revise=false; mmax=1; mmin=1; totalm=0; pmax=1; pmin=1; //initializing variables
+}
+
+function sortm() { // finds the higest and lowest market share seller
+for (var i = 1; i < N/1+1/1; i++) {
+	if (m[i] > m[mmax]) mmax=i;
+//	if (m[i] == m[mmax] && p[i] > p[mmax]) mmax=i;
+} // end for statment
+for (var i = 1; i < N/1+1/1; i++) {
+	if (m[i] < m[mmin]) mmin=i;
+//	if (m[i] == m[mmin] && p[i] < p[mmin]) mmin=i;
+} // end for statment
+}
+
+function sortp() { // finds the higest and lowest price (seller 0 not included)
+for (var i = 1; i < N/1+1/1; i++) {
+	if (p[i] > p[pmax]) pmax=i;
+} // end for statment
+for (var i = 1; i < N/1+1/1; i++) {
+	if (p[i] < p[pmin]) pmin=i;
+} // end for statment
+}
+
+function writdata() { //writes the data provided by the user
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Competition / Switching Costs / 1-9 Competing Sellers</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("Switching costs equal: <EM>s</EM> = ", '<font color="fuchsia">', s,'</font>', "<br>");
+results.document.write("Maginal cost equals: <EM>c</EM> = ", '<font color="fuchsia">', c,'</font>', "<br>");
+results.document.write("The number of active competing sellers is : ", '<EM>N</EM> = <font color="fuchsia">', N,'</font>', "<br>");
+totalm=0; // sum of all market shares, initialized
+for (var i = 1; i < N/1+1/1; i++) {
+totalm=totalm/1 + m[i]/1; //aggregate market share
+results.document.write('Competing seller ' + i + ': sets the price <EM>p</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + p[i] + '</font>, ' );
+results.document.write('and serves <EM>m</EM><SUB>' + i +'</SUB> =  <font color="fuchsia">' + m[i] + '</font> customers' + "<br>" );
+} // end of for statement
+results.document.write('The highest market share is maintained by seller  <font color="fuchsia">' + mmax + '</font>' + "<br>" );
+results.document.write('The lowest market share is maintained by seller  <font color="fuchsia">' + mmin + '</font>' + "<br>" );
+results.document.write('The highest price is charged by competing seller  <font color="fuchsia">' + pmax + '</font>' + "<br>" );
+results.document.write('The lowest price is charged by competing seller  <font color="fuchsia">' + pmin + '</font>' + "<br>" );
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function revisedata(j) { // asks revision on data due to price below unit cost
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, firm ' + j + ' prices below marginal cost, therefore is making a loss.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function revisedatam() { // asks revision on data due to price below unit cost
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, market shares sum up to ' + totalm + '% which differs from 100%.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function checkdata() {
+for (var i = 1; i < N/1+1/1; i++) {
+	if (p[i] < c) {revisedata(i); revise=true};
+} // end for
+// if (totalm != 100) {revisedatam(); revise=true};
+} // end checkdata()
+
+function writprice() { // writes the profit-max price of seller 0: main results!
+writresult();
+p[0]=p[pmin]-s; //initializing price as the lowest -sc
+m[0]=totalm
+profit0=(p[0]-c)*m[0]; //initial profit under extreme undercutting
+for (var i = 1; i < N/1+1/1; i++) {
+mvar=m[i]; pvar=p[i]-s;
+	for (var j = 1; j < N/1+1/1; j++) {
+	if (j != i && p[i] <= p[j]) mvar=mvar/1+m[j]/1; //undercutting j as well
+	} //end for
+profitvar=(pvar-c)*mvar;
+if (profitvar > profit0) {p[0]=pvar; m[0]=mvar; profit0=profitvar;}
+} //end for
+results.document.write('The profit maximizing price for seller 0 is: <em>p</em><sub>0</sub> = <font color="fuchsia">' + p[0] + '</font>' + "<br>" );
+results.document.write('The resulting number of customers served by seller 0 is: <em>m</em><sub>0</sub> = <font color="fuchsia">' + m[0] + '</font>' + "<br>" );
+results.document.write('The resulting profit earned by seller 0 is: <em>Profit</em><sub>0</sub> = <font color="fuchsia">' + profit0 + '</font>' + "<br>" );
+var undercut=''; remain='';
+	for (var j = 1; j < N/1+1/1; j++) {
+	if (p[j]-s >= p[0]) undercut=undercut + j + ', '; // lists of out of business
+	if (p[j]-s < p[0]) remain=remain + j + ', '; // lists remaining firms
+	} //end for
+results.document.write('Seller 0 undercuts sellers: <font color="fuchsia">' + undercut + '</font>' + "<br>" );
+results.document.write('The remaining in business competing sellers are: <font color="fuchsia">' + remain + '</font>' + "<br>" );
+} //end writprice()
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+if (N > 9) N = 9; //making sure that # sellers does not exceed 25
+if (N < 1) N = 1; //making sure that # sellers is at least 1
+if (c < 0) c = 0; //making sure non-neg cost
+sortm(); sortp();
+writdata(); //writes the data function
+checkdata(); // checks that all price exceed c
+if (revise==false) { writprice();}
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+</head>
+<body text=black bgColor=white>
+<h1 style="BACKGROUND-COLOR: aqua">Competition 
+/ Undercutting Rivals under Switching Costs /&nbsp;1 to&nbsp;9 Competitors</h1>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>:&nbsp; To calculate the profit-maximizing price 
+that&nbsp;a new firm (your firm) should set in order to grab consumers from 
+competing firms. This model assumes&nbsp;that competing firms hold 
+their&nbsp;prices constant, and that&nbsp;consumers bear switching costs when 
+switching brands. The user (you)&nbsp;inputs prices and market shares of your 
+rivals, as well as&nbsp;marginal cost, and swtiching costs,&nbsp;and 
+<em>How-to-Price</em>      
+             
+        
+     computes your profit 
+maximizing price. <br><strong>Remark</strong>: Here, competitors are not allowed to 
+adjust their prices; see our next page for a calculation of an equilibrium when 
+all firms adjust their prices in order&nbsp;to preserve or&nbsp;protect their 
+market shares.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and 
+technology data:</b><br>
+<FORM name=data onsubmit=calc()><font color=#ff0000>Please, <STRONG>always</STRONG> click <INPUT id=reset1 onclick=initialize() type=reset value="Reset !" name=reset1>&nbsp;before 
+changing or submitting the following parameters:</font> 
+<ul>
+  <LI>Enter the switching cost parameter&nbsp;<EM 
+  >s</EM>&nbsp;in this box:&nbsp; <INPUT id=sinput 
+  onchange="s =this.value" size=10 value=4 name=sinput 
+  >&nbsp; (i.e., cost of switching brands) 
+  <LI>Enter the number of competing sellers (brands) <EM 
+  >N</EM> (1-9):&nbsp; <INPUT id=Ninput 
+  onchange="N =this.value" size=10 value=5 name=Ninput> 
+  <LI>The marginal production cost (<I 
+  >c</I>). Enter <EM>c</EM> in this box 
+  (<I>c</I> &gt; 0 or <I>c</I> = 0): 
+  <INPUT id=cinput onchange="c =this.value" size=10 value=1 name=cinput 
+  > 
+  <LI>Below, enter the price charged by each competing 
+  seller&nbsp;(<EM>p</EM><SUB>i</SUB> &gt; 0), and 
+  this seller's number of customers (or market&nbsp;size) (<EM 
+  >m</EM><SUB>i</SUB>&gt; 0)<BR 
+  ><FONT size=2>(<font color=#ff0000 
+  >Remark:</font> if, for example, you entered <EM 
+  >N</EM> =         &nbsp;5 (default), the 
+  program will ignore all prices and market shares of competing brands 6 to 9) 
+  </FONT><br>Competitor 01: Enter <i 
+  >p</i><SUB>01</SUB> in this box: 
+  <INPUT id=p1input onchange="p[1] =this.value" size=10 value=8 name=p1input 
+  >,&nbsp; Enter <I>m</I><SUB 
+  >01</SUB> in this box: <INPUT id=m1input 
+  onchange="m[1] =this.value" size=10 value=30 name=p1input 
+  > &nbsp;<BR>Competitor 02: Enter <I 
+  >p</I><SUB>02</SUB> in this box: 
+  <INPUT id=p2input onchange="p[2] =this.value" size=10 value=12 name=p2input 
+  >,&nbsp; Enter <I>m</I><SUB 
+  >02</SUB> in this box: <INPUT id=m2input 
+  onchange="m[2] =this.value" size=10 value=10 name=m2input 
+  > &nbsp;<BR>Competitor 03: Enter <I 
+  >p</I><SUB>03</SUB> in this box: 
+  <INPUT id=p3input onchange="p[3] =this.value" size=10 value=4 name=p3input 
+  >,&nbsp; Enter <I>m</I><SUB 
+  >03</SUB> in this box: <INPUT id=m3input 
+  onchange="m[3] =this.value" size=10 value=25 name=m3input 
+  > &nbsp;<BR>Competitor 04: Enter <I 
+  >p</I><SUB>04</SUB> in this box: 
+  <INPUT id=p4input onchange="p[4] =this.value" size=10 value=6 name=p4input 
+  >,&nbsp; Enter <I>m</I><SUB 
+  >04</SUB> in this box: <INPUT id=m4input 
+  onchange="m[4] =this.value" size=10 value=15 name=m4input 
+  > &nbsp;<BR>Competitor 05: Enter <I 
+  >p</I><SUB>05</SUB> in this box: 
+  <INPUT id=p5input onchange="p[5] =this.value" size=10 value=7 name=p5input 
+  >,&nbsp; Enter <I>m</I><SUB 
+  >05</SUB> in this box: <INPUT id=m5input 
+  onchange="m[5] =this.value" size=10 value=20 name=m5input 
+  > &nbsp;<BR>Competitor 06: Enter <I 
+  >p</I><SUB>06</SUB> in this box: 
+  <INPUT id=p6input onchange="p[6] =this.value" size=10 value=333 name=p6input 
+  >,&nbsp; Enter <I>m</I><SUB 
+  >06</SUB> in this box: <INPUT id=m6input 
+  onchange="m[6] =this.value" size=10 value=333 name=m6input 
+  > &nbsp;<BR>Competitor 07: Enter <I 
+  >p</I><SUB>07</SUB> in this box: 
+  <INPUT id=p7input onchange="p[7] =this.value" size=10 value=333 name=p7input 
+  >,&nbsp; Enter <I>m</I><SUB 
+  >07</SUB> in this box: <INPUT id=m7input 
+  onchange="m[7] =this.value" size=10 value=333 name=m7input 
+  > &nbsp;<BR>Competitor 08: Enter <I 
+  >p</I><SUB>08</SUB> in this box: 
+  <INPUT id=p8input onchange="p[8] =this.value" size=10 value=333 name=p8input 
+  >,&nbsp; Enter <I>m</I><SUB 
+  >08</SUB> in this box: <INPUT id=m8input 
+  onchange="m[8] =this.value" size=10 value=333 name=m8input 
+  > &nbsp;<BR>Competitor 09: Enter <I 
+  >p</I><SUB>09</SUB> in this box: 
+  <INPUT id=p9input onchange="p[9] =this.value" size=10 value=333 name=p9input 
+  >,&nbsp; Enter <I>m</I><SUB 
+  >09</SUB> in this box: <INPUT id=m9input 
+  onchange="m[9] =this.value" size=10 value=333 name=m9input 
+  >&nbsp;&nbsp;<BR></LI></ul><INPUT type=submit value="Show Results Now !" name=showresults><INPUT onclick=window.close() type=button value="Close Page" name=closewindow><INPUT id=GoMain onclick="openwindow('index.html')" type=button value="Main Page" name=GoMain><INPUT onclick="openwindow('glossary.html')" type=button value="Glossary of Terms" name=glossary></FORM>
+<hr>
+
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size=1>TM</font></SUP>&nbsp; All rights 
+reserved.</h5>
+
+</body></html>

@@ -1,0 +1,379 @@
+<html><head>
+<title>Single Seller / Tying / 2 Goods / 2-9 consumer types</title>
+<META content="Client (IE 4.0 DHTML)" name=VI60_DTCScriptingPlatform>
+<META content=JavaScript name=VI60_defaultClientScript>
+<meta http-equiv=Content-Language content=en-us>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta content="Microsoft FrontPage 4.0" name=GENERATOR>
+<meta content=FrontPage.Editor.Document name=ProgId>
+<SCRIPT language=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+function comparenumbers(a,b) { // needed for soring arrays
+return a - b
+}
+
+var T, F, cx, cy, x = new Array(9), y = new Array(9), xy = new Array(9), n = new Array(9), 
+revise, nmax, nmin, xmax, xmin, totaln, resultno, 
+px, py, profitx, profity, quantxtemp, quantytemp, qx, qy, rx, ry, //single package vars
+quantxytemp, qxy, pxy, profitxy, rxy; //tied packages vars
+
+function initialize() {
+T=3; F=1000; cx=0; cy=0; 
+x[1]=4; x[2]=3; x[3]=0; x[4]=333; x[5]=333; x[6]=333; x[7]=333; x[8]=333; x[9]=333; 
+y[1]=0; y[2]=3; y[3]=4; y[4]=333; y[5]=333; y[6]=333; y[7]=333; y[8]=333; y[9]=333; 
+n[1]=200; n[2]=100; n[3]=200; n[4]=333; n[5]=333; n[6]=333; n[7]=333; n[8]=333; n[9]=333; 
+revise=false; nmax=1; nmin=1; xmax=1; xmin=1; ymax=1; ymin=1; totaln=0; resultno=0; //initializing variables
+}
+ 
+function sortdata() { // finds the higest and lowest valuations and sorts s array
+for (var i = 2; i < T/1+1/1; i++) {
+	if (n[i] > n[nmax]) nmax=i;
+	if (n[i] < n[nmin]) nmin=i;
+	if (x[i] > x[xmax]) xmax=i;
+	if (x[i] < x[xmin]) xmin=i;
+	if (y[i] > y[ymax]) ymax=i;
+	if (y[i] < y[ymin]) ymin=i;
+} // end for statement
+}
+
+function writdata() { //writes the data provided by the user
+sortdata();
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Single Seller / Tying / 2 Goods / 2-9 Consumer Types</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("Maginal production costs are: ", 
+'<i>c</i><sub>X</sub> = <font color="fuchsia">', cx,'</font> and ',
+'<i>c</i><sub>Y</sub> = <font color="fuchsia">', cy,'</font>', "<br>");
+results.document.write("Fixed production cost equals: ", '<font color="fuchsia">', F, '</font>', "<br>");
+results.document.write("The number of consumer types is : ", '<EM>T</EM> = <font color="fuchsia">', T,'</font>', "<br>");
+for (var i = 1; i < T/1+1/1; i++) {
+totaln=totaln/1+n[i]/1;
+xy[i]=x[i]/1+y[i]/1;
+results.document.write('<EM>n</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + n[i] + '</font> type ' + i + ' consumers: Willing to pay: [<EM>x</EM><SUB>' + i +'</SUB> = <font color="fuchsia"> ' + x[i] + '</font> for <i>X</i>] ' );
+results.document.write('[<EM>y</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + y[i] + '</font> for <i>Y</i>] ' );
+results.document.write('[<EM>x</EM><SUB>' + i +'</SUB>+<EM>y</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + xy[i] + '</font> for both]<br>' );
+} // end of for statement
+results.document.write('The highest willingness to pay for good <i>X</i> is by consumers type  <font color="fuchsia">' + xmax + '</font>' + "<br>" );
+results.document.write('The lowest willingness to pay for good <i>X</i> is by consumers type  <font color="fuchsia">' + xmin + '</font>' + "<br>" );
+results.document.write('The highest willingness to pay for good <i>Y</i> is by consumers type  <font color="fuchsia">' + ymax + '</font>' + "<br>" );
+results.document.write('The lowest willingness to pay for good <i>Y</i> is by consumers type  <font color="fuchsia">' + ymin + '</font>' + "<br>" );
+results.document.write('The largest number of consumers are type  <font color="fuchsia">' + nmax + '</font>' + "<br>" );
+results.document.write('The lowest number of consumers are type  <font color="fuchsia">' + nmin + '</font>' + "<br>" );
+results.document.write('The total number of consumers (all types combined) is  <font color="fuchsia">' + totaln + '</font>' + "<br>" );
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function revisedata(j) { // asks revision on data due to price below unit cost
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, observation ' + j + ' has a negative value.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function checkx() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (x[i] < 0) {revisedata(i); revise=true};
+} }
+
+function checky() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (y[i] < 0) {revisedata(i); revise=true};
+} }
+
+function checkn() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (n[i] < 0) {revisedata(i); revise=true};
+} }
+
+function writnotying() { //writes no-tying results
+writresult();
+results.document.write('<font color="#FF0000">No-Tying: Suppose that the seller is contrained to sell (and price) each product separatefly (i.e., no tied packages)</font>: <br>');
+profitx=0; profity=0; px=0; py=0;
+for (var i = 1; i < T/1+1/1; i++) { //loop to run over all prices of x and y
+	quantxtemp=0; quantytemp=0; 
+	for (var j = 1; j < T/1+1/1; j++) { // adding all n[j] for x[j] <= x[i]
+		if (x[j] >= x[i]) quantxtemp=quantxtemp/1+n[j]/1;
+		if (y[j] >= y[i]) quantytemp=quantytemp/1+n[j]/1;
+	} //end of for j
+	if ((x[i]-cx)*quantxtemp >= profitx) { // asigning max profit and prices
+	profitx=(x[i]-cx)*quantxtemp; px=x[i]; qx=quantxtemp; rx=px*quantxtemp;
+	} //end if profit
+	if ((y[i]-cy)*quantytemp >= profity) { // asigning max profit and prices
+	profity=(y[i]-cy)*quantytemp; py=y[i]; qy=quantytemp; ry=py*quantytemp;
+	} //end if profit
+}// end for i
+results.document.write('The seller should set the price of <em>X</em> to: '); //good x
+results.document.write('<i>p</i><sub>X</sub> = <font color="#0000FF">' + round(px) + '</font><br>');
+var xserved=''; xunserved='';  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (x[i] < px) {xunserved=xunserved+'type '+i+', ';}
+	else {xserved=xserved+'type '+i+', ';}
+}//end for 
+results.document.write("Under this price, the types of consumers who buy <em>X</em> are: ", '<font color="#0000FF">'+ xserved +'</font><br>');
+results.document.write('At this price, the number of units of <em>X</em> sold is: ');
+results.document.write('<i>q</i><sub>X</sub> = <font color="#0000FF">' + round(qx) + '</font><br>');
+results.document.write('The revenue collected from selling good <em>X</em> is: ');
+results.document.write('<i>R</i><sub>X</sub> = <font color="#0000FF">' + round(rx) + '</font><br>');
+results.document.write('Ignoring fixed costs, the profit made out of good <em>X</em> is: ');
+results.document.write('<i>Profit</i><sub>X</sub> = <font color="#0000FF">' + round(profitx) + '</font><br>');
+results.document.write('The seller should set the price of <em>Y</em> to: '); //good y
+results.document.write('<i>p</i><sub>Y</sub> = <font color="#0000FF">' + round(py) + '</font><br>');
+var yserved=''; yunserved='';  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (y[i] < py) {yunserved=yunserved+'type '+i+', ';}
+	else {yserved=yserved+'type '+i+', ';}
+}//end for 
+results.document.write("Under this price, the types of consumers who buy <em>Y</em> are: ", '<font color="#0000FF">'+ yserved +'</font><br>');
+results.document.write('At this price, the number of units of <em>Y</em> sold is: ');
+results.document.write('<i>q</i><sub>Y</sub> = <font color="#0000FF">' + round(qy) + '</font><br>');
+results.document.write('The revenue collected from selling good <em>Y</em> is: ');
+results.document.write('<i>R</i><sub>Y</sub> = <font color="#0000FF">' + round(ry) + '</font><br>');
+results.document.write('Ignoring fixed costs, the profit made out of good <em>Y</em> is: ');
+results.document.write('<i>Profit</i><sub>Y</sub> = <font color="#0000FF">' + round(profity) + '</font><br>');
+
+results.document.write('The combined revenue collected from selling goods <em>X</em> and <em>Y</em> is: '); //combined revenue and profit
+results.document.write('<i>R</i><sub>X</sub>+<i>R</i><sub>Y</sub> = <font color="#0000FF">' + round(rx/1+ry/1) + '</font><br>');
+results.document.write('Ignoring fixed costs, the combined profit made out of goods <em>X</em> and <em>Y</em> is: ');
+results.document.write('<i>Profit</i><sub>X</sub>+<i>Profit</i><sub>Y</sub> = <font color="#0000FF">' + round(profitx/1+profity) + '</font><br>');
+if (profitx/1+profity >= F)
+results.document.write("Taking fixed cost into account, the seller earns a total profit of: ", '<i>Profit</i><sub>X</sub>+<i>Profit</i><sub>Y</sub>-<i>F</i>  = <font color="#0000FF">', round(profitx/1+profity-F), '</font><br>');
+else 
+results.document.write("Taking fixed cost into account, the seller makes a total loss of: ", '<EM>L</EM>  = <font color="#0000FF">', round(F-profitx-profity), '</font><br>');
+} //end of writnotying function
+
+function writpuretying() { //writes pure-tying results
+writresult();
+results.document.write('<font color="#FF0000">Pure-Tying: Suppose that the seller is contrained to sell all products in a single pacakge only </font>: <br>');
+profitxy=0; pxy=0;
+for (var i = 1; i < T/1+1/1; i++) { //loop to run over all prices of XY
+	quantxytemp=0;
+	for (var j = 1; j < T/1+1/1; j++) { // adding all n[j] for xy[j] <= xy[i]
+		if (xy[j] >= xy[i]) quantxytemp=quantxytemp/1+n[j]/1;
+	} //end of for j
+	if ((xy[i]-cx-cy)*quantxytemp >= profitxy) { // asigning max profit and prices
+	profitxy=(xy[i]-cx-cy)*quantxytemp; pxy=xy[i]; qxy=quantxytemp; rxy=pxy*quantxytemp;
+	} //end if profit
+}// end for i
+results.document.write('The seller should set the price of the tied package <em>XY</em> to: ');
+results.document.write('<i>p</i><sub>XY</sub> = <font color="#0000FF">' + round(pxy) + '</font><br>');
+var xyserved=''; xyunserved='';  //now, sorting out served types
+for (var i = 1; i < T/1+1/1; i++) { 
+	if (xy[i] < pxy) {xyunserved=xyunserved+'type '+i+', ';}
+	else {xyserved=xyserved+'type '+i+', ';}
+}//end for 
+results.document.write("Under this price, the types of consumers who buy the package <em>XY</em> are: ", '<font color="#0000FF">'+ xyserved +'</font><br>');
+results.document.write('At this price, the number of packages <em>XY</em> sold is: ');
+results.document.write('<i>q</i><sub>XY</sub> = <font color="#0000FF">' + round(qxy) + '</font><br>');
+results.document.write('The revenue collected from selling the package <em>XY</em> is: ');
+results.document.write('<i>R</i><sub>XY</sub> = <font color="#0000FF">' + round(rxy) + '</font><br>');
+results.document.write('Ignoring fixed costs, the profit made from selling the package <em>XY</em> is: ');
+results.document.write('<i>Profit</i><sub>XY</sub> = <font color="#0000FF">' + round(profitxy) + '</font><br>');
+if (profitxy >= F)
+results.document.write("Taking fixed cost into account, the seller earns a total profit of: ", '<i>Profit</i><sub>XY</sub>-<i>F</i> = <font color="#0000FF">', round(profitxy-F), '</font><br>');
+else 
+results.document.write("Taking fixed cost into account, the seller makes a total loss of: ", '<EM>L</EM>  = <font color="#0000FF">', round(F-profitxy), '</font><br>');
+}
+
+function writmixedtying() { //writes mixed tying results
+writresult();
+results.document.write('<font color="#FF0000">Mixed-Tying: Suppose that the seller can sell packages and/or each product separately </font>: <br>');
+results.document.write('Under Development: This feature of the software is not yet available! <br>');
+}
+
+function writcomparetying() { //compares and finds optimal strategy
+writresult();
+results.document.write('<font color="#FF0000">Profit Comparison: Is tying profitable? </font>: <br>');
+	if (profitxy > profitx/1+profity) {
+	results.document.write('Tying should be utilized, since pure-tying yields a higher profit than no-tying. <br>');
+	results.document.write('The difference in profit is: <i>Profit</i><sub>XY</sub>-<i>Profit</i><sub>X</sub>-<i>Profit</i><sub>Y</sub>  = <font color="#0000FF">', round(profitxy-profitx-profity), '</font><br>');
+	} //end if >
+	else {
+		if (profitxy == profitx/1+profity) {
+		results.document.write('Pure-tying and no-tying yield identical profit levels. <br>');
+		} //end if =
+		else { //meaning that < applies
+		results.document.write('Each product should be sold separately, since no-tying yields a higher profit than pure-tying. <br>');
+		results.document.write('The difference in profit is: <i>Profit</i><sub>X</sub>+<i>Profit</i><sub>Y</sub>-<i>Profit</i><sub>XY</sub>  = <font color="#0000FF">', round(profitx+profity-profitxy), '</font><br>');
+		} // end else
+	}//end else >
+}
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+if (T > 9) T = 9; //making sure that # Observations does not exceed 9
+if (T < 2) T = 2; //making sure that # Observations is at least 2
+writdata(); //writes the data function
+checkx(); checky(); checkn(); //checking for negative values
+if (cx > x[xmax]) { //total shut down
+revise=true; writresult();
+results.document.write('<font color="#FF0000">The data you provided implies that good <i>X</i> should not be produced (sold) since <EM>x</EM><SUB>i</SUB> < <EM>c</EM><sub>X</sub> for all i. <br>This means that the marginal cost exceeds consumers\' willingness to pay.</font><br>' );
+results.document.write('<font color="#FF0000">Please, close this window and re-enter your data.</font><br>' ); 
+}
+if (cy > y[ymax]) { //total shut down
+revise=true; writresult();
+results.document.write('<font color="#FF0000">The data you provided implies that good <i>Y</i> should not be produced (sold) since <EM>y</EM><SUB>i</SUB> < <EM>c</EM><sub>Y</sub> for all i. <br>This means that the marginal cost exceeds consumers\' willingness to pay. </font><br>' );
+results.document.write('<font color="#FF0000">Please, close this window and re-enter your data.</font><br>' ); 
+}
+	if (revise==false) { // main calc begins
+	writnotying(); writpuretying();	writmixedtying(); writcomparetying(); //main program
+	} //end of if revise is false
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+</head>
+
+<body text=black bgColor=white>
+<h1 style="BACKGROUND-COLOR: aqua">Single 
+Seller&nbsp;/&nbsp;Tying&nbsp;/&nbsp;2 Goods / 2 to&nbsp;9 Consumer Types</h1>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: 
+To compute the single-seller's profit-maximizing strategy regarding tying of products and selling them as packages.
+The user (you) input willingness to pay for each good by each consumer type, as well as
+the number of consumers of each type, and the seller's cost parameters. 
+<br>Then, <em>How-to-Price</em><sup>TM</sup> computes whether tying is profitable, and how to price 
+the packages as well as each product sold separately.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br>
+<FORM name=data onsubmit=calc()><font color=#ff0000>Please, <STRONG>always</STRONG> click <INPUT id=reset1 onclick=initialize() type=reset value="Reset !" name=reset1>&nbsp;before 
+changing or submitting the following parameters:</font> 
+<UL>
+  <LI>The marginal production cost of good&nbsp;<em>X</em>&nbsp;(<em>c</em><sub>X</sub>), 
+  and of good&nbsp;<em>Y</em> (<em>c</em><sub>Y</sub>). <BR 
+  >Enter <em>c</em><sub>X</sub>&nbsp; =  
+  <INPUT id=cxinput onchange="cx =this.value" size=10 value=0 name=cxinput>,
+  &nbsp; <em>c</em><sub>Y</sub>&nbsp; =  
+  <INPUT id=cyinput onchange="cy =this.value" size=10 value=0 name=cyinput>&nbsp; 
+  
+  <LI>Fixed production cost (<I>F</I>). <BR>
+  Enter <I>F</I> in this box (<I>F</I> &gt; 0 
+  or <I>F</I> = 0): 
+  <INPUT id=Finput onchange="F =this.value" size=10 value=1000 name=Finput> 
+  
+  <li>Enter the number of consumer types <EM>T</EM>&nbsp;in this&nbsp;box (2-9):&nbsp; 
+  <INPUT id=Ninput onchange="T =this.value" size=10 value=3 name=Ninput> 
+  <LI>Below, enter&nbsp;consumers' maximum willingness to 
+  pay for good <em>X</em>     
+     &nbsp;(<em>x</em><SUB>i</SUB> &gt; 0), for good <em>Y</em>    
+    (<em>y</em><sub>i</sub> &gt; 0),&nbsp;
+  and the number of consumers of this type&nbsp;(<EM>n</EM><SUB>i</SUB>):<BR>
+  <FONT size=2>(<font color=#ff0000>Remark:</font> 
+  if, for example, you entered&nbsp; <EM>T</EM> =    3 (default), 
+  the program will ignore all&nbsp;consumer types&nbsp;4 to 9, and so on...) </FONT><br>
+  
+  Consumer-type&nbsp;01: 
+  Enter <i>x</i><SUB>01</SUB> =
+  <INPUT onchange="x[1] =this.value" size=10 value=4 name=x1input ID=Text1>,&nbsp; 
+  <i>y</i><SUB>01</SUB> =
+  <INPUT onchange="y[1] =this.value" size=10 value=0 name=x1input ID=Text2>,&nbsp; 
+  <I>n</I><SUB>01</SUB> =
+  <INPUT onchange="n[1] =this.value" size=10 value=200 name=n1input ID=Text3><br> 
+   
+  Consumer-type&nbsp;02: 
+  Enter <i>x</i><SUB>02</SUB> =
+  <INPUT onchange="x[2] =this.value" size=10 value=3 name=x2input ID=Text4>,&nbsp; 
+  <i>y</i><SUB>02</SUB> =
+  <INPUT onchange="y[2] =this.value" size=10 value=3 name=y2input ID=Text5>,&nbsp; 
+  <I>n</I><SUB>02</SUB>   = 
+  <INPUT onchange="n[2] =this.value" size=10 value=100 name=n2input ID=Text6>&nbsp;<br>
+    
+  Consumer-type&nbsp;03: 
+  Enter <i>x</i><SUB>03</SUB> =
+  <INPUT onchange="x[3] =this.value" size=10 value=0 name=x3input ID=Text7>,&nbsp; 
+  <i>y</i><SUB>03</SUB> =
+  <INPUT onchange="y[3] =this.value" size=10 value=4 name=y3input ID=Text8>,&nbsp; 
+  <I>n</I><SUB>03</SUB>  = 
+  <INPUT onchange="n[3] =this.value" size=10 value=200 name=n3input ID=Text9>&nbsp;<br>
+  
+  Consumer-type&nbsp;04: 
+  Enter <i>x</i><SUB>04</SUB> =
+  <INPUT onchange="x[4] =this.value" size=10 value=333 name=x4input ID=Text10>,&nbsp; 
+  <i>y</i><SUB>04</SUB> =
+  <INPUT onchange="y[4] =this.value" size=10 value=333 name=y4input ID=Text11>,&nbsp; 
+  <I>n</I><SUB>04</SUB> =
+  <INPUT onchange="n[4] =this.value" size=10 value=333 name=n4input ID=Text12>&nbsp;<br> 
+  
+  Consumer-type&nbsp;05: 
+  Enter <i>x</i><SUB>05</SUB> =
+  <INPUT onchange="x[5] =this.value" size=10 value=333 name=x5input ID=Text13>,&nbsp; 
+  <i>y</i><SUB>05</SUB> =
+  <INPUT onchange="y[5] =this.value" size=10 value=333 name=y5input ID=Text14>,&nbsp; 
+  <I>n</I><SUB>05</SUB>  = 
+  <INPUT onchange="n[5] =this.value" size=10 value=333 name=n5input ID=Text15>&nbsp;<br>
+    
+  Consumer-type&nbsp;06: 
+  Enter <i>x</i><SUB>06</SUB> =
+  <INPUT onchange="x[6] =this.value" size=10 value=333 name=x6input ID=Text16>,&nbsp; 
+  <i>y</i><SUB>06</SUB> =
+  <INPUT onchange="y[6] =this.value" size=10 value=333 name=y6input ID=Text17>,&nbsp; 
+  <I>n</I><SUB>06</SUB> = 
+  <INPUT onchange="n[6] =this.value" size=10 value=333 name=n6input ID=Text18>&nbsp;<br>
+      
+  Consumer-type&nbsp;07: 
+  Enter <i>x</i><SUB>07</SUB> =
+  <INPUT onchange="x[7] =this.value" size=10 value=333 name=x7input ID=Text19>,&nbsp; 
+  <i>y</i><SUB>07</SUB> =
+  <INPUT onchange="y[7] =this.value" size=10 value=333 name=y7input ID=Text20>,&nbsp; 
+  <I>n</I><SUB>07</SUB> = 
+  <INPUT onchange="n[7] =this.value" size=10 value=333 name=n7input ID=Text21>&nbsp;<br>
+    
+  Consumer-type&nbsp;08: 
+  Enter <i>x</i><SUB>08</SUB> =
+  <INPUT onchange="x[8] =this.value" size=10 value=333 name=x8input ID=Text22>,&nbsp; 
+  <i>y</i><SUB>08</SUB> =
+  <INPUT onchange="y[8] =this.value" size=10 value=333 name=y8input ID=Text23>,&nbsp; 
+  <I>n</I><SUB>08</SUB> =
+  <INPUT onchange="n[8] =this.value" size=10 value=333 name=n8input ID=Text24>&nbsp;<br>
+   
+  Consumer-type&nbsp;09: 
+  Enter <i>x</i><SUB>09</SUB> =
+  <INPUT onchange="x[9] =this.value" size=10 value=333 name=x9input ID=Text25>,&nbsp; 
+  <i>y</i><SUB>09</SUB> =
+  <INPUT onchange="y[9] =this.value" size=10 value=333 name=y9input ID=Text26>,&nbsp; 
+  <I>n</I><SUB>09</SUB> =
+  <INPUT onchange="n[9] =this.value" size=10 value=333 name=n9input ID=Text27>&nbsp;<br>
+      
+        
+</LI></UL>
+ 
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !"><INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()"><INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')"><INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"></FORM><hr>
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.</h5>
+
+</body></html>

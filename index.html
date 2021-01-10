@@ -1,0 +1,591 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta name="VI60_defaultClientScript" content="JavaScript">
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=windows-1252">
+  <meta http-equiv="Content-Language" content="en-us">
+  <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+  <meta name="ProgId" content="FrontPage.Editor.Document">
+  <title>Welcome to How-to-Price</title>
+  <meta name="description"
+ content="How-to-PriceTM provides the business community with the software for helping in making decisions how to price products and services, and the utilization of other marketing strategies.">
+  <meta name="keywords"
+ content="how to price, yield management, revenue management, pricing, pricing decision, market share, profit maximization, profit making, pricing products, pricing services, microeconomics, price computation, pricing software, estimation of demand function, single-seller pricing, pricing under competition, public-utility pricing, booking, reservation, regulation of the industry, concentration measures, concentration index, index of concentration, present value, future value, markup, discount, industrial organization, switching cost, Cournot competition, quantity competition, Bertrand competition, price competition, monopoly pricing, monopoly output, business intellignece, ">
+  <link rel="SHORTCUT ICON" href="favicon.ico">
+  <style ="LEFT: 10px; TOP: 1509px"></style>
+</head>
+<body bgcolor="#ffffff">
+<script language="javascript">
+/* var versionnumber=17; not in use for openmodel() */
+/* REVSITION NOTES (see bottom) */
+/* No longer uses!  The trick here is the use of the var versionnumber to open all files
+function openmodel(filename) {
+window.open(filename+versionnumber+'.html', 'results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no');
+}
+Instead, we use */
+function openmodel(filename) {
+window.open(filename+'.html', 'results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no');
+}
+function printpage() {
+if (window.print) {
+window.print();  }
+}
+</script>
+<p style="background-color: lightgrey;" align="left"><font size="6"><font
+ style="background-color: gold;" color="#0000ff"><strong> <a name="top"></a>Welcome
+to</strong> </font> <i><font color="#000000"><span
+ style="background-color: rgb(0, 255, 255);">How-to-Price</span></font></i></font></p>
+<table style="border-collapse: collapse;" border="0"
+ bordercolor="#111111" cellpadding="10" cellspacing="0" height="38"
+ width="89%">
+  <tbody>
+    <tr>
+      <td height="34" valign="top" width="32%"> <span
+ style="background-color: rgb(255, 255, 255);"> <font color="#000000"
+ size="4"> <a name="servicesmenu"></a></font><b> <font color="#006600"
+ size="4"> Menu of Services</font></b></span><font color="#000000"
+ size="4"><span style="background-color: rgb(255, 255, 255);">:</span></font>
+      <ol>
+        <li><span style="background-color: rgb(255, 255, 255);"><a
+ href="#demandest"> Demand Estimation &amp; Forecasting</a>&nbsp; </span></li>
+        <li><span style="background-color: rgb(255, 255, 255);"> <a
+ href="#sspricing">Single-seller Pricing</a>&nbsp; </span> </li>
+        <li><span style="background-color: rgb(255, 255, 255);"> <a
+ href="#comppricing">Pricing under Competition</a></span></li>
+        <li><span style="background-color: rgb(255, 255, 255);"> <a
+ href="#booking"> Booking &amp; Reservations</a></span></li>
+        <li><span style="background-color: rgb(255, 255, 255);"><a
+ href="#investment">Investment Decisions</a> </span></li>
+        <li><span style="background-color: rgb(255, 255, 255);"> <a
+ href="#pupricing">Public-utility Pricing</a>&nbsp; </span></li>
+        <li><span style="background-color: rgb(255, 255, 255);"> <a
+ href="#regulation"> Industry Regulation</a>&nbsp; </span> </li>
+        <li><span style="background-color: rgb(255, 255, 255);"> <a
+ href="#distance"> Distance, Routing, &amp; Logistics</a></span></li>
+        <li><span style="background-color: rgb(255, 255, 255);"> <a
+ href="#misc">Misc. Calculations</a>&nbsp; </span></li>
+        <li><span style="background-color: rgb(255, 255, 255);"> <a
+ href="#supporting"> Supporting-Material</a>&nbsp; </span></li>
+      </ol>
+      <p> <font
+ style="background-color: rgb(255, 255, 255); font-weight: 700;"
+ color="#006600">Web Site</font>:&nbsp; <br>
+      <font
+ color="black"><span style="background-color: rgb(255, 255, 255);">
+      <a target="_top" href="http://links.ozshy.com/how-to-price">
+      http://links.ozshy.com/how-to-price</a> &nbsp;
+      </span></font> </p>
+      <p> <input language="javascript" id="button3"
+ onclick="window.close()" value="Close !" name="button1" type="button">
+      <input language="javascript" id="print1" onclick="printpage()"
+ value="Print !" name="print" type="button"> </p>
+      </td>
+      <td bgcolor="#c0c0c0" height="34" width="3%">&nbsp;</td>
+      <td colspan="2" height="34" valign="top" width="70%">
+      <p align="justify"><font> <span
+ style="background-color: rgb(255, 255, 255);"><i><font color="#ff0000"
+ size="4">"Your guide <span lang="de">to pricing techniques</span> and
+yield-management"</font></i><font size="4"> </font><font
+ color="#0000ff" size="4"><br>
+      </font> </span> </font> </p>
+      <p align="justify"><em><span
+ style="background-color: rgb(0, 255, 255);">How-to-Price</span></em><span
+ style="font-variant: small-caps;"><sup>TM</sup></span> provides the
+business community with the software for helping in making decisions
+how to price products and services, and the&nbsp;utilization
+of&nbsp;other&nbsp;marketing strategies.&nbsp; </p>
+      <p align="justify"> <font color="#ffffff"><span
+ style="background-color: rgb(0, 128, 128);">Overview</span></font><font
+ color="#000000">:</font> &nbsp;&nbsp;The computations performed in
+this site cannot replace the common-sense and intuition of sales and
+marketing officers.&nbsp;Therefore, the purpose of this site is only to
+offer some support for those who make pricing decisions.&nbsp; However,
+the user should carefully check whether the assumptions of the models
+underlying these computations match the particular environment in
+question. The algorithms built into this software utilize
+modern&nbsp;theories taken from theoretical economics and
+yield-management research.&nbsp;&nbsp;</p>
+      <p align="justify">This site is under construction.&nbsp; The
+work on this project has&nbsp;begun on January 2002 and is likely to
+continue for a few years, with the intention of writing computer
+software to be used on various operating systems.</p>
+      <h5> </h5>
+      <h5>Copyright &copy; 2002&nbsp; <em>How-to-Price</em><sup><span
+ style="font-variant: small-caps;">TM</span></sup>&nbsp;&nbsp;All
+rights reserved.</h5>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr>
+<p align="left"> </p>
+<!--webbot bot="PurpleText" PREVIEW="*** Estimation begins" -->
+<h3 style="background-color: silver;" align="left"><span
+ style="background-color: rgb(0, 255, 255);">1.&nbsp;
+<a name="demandest"></a>Estimation and Forecasting of Demand Functions
+&amp; Related Parameters </span></h3>
+<ul>
+  <li>
+    <p align="left"><font color="red"><strong> Ordinary Demand
+Functions (price-quantity regressions):</strong></font> &nbsp;</p>
+    <ul>
+      <li>
+        <p align="left"><font color="#ff0000">Linear Demand:</font>&nbsp;
+        <a onclick="openmodel('reglin9firms19')"
+ href="javascript:void(0);">2 to 9 observations</a>,&nbsp; <a
+ onclick="openmodel('reglin25firms19')" href="javascript:void(0);">2 to
+25 observations</a>,</p>
+      </li>
+      <li>
+        <p align="left"><font color="#ff0000">Constant-Elasticity
+(Exponential) Demand:</font>&nbsp; <a
+ onclick="openmodel('regexp9firms19')" href="javascript:void(0);">2 to
+9 observations</a>,&nbsp; <a onclick="openmodel('regexp25firms19')"
+ href="javascript:void(0);">2 to 25 observations</a>,</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p align="left"><font color="red"><strong> Advertising Demand
+Functions (quantity-price-advertising regressions):</strong></font>
+&nbsp;</p>
+    <ul>
+      <li>
+        <p align="left"><font color="#ff0000">Linear Demand:</font>&nbsp;
+        <a onclick="openmodel('reglinad9firms19')"
+ href="javascript:void(0);">2 to 9 observations</a>,&nbsp; <a
+ onclick="openmodel('reglinad25firms19')" href="javascript:void(0);">2
+to 25 observations</a>,</p>
+      </li>
+      <li>
+        <p align="left"><font color="#ff0000">Constant-Elasticity
+(Exponential) Demand:</font>&nbsp; <a
+ onclick="openmodel('regexpad9firms19')" href="javascript:void(0);">2
+to 9 observations</a>,&nbsp; <a
+ onclick="openmodel('regexpad25firms19')" href="javascript:void(0);">2
+to 25 observations</a>,</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p align="left"><font color="red"><strong> Income Demand Functions
+(quantity-price-income regressions):</strong></font> &nbsp;</p>
+    <ul>
+      <li>
+        <p align="left"><font color="#ff0000">Linear Demand:</font>&nbsp;
+        <a onclick="openmodel('reglinin9firms19')"
+ href="javascript:void(0);">2 to 9 observations</a>,&nbsp; <a
+ onclick="openmodel('reglinin25firms19')" href="javascript:void(0);">2
+to 25 observations</a>,</p>
+      </li>
+      <li>
+        <p align="left"><font color="#ff0000">Constant-Elasticity
+(Exponential) Demand:</font>&nbsp; <a
+ onclick="openmodel('regexpin9firms19')" href="javascript:void(0);">2
+to 9 observations</a>,&nbsp; <a
+ onclick="openmodel('regexpin25firms19')" href="javascript:void(0);">2
+to 25 observations</a>,</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p align="left"><font color="red"><strong>Demand for Network
+Services (price-quantity regressions):</strong></font>&nbsp; <a
+ onclick="openmodel('regnet9firms19')" href="javascript:void(0);">2 to
+9 observations</a>,&nbsp; <a onclick="openmodel('regnet25firms19')"
+ href="javascript:void(0);">2 to 25 observations</a>,</p>
+  </li>
+  <li>
+    <p align="left"><b><font color="#ff0000">Estimating Switching Costs
+(discrete demand functions):</font></b>&nbsp; <a
+ onclick="openmodel('sc9firms19')" href="javascript:void(0);">2 to 9
+sellers</a>,&nbsp; <a onclick="openmodel('sc25firms19')"
+ href="javascript:void(0);">2 to 25 sellers</a>, </p>
+  </li>
+  <li>
+    <p align="left"><font color="#ff0000"><b>Forecasting Demand Patterns</b></font><b><font
+ color="#ff0000">:</font></b>&nbsp; <a
+ onclick="openmodel('forecastq9obs1')" href="javascript:void(0);">2 to
+9 past observations</a>,&nbsp; <a
+ onclick="openmodel('forecastq25obs1')" href="javascript:void(0);">2 to
+25 past observations</a>, </p>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<!--webbot bot="PurpleText" PREVIEW="*** Single-seller pricing" -->
+<h3 style="background-color: silver;" align="left"><span
+ style="background-color: rgb(0, 255, 255);">2. <a name="sspricing"></a>Single-Seller
+Pricing</span> </h3>
+<ul>
+  <li>
+    <p align="left"><font color="#ff0000"><b>Single Market (continuous
+demand function):</b></font>&nbsp; <a
+ onclick="openmodel('1mktmonoplin19')" href="javascript:void(0);">Linear
+demand case</a>,&nbsp; <a onclick="openmodel('1mktmonopexp19')"
+ href="javascript:void(0);">Constant-elasticity demand case</a>,</p>
+  </li>
+</ul>
+<ul>
+  <li>
+    <p align="left"><font color="#ff0000"><b>Single Market (discrete
+demand functions):</b></font>&nbsp; <a
+ onclick="openmodel('1mkt9consumermonop10')" href="javascript:void(0);">2
+to 9 consumer types</a>,&nbsp; <a
+ onclick="openmodel('1mkt25consumermonop10')" href="javascript:void(0);">2
+to 25 consumer types</a>,</p>
+  </li>
+</ul>
+<ul>
+  <li>
+    <p align="left"><b><font color="#ff0000">Two Markets (continuous
+demand function):</font></b>&nbsp;</p>
+    <ul>
+      <li>
+        <p align="left"><font color="red">Unlimited Capacity:</font>&nbsp;
+        <a onclick="openmodel('2mktmonoplin19')"
+ href="javascript:void(0);">Linear demand case</a>,&nbsp; <a
+ onclick="openmodel('2mktmonopexp19')" href="javascript:void(0);">Constant-elasticity
+demand case</a>,</p>
+      </li>
+      <li>
+        <p align="left"><font color="red">Capacity Constraint:</font>&nbsp;
+        <a onclick="openmodel('2mktmonopcaplin19')"
+ href="javascript:void(0);">Linear demand case</a>,&nbsp; </p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p align="left"><b><font color="#ff0000">Peak-load Pricing
+(continuous demand function):</font></b>&nbsp; <a
+ onclick="openmodel('2mktmonoppeak22')" href="javascript:void(0);">Two
+seasons</a>,&nbsp; <a onclick="openmodel('2mktmonoppeakrep19')"
+ href="javascript:void(0);">Two seasons repeated <em>n</em> periods</a>,</p>
+  </li>
+  <li>
+    <p align="left"><b><font color="#ff0000">Bundling (up to 4 units)
+(discrete demand functions):</font></b>&nbsp; <a
+ onclick="openmodel('bundling9consumer3')" href="javascript:void(0);">2
+to 9 consumer types</a>,&nbsp; <a
+ onclick="openmodel('bundling25consumer3')" href="javascript:void(0);">2
+to 25 consumer types</a>,</p>
+  </li>
+  <li>
+    <p align="left"><b><font color="#ff0000">Tying (discrete demand
+functions):</font></b>&nbsp; </p>
+    <ul>
+      <li>
+        <p align="left"><font color="#ff0000">2 Goods:</font>&nbsp; <a
+ onclick="openmodel('2tying9consumer1')" href="javascript:void(0);">2
+to 9 consumer types</a>,&nbsp; <a
+ onclick="openmodel('2tying25consumer1')" href="javascript:void(0);">2
+to 25 consumer types</a>,</p>
+      </li>
+      <li>
+        <p align="left"><font color="#ff0000">3 Goods:</font>&nbsp; <a
+ onclick="openmodel('3tying9consumer1')" href="javascript:void(0);">2
+to 9 consumer types</a>,&nbsp; <a
+ onclick="openmodel('3tying25consumer1')" href="javascript:void(0);">2
+to 25 consumer types</a>,</p>
+      </li>
+      <li>
+        <p align="left"><font color="#ff0000">4 Goods:</font>&nbsp; <a
+ onclick="openmodel('4tying9consumer3')" href="javascript:void(0);">2
+to 9 consumer types</a>,&nbsp; <a
+ onclick="openmodel('4tying25consumer3')" href="javascript:void(0);"> 2
+to 25 consumer types</a>,</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p align="left"><strong><font color="red"> Advertising </font></strong><b><font
+ color="#ff0000">(continuous demand function)</font></b><strong><font
+ color="red">:</font></strong>&nbsp; <a onclick="openmodel('ad19')"
+ href="javascript:void(0);">Optimal spending</a>, </p>
+  </li>
+  <li>
+    <p align="left"><strong><font color="#ff0000">Network-Services
+Pricing </font></strong><b><font color="#ff0000">(continuous demand
+function)</font></b><strong><font color="#ff0000">:</font></strong>&nbsp;
+    <a onclick="openmodel('criticalmass19')" href="javascript:void(0);">Critical
+mass</a>,&nbsp; <a onclick="openmodel('1mktmonopnet19')"
+ href="javascript:void(0);">Subscription pricing</a>,
+    </p>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<!--webbot bot="PurpleText" PREVIEW="*** Pricing Under Competition" -->
+<h3 style="background-color: silver;" align="left"><span
+ style="background-color: rgb(0, 255, 255);">3.&nbsp; <a
+ name="comppricing"></a>Pricing Under Competition </span> </h3>
+<ul>
+  <li>
+    <p align="left"><b><font color="#ff0000">Homogeneous Products
+(continuous demand function):</font></b>&nbsp; <a
+ onclick="openmodel('comphomo19')" href="javascript:void(0);">Quantity
+(inventory) competition</a>,</p>
+  </li>
+  <li>
+    <p align="left"><b><font color="#ff0000">Undercutting Rivals under
+Switching Costs (discrete demand functions):</font></b>&nbsp; <a
+ onclick="openmodel('undersc9firms5')" href="javascript:void(0);"> 1 to
+9 competing brands</a>,&nbsp; <a onclick="openmodel('undersc25firms5')"
+ href="javascript:void(0);"> 1 to 25 competing brands</a>, </p>
+  </li>
+  <li>
+    <p align="left"><b><font color="#ff0000">Price Equilibrium under
+Switching Costs (discrete demand functions):</font></b>&nbsp; <a
+ onclick="openmodel('compsc9firms2')" href="javascript:void(0);">2 to 9
+sellers</a>,&nbsp; <a onclick="openmodel('compsc25firms2')"
+ href="javascript:void(0);">2 to 25 sellers</a>, </p>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<!--webbot bot="PurpleText" PREVIEW="*** Booking and Reservations" -->
+<h3 style="background-color: silver;" align="left"><font
+ style="background-color: rgb(0, 255, 255);"><span
+ style="background-color: rgb(0, 255, 255);"> 4.&nbsp; <a
+ name="booking"></a>Booking and Reservations </span></font></h3>
+<ul>
+  <li>
+    <p align="left"><b><font color="#ff0000">Advance Booking:</font></b>&nbsp;
+    <a onclick="openmodel('overbook2')" href="javascript:void(0);">Overbooking
+(single-class)</a>,&nbsp; [This algorithm contains an error and should
+therefore be modified!]<br>
+&nbsp;</p>
+  </li>
+  <li>
+    <p align="left"><font color="#ff0000"><b>Refundable vs.
+Non-refundable </b> </font><font color="#ff0000"><b> Booking:</b></font>&nbsp;
+    </p>
+    <ul>
+      <li>
+        <p align="left"><font color="#ff0000">Unlimited Capacity</font>:
+        <a onclick="openmodel('refund9consumer6')"
+ href="javascript:void(0);">1 to 9 consumer types</a>, <a
+ onclick="openmodel('refund25consumer6')" href="javascript:void(0);">1
+to 25 consumer types</a>,</p>
+      </li>
+      <li>
+        <p align="left"><font color="#ff0000">Capacity Constraint</font>:
+[<a onclick="openmodel('refund9cap1')" href="javascript:void(0);">n/a </a>],
+[<a onclick="openmodel('refund25cap1')" href="javascript:void(0);">n/a </a>],</p>
+      </li>
+      <li>
+        <p align="left"><font color="#ff0000">Optimal Cancellation Fee</font>:
+[n/a],</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<!--webbot bot="PurpleText" PREVIEW="*** Invesement Decisions" -->
+<h3 style="background-color: silver;" align="left"><span
+ style="background-color: rgb(0, 255, 255);">5</span><span
+ style="background-color: rgb(0, 255, 255);">.&nbsp; <a
+ name="investment"></a>Investment Decisions </span> </h3>
+<ul>
+  <li>
+    <p align="left"><b><font color="#ff0000"> Entry Decisions:</font></b>&nbsp;
+[<a onclick="openmodel('entry1')" href="javascript:void(0);">n/a</a>],&nbsp;
+    </p>
+  </li>
+  <li>
+    <p align="left"><b><font color="#ff0000"> Capital Replacement:</font></b>&nbsp;[<a
+ onclick="openmodel('capital1')" href="javascript:void(0);">n/a</a>],&nbsp;
+    </p>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<!--webbot bot="PurpleText" PREVIEW="*** Public-Utility pricing" -->
+<h3 style="background-color: silver;" align="left"><span
+ style="background-color: rgb(0, 255, 255);"> 6.&nbsp; <a
+ name="pupricing"></a>Public-Utility Pricing </span> </h3>
+<ul>
+  <li>
+    <p align="left"><font color="#ff0000"><b>Peak-load Pricing </b></font><b><font
+ color="#ff0000">(continuous demand functions)</font></b><font
+ color="#ff0000"><b>:</b></font>&nbsp; <a
+ onclick="openmodel('2mktsocialpeak20')" href="javascript:void(0);">Two
+seasons</a>,&nbsp; <a onclick="openmodel('2mktsocialpeakrep19')"
+ href="javascript:void(0);">Two seasons repeated <em>n</em> periods</a>,</p>
+  </li>
+  <li>
+    <p align="left"><font color="#ff0000"><b>Ramsey Pricing </b></font><b><font
+ color="#ff0000">(continuous demand functions)</font></b><font
+ color="#ff0000"><b>:</b></font>&nbsp; [n/a],&nbsp;</p>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<!--webbot bot="PurpleText" PREVIEW="*** Regulation of the Industry" -->
+<h3 style="background-color: silver;" align="left"><span
+ style="background-color: rgb(0, 255, 255);"> 7.&nbsp; <a
+ name="regulation"></a>Regulation of the Industry </span> </h3>
+<ul>
+  <li>
+    <p align="left"><b><font color="#ff0000"> Market-Concentration
+Measures:</font></b>&nbsp; <a onclick="openmodel('concent9firms19')"
+ href="javascript:void(0);">1 to 9 Sellers</a>,&nbsp; <a
+ onclick="openmodel('concent25firms19')" href="javascript:void(0);">1
+to 25 Sellers</a>,
+    </p>
+  </li>
+  <li>
+    <p align="left"><b><font color="#ff0000"> Merger Guidelines:</font></b>&nbsp;
+    <a onclick="openmodel('merger9firms19')" href="javascript:void(0);">2
+to 9 Sellers</a>,&nbsp; <a onclick="openmodel('merger25firms19')"
+ href="javascript:void(0);">2 to 25 Sellers</a>,
+    </p>
+  </li>
+  <li>
+    <p align="left"><b><font color="#ff0000"> Access Pricing:</font></b>&nbsp;
+[n/a],</p>
+  </li>
+  <li>
+    <p align="left"><font color="#ff0000"><strong>Price Control:&nbsp;</strong><font
+ color="#000000">&nbsp; [n/a],</font></font></p>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<!--webbot bot="PurpleText" PREVIEW="*** Distance problems and Logistics" -->
+<h3 style="background-color: silver;" align="left"><font
+ style="background-color: rgb(0, 255, 255);"><span
+ style="background-color: rgb(0, 255, 255);"> 8.&nbsp; <a
+ name="distance"></a>Distance, Routing, and Logistics </span></font></h3>
+<ul>
+  <li>
+    <p align="left"><font color="#ff0000"><b>Shortest-Route Problem</b></font><b><font
+ color="#ff0000">:</font></b>&nbsp; <a onclick="openmodel('route4')"
+ href="javascript:void(0);">3 to 9 Cities</a>,</p>
+  </li>
+  <li>
+    <p align="left"><font color="#ff0000"><b>Minimal Spanning Tree</b></font><b><font
+ color="#ff0000">:</font></b>&nbsp; <a
+ onclick="openmodel('spantree11')" href="javascript:void(0);">3 to 9
+Cities</a>,</p>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<!--webbot bot="PurpleText" PREVIEW="*** Misc Calculations" -->
+<h3 style="background-color: silver;" align="left"><span
+ style="background-color: rgb(0, 255, 255);">9.&nbsp; <a name="misc"></a>Miscellaneous
+Calculations </span> </h3>
+<ul>
+  <li>
+    <p align="left"><font color="#ff0000"><b>Interest-rate Calculations:</b></font>&nbsp;
+    <a onclick="openmodel('pv19')" href="javascript:void(0);">Present
+value (Payments)</a>,&nbsp; &nbsp;<a onclick="openmodel('fv19')"
+ href="javascript:void(0);">Future value (Investment)</a>, </p>
+  </li>
+  <li>
+    <p align="left"><font color="#ff0000"><strong>Markups and Discounts:</strong><font
+ color="#000000"> &nbsp; <a onclick="openmodel('pricecomp19')"
+ href="javascript:void(0);">Price comparison</a></font></font>, &nbsp; <a
+ onclick="openmodel('markdisc19')" href="javascript:void(0);">Markup
+&amp; Discount</a>,&nbsp; Payments under Inflation [n/a], </p>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<!--webbot bot="PurpleText" PREVIEW="*** Supporting Material" -->
+<h3 style="background-color: silver;" align="left"><font
+ style="background-color: rgb(0, 255, 255);"><span
+ style="background-color: rgb(0, 255, 255);">10.&nbsp; <a
+ name="supporting"></a>Supporting Material </span></font></h3>
+<ul>
+  <li>
+    <p align="left"><font color="#ff0000"><b><a
+ onclick="openmodel('glossary')" href="javascript:void(0);"><font
+ color="red"><strong>Glossary of Terms</strong></font></a></b></font></p>
+  </li>
+  <li>
+    <p align="left"><a onclick="openmodel('terms20')"
+ href="javascript:void(0);"><font color="red"><strong>Terms-of-Use and
+Disclaimer</strong></font></a></p>
+  </li>
+  <li>
+    <p align="left"><a onclick="openmodel('faq19')"
+ href="javascript:void(0);"><font color="red"><strong>Frequently Asked
+Questions</strong></font></a></p>
+  </li>
+  <li>
+    <p align="left"><font color="#ff0000"><b><a
+ onclick="openmodel('revision')" href="javascript:void(0);"><font
+ color="red"><strong>Revision Notes</strong></font></a></b></font></p>
+  </li>
+  <li>
+    <p align="left"><font color="#ff0000"><b><a
+ onclick="openmodel('books21')" href="javascript:void(0);"><font
+ color="red"><strong>Related Books</strong></font></a><font color="red"></font></b></font></p>
+  </li>
+  <li>
+    <p align="left"><a onclick="openmodel('links19')"
+ href="javascript:void(0);"><font color="red"><strong>Related Links</strong></font></a></p>
+  </li>
+</ul>
+<p align="center"><font size="2"><a href="#top">Go-to-top</a></font></p>
+<hr>
+<p></p>
+<form id="FORM1" name="FORM1"><input language="javascript" id="close"
+ onclick="window.close()" value="Close This Page !" name="close"
+ type="button">
+  <input language="javascript" id="print" onclick="printpage()"
+ value="Print This Page !" name="print" type="button"></form>
+<h5 align="left">Copyright &copy; 2002&nbsp; <em>How-to-Price</em><sup><span
+ style="font-variant: small-caps;">TM</span></sup>&nbsp; All rights
+reserved.</h5>
+<script language="javascript">
+/* document.write('<h5>Version number ', versionnumber,', Posted on 2002/05/19<h5>'); */
+document.write('<h5>Version number 35, Posted on 2002/11/04<h5>'); 
+  </script>
+<p> Since November 1, 2004, you are visitor number:<!-- Start of StatCounter Code -->
+<script type="text/javascript" language="javascript">
+var sc_project=441226; 
+var sc_partition=2; 
+  </script>
+<script type="text/javascript" language="javascript"
+ src="http://www.statcounter.com/counter/counter.js"></script>
+<noscript> 
+<a href="http://www.statcounter.com/" target="_blank"><img
+src="http://c3.statcounter.com/counter.php?sc_project=441226&amp;java=0"
+alt="free hit counter" border="0"></a></noscript>
+<!-- End of StatCounter Code -->
+. Since November 1, 2004, this page has been loaded<!-- Start of StatCounter Code -->
+<script type="text/javascript" language="javascript">
+var sc_project=805281; 
+var sc_partition=4; 
+var sc_security="3be9f082"; 
+  </script>
+<script type="text/javascript" language="javascript"
+ src="http://www.statcounter.com/counter/counter.js"></script>
+<noscript> 
+<a href="http://www.statcounter.com/" target="_blank"><img
+src="http://c5.statcounter.com/counter.php?sc_project=805281&amp;java=0&amp;security=3be9f082"
+alt="counter create hit" border="0"></a></noscript>
+<!-- End of StatCounter Code --> times.
+<script src="http://www.google-analytics.com/urchin.js"
+ type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-3168416-2";
+urchinTracker();
+</script></p>
+</body>
+</html>

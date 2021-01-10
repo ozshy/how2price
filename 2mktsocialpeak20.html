@@ -1,0 +1,255 @@
+<html>
+<head>
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+<META name=VI60_defaultClientScript content=JavaScript>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Public Utility / Peak-load Pricing / Two Seasons</title>
+<SCRIPT LANGUAGE=javascript> // collecting user-inserted demand data functions
+
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+var a1, a2, b1, b2, oc, cc, occc, intercept1, intercept2, shutdown, season1, season2, singlemarket;
+function initialize() { //initializing variables
+a1=12; b1=1; a2=10; b2=1; oc=2; cc=3; occc=5; intercept1='high'; intercept2='high'; shutdown=false; season1='low'; season2='low', singlemarket=false;
+}
+
+function writdata() { //writes the data provided by the user
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> public-utility / peak-load pricing / two-markets (linear demand) case</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write("Inverse demand function in market 1 is given by: <EM>p</EM><SUB>1</SUB> = ",'<font color="fuchsia">', a1 ,'</font>', " - ",'<font color="fuchsia">', b1,'</font>', " <EM>q</EM><SUB>1</SUB>", "<br>" );
+results.document.write("Inverse demand function in market 2 is given by: <EM>p</EM><SUB>2</SUB> = ",'<font color="fuchsia">', a2 ,'</font>', " - ",'<font color="fuchsia">', b2,'</font>', " <EM>q</EM><SUB>2</SUB>", "<br>" );
+results.document.write("Maginal operating cost equals: ", '<font color="fuchsia">', oc,'</font>', "<br>");
+results.document.write("Maginal capacity cost equals: ", '<font color="fuchsia">', cc,'</font>', "<br>");
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function writ1mkt(a,b,i) { // writes results when only 1 mkt is served
+results.document.write("The public utility should sell in market (season) ", '<font color="#0000FF">',  i ,'</font>', " only!", "<br>");
+results.document.write("This means that peak-load pricing cannot be excercised since the service is provided only in one season !<br>");
+results.document.write("Ignoring fixed cost, the public utility should set the price: ");
+results.document.write('<font color="#0000FF"><i>p</i> = ', round(occc) ,'</font>', "<br>");
+results.document.write('Ignoring fixed cost, the public utility should sell in the active market: ');
+results.document.write('<font color="#0000FF">','<i>q</i><SUB>', i ,'</SUB> = ', round(a/b-oc/b-cc/b), '</font>', "<br>");
+if (i==1) {
+results.document.write('Ignoring fixed cost, the public utility should not sell in the non-active market: ');
+results.document.write('<font color="#0000FF">','<i>q</i><SUB>', 2 ,'</SUB> = 0</font>', "<br>"); }
+else {
+results.document.write('Ignoring fixed cost, the public utility should not sell in the non-active market: ');
+results.document.write('<font color="#0000FF">','<i>q</i><SUB>', 1 ,'</SUB> = 0</font>', "<br>"); 
+} //end else
+
+results.document.write('Price-elasticity in the active market: ');
+results.document.write('<font color="#0000FF">','<i>e</i><SUB>', i ,'</SUB> = ', -round((oc/1+cc/1)/(a-oc-cc)), '</font>', "<br>");
+results.document.write('The revenue (turnover) collected is: ');
+results.document.write('<font color="#0000FF">','<i>R</i> = ', round((occc)*(a/b-oc/b-cc/b)), '</font>', "<br>");
+results.document.write('Ignoring fixed and capacity costs, the operating profit made is: ');
+results.document.write('<font color="#0000FF">','<i>Profit</i> = ', round((occc-oc)*(a/b-oc/b-cc/b)), '</font>', "<br>");
+results.document.write('Note that this public utility does not make any profit.  If fact, this public utility is making a loss equals to the fixed cost (if there is any).<br>');
+} 
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+writdata(); //writes data inputted
+occc=(oc/1 + cc/1);
+if (a1 <= occc) intercept1='medium';
+if (a1 <= oc) intercept1='low';
+if (a2 <= occc) intercept2='medium';
+if (a2 <= oc) intercept2='low';
+if (intercept1=='low' && intercept2=='low') { // shutdown due to both low
+	shutdown=true; writresult();
+	results.document.write('<font color="#0000FF">This public utility should shut down (not sell in any season) since marginal operating cost exceeds consumers\' willingness to pay in any season. That is, the necessary requirement that (<EM>a</EM><SUB>1</SUB> > <EM>oc</EM>) and (<EM>a</EM><SUB>2</SUB> > <EM>oc</EM>) is not satisfied according to the data you provided. &nbsp; These values correspond to insufficient consumers\' willingness to pay at any season. </font>' );
+} // end of if both intercepts are low
+if (intercept1=='medium' && intercept2=='low') { // shutdown due 1 medium and 2 low
+	shutdown=true; writresult();
+	results.document.write('<font color="#0000FF">This public utility should shut down (not sell in any season) since (<EM>a</EM><SUB>1</SUB> < <EM>oc + cc</EM>) and (<EM>a</EM><SUB>2</SUB> < <EM>oc</EM>) according to the data you provided.  These values correspond to insufficient consumers\' willingness to pay. </font>' );
+} // end of if 1 medium, 2 low
+if (intercept1=='low' && intercept2=='medium') { // shutdown due 1 low and 2 medium
+	shutdown=true; writresult();
+	results.document.write('<font color="#0000FF">This public utility should shut down (not sell in any season) since (<EM>a</EM><SUB>1</SUB> < <EM>oc</EM>) and (<EM>a</EM><SUB>2</SUB> < <EM>oc + cc</EM>) according to the data you provided.  These values correspond to insufficient consumers\' willingness to pay. </font>' );
+} // end of if 1 medium, 2 low
+if (shutdown==false) { // begin non-shutdown
+	if (intercept1=='high' && intercept2=='low') { //market 1 only
+	singlemarket=true; writresult(); writ1mkt(a1,b1,1);
+	} 
+	if (intercept1=='low' && intercept2=='high') { //market 2 only
+	singlemarket=true; writresult(); writ1mkt(a2,b2,2);
+	} 
+// begin both markets (peak-load pricing at work)
+	if (a1/b1 - cc/b1 - oc/b1 > a2/b2 - oc/b2) season1='high';
+	if (a2/b2 - cc/b2 - oc/b2 > a1/b1 - oc/b1) season2='high';
+	if (season1=='high' && singlemarket==false) { // season 1 is high
+	writresult();
+	results.document.write('Season <font color="#0000FF">1</font> was found to be the high season. <br> This means that the capacity cost will be borne only by season <font color="#0000FF">1</font>\' s customers.<br>');
+	results.document.write('The price in season 1 should be set to: <font color="#0000FF"><EM>p</EM><SUB>1</SUB> = ', round(occc), '</font><br>');
+	results.document.write('The price in season 2 should be set to: <font color="#0000FF"><EM>p</EM><SUB>2</SUB> = ', round(oc), '</font><br>');
+	results.document.write('This means that the high-season price is <font color="#0000FF">', round(occc/oc),' </font> higher than the low-season price<br>');
+	results.document.write('Alternatively, the low-season price equals <font color="#0000FF">', round(oc/occc),' </font> of the high-season price<br>');
+	results.document.write('In other words, the low-season price is discounted <font color="#0000FF">', round(100*cc/occc),' %</font> compared with the high-season price<br>');
+	results.document.write('Or, the high-season price is marked up <font color="#0000FF">', round(100*(cc/1+oc/1)/oc),' %</font> above the low-season price<br>');
+	results.document.write('At the price <EM>p</EM><SUB>1</SUB> stated above, the public utility sells <font color="#0000FF"><EM>q</EM><SUB>1</SUB> = ', round(a1/b1-oc/b1-cc/b1),' </font>units in season 1<br>');
+	results.document.write('At the price <EM>p</EM><SUB>2</SUB> stated above, the firm sells <font color="#0000FF"><EM>q</EM><SUB>2</SUB> = ', round(a2/b2-oc/b2),' </font>units in season 2<br>');
+	results.document.write('The revenue collected in season 1 is: <font color="#0000FF"><EM>R</EM><SUB>1</SUB> = ', round(occc*(a1/b1-oc/b1-cc/b1)),' </font><br>');
+	results.document.write('The revenue collected in season 2 is: <font color="#0000FF"><EM>R</EM><SUB>2</SUB> = ', round(oc*(a2/b2-oc/b2)),' </font><br>');
+	results.document.write('The sum of revenues collected in both seasons is: <font color="#0000FF"><EM>R</EM><SUB>1</SUB>+<EM>R</EM><SUB>2</SUB> = ', round(occc*(a1/b1-oc/b1-cc/b1)+oc*(a2/b2-oc/b2)),' </font><br>');
+	results.document.write('Ignoring fixed and capacity costs, the operating profit made in season 1 is: <font color="#0000FF"><EM>Profit</EM><SUB>1</SUB> = ', round((occc-oc)*(a1/b1-oc/b1-cc/b1)),' </font> (equals to capacity cost)<br>');
+	results.document.write('Ignoring fixed and capacity costs, the operating profit made in season 2 is: <font color="#0000FF"><EM>Profit</EM><SUB>2</SUB> = ', 0,' </font><br>');
+	results.document.write('Ignoring fixed and capacity costs, the sum operating profits made in both seasons is: <font color="#0000FF"><EM>Profit</EM><SUB>1</SUB>+<EM>Profit</EM><SUB>2</SUB> = ', round((occc-oc)*(a1/b1-oc/b1-cc/b1)),' </font><br>');
+	results.document.write('Taking capacity costs into account, this public utility does not make any profit.  If fact, this public utility is making a loss equals exactly to the fixed cost (if there is any).<br>');
+	} // end of season 1 as high	
+	if (season2=='high' && singlemarket==false) { // season 2 is high
+	writresult();
+	results.document.write('Season <font color="#0000FF">2</font> was found to be the high season. <br> This means that the capacity cost will be borne only by season <font color="#0000FF">2</font>\' s customers.<br>');
+	results.document.write('The price in season 2 should be set to: <font color="#0000FF"><EM>p</EM><SUB>2</SUB> = ', round(occc), '</font><br>');
+	results.document.write('The price in season 1 should be set to: <font color="#0000FF"><EM>p</EM><SUB>1</SUB> = ', round(oc), '</font><br>');
+	results.document.write('This means that the high-season price is <font color="#0000FF">', round(1+cc/oc),' </font> higher than the low-season price<br>');
+	results.document.write('Alternatively, the low-season price equals <font color="#0000FF">', round(oc/(occc)),' </font> of the high-season price<br>');
+	results.document.write('In other words, the low-season price is discounted <font color="#0000FF">', round(100*cc/(occc)),' %</font> compared with the high-season price<br>');
+	results.document.write('Or, the high-season price is marked up <font color="#0000FF">', round(100*cc/oc),' %</font> above the low-season price<br>');
+	results.document.write('At the price <EM>p</EM><SUB>2</SUB> stated above, the public utility sells <font color="#0000FF"><EM>q</EM><SUB>2</SUB> = ', round(a2/b2-oc/b2-cc/b2),' </font>units in season 2<br>');
+	results.document.write('At the price <EM>p</EM><SUB>1</SUB> stated above, the firm sells <font color="#0000FF"><EM>q</EM><SUB>1</SUB> = ', round(a1/b1-oc/b1),' </font>units in season 1<br>');
+	results.document.write('The revenue collected in season 2 is: <font color="#0000FF"><EM>R</EM><SUB>2</SUB> = ', round(occc*(a2/b2-oc/b2-cc/b2)),' </font><br>');
+	results.document.write('The revenue collected in season 1 is: <font color="#0000FF"><EM>R</EM><SUB>1</SUB> = ', round(oc*(a1/b1-oc/b1)),' </font><br>');
+	results.document.write('Ignoring fixed and capacity costs, the operating profit made in season 2 is: <font color="#0000FF"><EM>Profit</EM><SUB>1</SUB> = ', round((occc-oc)*(a2/b2-oc/b2-cc/b2)),' </font><br>');
+	results.document.write('Ignoring fixed and capacity costs, the operating profit made in season 1 is: <font color="#0000FF"><EM>Profit</EM><SUB>2</SUB> = ', 0,' </font><br>');
+	results.document.write('Ignoring fixed and capacity costs, the sum operating profits made in both seasons is: <font color="#0000FF"><EM>Profit</EM><SUB>1</SUB>+<EM>Profit</EM><SUB>2</SUB> = ', round((occc-oc)*(a2/b2-oc/b2-cc/b2)),' </font>(equals to capacity cost)<br>');
+	results.document.write('Taking capacity costs into account, this public utility does not make any profit.  If fact, this public utility is making a loss equals exactly to the fixed cost (if there is any).<br>');
+	} // end of season 2 as high, * starting shifting peaks *
+
+	var shiftp1, shiftp2, shiftq; //prices and common quantity
+	if (season1=='low' && season2=='low') { // Shifting peaks
+	writresult();
+	shiftp1=(a1*b2-b1*(a2-cc-2*oc))/(b1+b2);
+	shiftp2=(a2*b1-b2*(a1-cc-2*oc))/(b1+b2);
+	shiftq=a1/(b1+b2)+a2/(b1+b2)-cc/(b1+b2)-oc/(b1+b2);
+	results.document.write('The data <font color="fuchsia">you</font> provided reveals that neither season 1 nor season 2 can be regarded as high (or low).<br>');
+	results.document.write('This case is known in the literature as <EM>shifting peaks</EM>, meaning that the seasonal changes in demand are insignificant relative to the marginal capacity cost. <br>');
+	results.document.write('The price in season 1 should be set to: <font color="#0000FF"><EM>p</EM><SUB>1</SUB> = ', round(shiftp1), '</font><br>');
+	results.document.write('The price in season 2 should be set to: <font color="#0000FF"><EM>p</EM><SUB>2</SUB> = ', round(shiftp2), '</font><br>');
+	if (shiftp1 >= shiftp2) // if p1>=p2
+	results.document.write('This means that the price in season 1 is <font color="#0000FF">', round(shiftp1/shiftp2),' </font> times higher than the price in season 2.<br>');
+	if (shiftp1 < shiftp2) // if p2>p1
+	results.document.write('This means that the price in season 2 is <font color="#0000FF">', round(shiftp2/shiftp1) ,' </font> times higher than the price in season 1.<br>');// if p1<p2
+	results.document.write('At these prices, the public utility sells an equal amount in each season, so that <font color="#0000FF"> <EM>q</EM><SUB>1</SUB> = <EM>q</EM><SUB>2</SUB> = ', round(shiftq),'</font><br>');
+	results.document.write('This means that the public utility should invest in <font color="#0000FF"> ', round(shiftq),' </font>units of capacity, implying a total capacity investment cost of <font color="#0000FF"> ', round(cc*shiftq),'</font><br>');
+	results.document.write('The revenue collected in season 1 is: <font color="#0000FF"><EM>R</EM><SUB>1</SUB> = ', round(shiftp1*shiftq) ,' </font><br>');
+	results.document.write('The revenue collected in season 2 is: <font color="#0000FF"><EM>R</EM><SUB>2</SUB> = ', round(shiftp2*shiftq) ,' </font><br>');
+	results.document.write('The sum of revenues collected in both seasons is: <font color="#0000FF"><EM>R</EM><SUB>1</SUB>+<EM>R</EM><SUB>2</SUB> = ', round(shiftp1*shiftq+shiftp2*shiftq) ,' </font><br>');
+	results.document.write('Ignoring fixed and capacity costs, operating profit made in season 1 is:  <font color="#0000FF"><EM>Profit</EM><SUB>1</SUB> = ', round((shiftp1-oc)*shiftq) ,' </font><br>');
+	results.document.write('Ignoring fixed and capacity costs, operating profit made in season 2 is:  <font color="#0000FF"><EM>Profit</EM><SUB>2</SUB> = ', round((shiftp2-oc)*shiftq) ,' </font><br>');
+	results.document.write('Ignoring fixed and capacity costs, the sum of operating profits made in both seasons is:  <font color="#0000FF"><EM>Profit</EM><SUB>1</SUB>+<EM>Profit</EM><SUB>2</SUB> = ', round((shiftp1-oc)*shiftq+(shiftp2-oc)*shiftq) ,' </font><br>');
+	results.document.write('Note that, if capacity cost is taken into account, this public utility does not make any profit.  If fact, this public utility is making a loss equals to the fixed cost (if there is any).<br>');
+	} // end of Shifting Peaks
+} // end non-shutdown if
+
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP> &nbsp; All rights reserved.<h5>');
+
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+
+</head>
+
+
+<body bgColor=white text="black">
+
+<h1 style="BACKGROUND-COLOR: aqua">Public Utility&nbsp;/ Peak-load Pricing/ Two Seasons</h1>
+<h2>[Class of linear demand functions]</h2>
+<p><b style="BACKGROUND-COLOR: lime">Purpose:</b>&nbsp;</p>
+<ol>
+  <li style="BACKGROUND-COLOR: lime">How to price a non-storable service/product subjected 
+  to seasonal demand fluctuations. 
+  <li style="BACKGROUND-COLOR: lime">To calculate the socially-optimal&nbsp;price and quantity sold during each season, 
+  by a public utility. 
+  <li style="BACKGROUND-COLOR: lime">To determine the overall profit-maximizing investment in production
+    capacity.</li>
+</ol>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br>
+
+<FORM NAME="data" onSubmit="calc()">
+<font color="#ff0000">
+Please, <STRONG>always</STRONG>
+  click 
+<INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>
+before changing or submitting the following parameters:
+</font>
+<ul>
+  <li>The intercepts (<i>a</i><SUB>1</SUB> and <i>a</i><sub>2</sub>) of the 
+    seasonal inverse demand functions <i> p</i><SUB>1</SUB> = <i> a</i><SUB>1</SUB> - <i> b</i><SUB>1</SUB> 
+    <i> q</i><SUB>1</SUB> and <i> p</i><SUB>2</SUB> = <i> a</i><SUB>2</SUB> - <i> b</i><SUB>2</SUB> 
+    <i> q</i><SUB>2</SUB>.
+    <br> Enter
+    <i>a</i><SUB>1</SUB> in this box (<i>a</i><SUB>1</SUB> &gt;  0): <INPUT id="a1input" name="a1input" value=12 size=10 onChange= "a1=this.value">
+    <BR>Enter
+    <i>a</i><SUB>2</SUB> in this box (<i>a</i><SUB>2</SUB> &gt;  0): <INPUT id="a2input" name="a2input" value=10 size=10 onChange= "a2=this.value">
+   
+   <li>The absolute values of the slopes (<i>b</i><SUB>1</SUB> and <i>b</i><sub>2</sub>) of the inverse
+    demand functions <i> p</i><SUB>1</SUB> = <i> a</i><SUB>1</SUB> - <i> b</i><SUB>1</SUB> 
+    <i> q</i><SUB>1</SUB> and <i> p</i><SUB>2</SUB> = <i> a</i><SUB>2</SUB> - <i> b</i><SUB>2</SUB> 
+    <i> q</i><SUB>2</SUB>. 
+    <BR>Enter
+    <i>b</i><SUB>1</SUB> in this box (<i>b</i><SUB>1</SUB> &gt;  0): <INPUT id="b1input" name="b1input" value=1 size=10 onChange= "b1=this.value">
+    <BR>Enter
+    <i>b</i><SUB>2</SUB> in this box (<i>b</i><SUB>2</SUB> &gt;  0): <INPUT id="b2input" name="b2input" value=1 size=10 onChange= "b2=this.value">
+  <li>The marginal operation cost (<i>oc</i>). <BR>Enter&nbsp; <EM>oc</EM> in this box (<i>oc</i> &gt;  0 or&nbsp;
+    <i>oc</i> = 0): <INPUT id="ocinput" name="ocinput" value=2 size=10 onChange= "oc =this.value">
+  <li>The marginal capacity cost (<i>cc</i>). 
+  <BR>Enter <i>cc</i> in this box (<EM>cc</EM> &gt;  0 or <i>cc</i> = 0): <INPUT id="ccinput" name="ccinput" value=3 size=10 onChange= "cc=this.value"></li>
+</ul>
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !">
+<INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()">
+<INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')">
+<INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')">
+</FORM>
+<hr>
+<h5>
+Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.
+</h5>
+
+
+</body>
+
+</html>
+
+<!-- text below generated by server. PLEASE REMOVE --><!-- Counter/Statistics available at http://geocities.yahoo.com --><script language="JavaScript" src="http://us.geocities.com/js_source/geov2.js"></script><script language="javascript">geovisit();</script><noscript>

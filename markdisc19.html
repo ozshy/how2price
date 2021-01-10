@@ -1,0 +1,216 @@
+<html>
+
+
+
+<head>
+
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+
+<META name=VI60_defaultClientScript content=JavaScript>
+
+<meta http-equiv="Content-Language" content="en-us">
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+
+<meta name="ProgId" content="FrontPage.Editor.Document">
+
+<title>Two-price Comparison</title>
+
+
+
+<SCRIPT LANGUAGE=javascript> 
+
+function openwindow(filename) { 
+
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+
+// rounds number to X decimal places, defaults to 2
+
+X = (!X ? 2 : X);
+
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+
+}
+
+function pv(variable,periods,rate) {
+
+var t, disc, sum=0;
+
+disc=1/(1+rate/1);
+
+	for (t = 0; t < periods; t++) {
+
+	sum = sum + variable*Math.pow(disc,t);
+
+	} //end of for statement
+
+return sum;
+
+} // end of pv function
+
+var p, d, m, r, i, n;
+
+function initialize() {
+
+p=12, d=10, m=10, i=5, r=i/100, n=4; //initializing variables
+
+}
+
+function writdata() { //writes the data provided by the user
+
+results.document.write('<body text="black">');
+
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following discounts and markups</font><br>');
+
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+
+results.document.write('The original price is: <EM>p</EM> = ','<font color="fuchsia">', p, '</font>', "<br>");
+
+results.document.write('The rate of discount is: <EM>d</EM> = ','<font color="fuchsia">', d, '</font> %', "<br>");
+
+results.document.write("The rate of markup is: <EM>m</EM> = ", '<font color="fuchsia">', m , '</font> %', "<br>");
+
+results.document.write("The number of periods is: <EM>n</EM> = ", '<font color="fuchsia">', n, '</font>', "<br>");
+
+results.document.write("Real interest rate equals: <EM>i</EM> = ", '<font color="fuchsia">', i, '</font> %', "<br>");
+
+}
+
+function writresult() { //writes Result #: (red+underline)
+
+resultno=resultno+1;
+
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+
+}
+
+function calc() { // start computation function (main function!)
+
+openresultswindow();
+
+r=i/100; // converting % into a fraction
+
+writdata(); //writes data inputted
+
+writresult(); // static results begin
+
+results.document.write('The discounted price is: <font color="#0000FF"><EM>p</EM><SUB><FONT size=2>d</FONT></SUB> = '+round(p*(1/1-d/100))+'</font><br>');
+
+results.document.write('The discounted amount equals: <font color="#0000FF"><EM>p - p</EM><SUB><FONT size=2>d</FONT></SUB> = '+round(p*d/100)+'</font><br>');
+
+results.document.write('The marked-up price is: <font color="#0000FF"><EM>p</EM><SUB><FONT size=2>m</FONT></SUB> = '+round(p*(1/1+m/100))+'</font><br>');
+
+results.document.write('The surcharge equals: <font color="#0000FF"><EM>p</EM><SUB><FONT size=2>m</FONT></SUB> - <EM>p</EM> = '+round(p*m/100)+'</font><br>');
+
+writresult(); // PV results begin
+
+results.document.write('The present value of the stream of the original payments over <font color="fuchsia">'+n+'</font> periods is: ');
+
+results.document.write('<font color="#0000FF">','<i>pvP</i> = ', round(pv(p,n,r)), '</font>', "<br>");
+
+results.document.write('The present value of the stream of the discounted payments over <font color="fuchsia">'+n+'</font> periods is: ');
+
+results.document.write('<font color="#0000FF">','<i>pvP</i><SUB><FONT size=2>d</FONT></SUB> = ', round(pv(p*(1/1-d/100),n,r)), '</font>', "<br>");
+
+results.document.write('The present value of the discount over <font color="fuchsia">'+n+'</font> periods is: ');
+
+results.document.write('<font color="#0000FF">','<i>pv</i>(<i>P-P<SUB></i>d</SUB>) = ', round(pv(p*d/100,n,r)), '</font>', "<br>");
+
+results.document.write('The present value of the stream of the marked-up payments over <font color="fuchsia">'+n+'</font> periods is: ');
+
+results.document.write('<font color="#0000FF">','<i>pvP</i><SUB><FONT size=2>m</FONT></SUB> = ', round(pv(p*(1/1+m/100),n,r)), '</font>', "<br>");
+
+results.document.write('The present value of the surcharge over <font color="fuchsia">'+n+'</font> periods is: ');
+
+results.document.write('<font color="#0000FF">','<i>pv</i>(<i>P<SUB></i>m</SUB><EM>-P</EM>) = ', round(pv(p*m/100,n,r)), '</font>', "<br>");
+
+// Now closing the output window
+
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP> &nbsp; All rights reserved.<h5>');
+
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+
+</head>
+
+
+<body bgColor=white text="black">
+
+<h1 style="BACKGROUND-COLOR: aqua">      Markups and&nbsp;Discounts<BR></h1>
+<h2>    &nbsp;</h2>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>:&nbsp; To calculate markup and discount of a 
+price.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">    Inputting&nbsp;data:</b><br>
+
+<FORM NAME="data" onSubmit="calc()">
+<font color="#ff0000">
+Please, <STRONG>always</STRONG>
+  click 
+<INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>
+before changing or submitting the following parameters:
+</font>
+<UL>
+  <li> Enter original price,&nbsp;<EM>p</EM> (<EM>p</EM> &gt; 0):  &nbsp; 
+  <INPUT id="phinput" name="phnput" value=12 size=10 onChange= "ph=this.value">
+    <li>Enter percentage of 
+  discount,&nbsp;<EM>d&nbsp;</EM>(in %): &nbsp; <INPUT id=dinput onchange="d=this.value" size=10 
+  value=10 name=dinput> %
+  <LI>Enter percentage of markup,&nbsp;<EM>m&nbsp;</EM>(in 
+  %): <INPUT id=minput 
+  onchange=m=this.value size=10 value=10 name=minput> %
+  <li>Enter the interest rate,&nbsp;<EM>i&nbsp;</EM>(in 
+  %):&nbsp; <INPUT id=rinput onchange="i=this.value" size=10 
+  value=5 name=rinput>%<LI>
+  Number of periods,&nbsp;<I>n</I> 
+  (<I>n</I>&nbsp;= 1, 2, ...): &nbsp; <INPUT id=ninput onchange="n=this.value" size=10 
+  value=4 name=ninput></LI></UL>
+<P>
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !">
+<INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()">
+<INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')">
+<INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')"> 
+</P>
+</FORM>
+<hr>
+<h5>
+Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.
+</h5>
+
+</body>
+
+</html>
+
+<!-- text below generated by server. PLEASE REMOVE --><!-- Counter/Statistics available at http://geocities.yahoo.com --><script language="JavaScript" src="http://us.geocities.com/js_source/geov2.js"></script><script language="javascript">geovisit();</script><noscript>

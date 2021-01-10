@@ -1,0 +1,259 @@
+<html>
+
+
+
+<head>
+
+<META name=VI60_DTCScriptingPlatform content="Client (IE 4.0 DHTML)">
+
+<META name=VI60_defaultClientScript content=JavaScript>
+
+<meta http-equiv="Content-Language" content="en-us">
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+
+<meta name="ProgId" content="FrontPage.Editor.Document">
+
+<title>Single-Seller / Two-Markets (Exponential Demand)</title>
+
+
+
+<SCRIPT LANGUAGE=javascript> // collecting user-inserted demand data functions
+
+function openwindow(filename) { 
+
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+
+}
+
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('history.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+
+// rounds number to X decimal places, defaults to 2
+
+X = (!X ? 2 : X);
+
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+
+}
+
+var a1, e1, a2, e2, c, F 
+
+function initialize() {
+
+a1=12; e1=2; a2=10; e2=3; c=2; F=4; //initializing variables
+
+}
+
+function writdata() { //writes the data provided by the user
+
+results.document.write('<body text="black">');
+
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> single-seller / two-markets (exponential demand) case</font><br>');
+
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+
+results.document.write('Inverse demand function in market 1 is given by: <EM>q</EM><SUB>1</SUB> = <font color="fuchsia">', a1 ,'</font> <EM>p</EM><SUB>1</SUB>','<SUP>-<font color="fuchsia">',e1,'</SUP></font>', '<br>' );
+
+results.document.write('Inverse demand function in market 2 is given by: <EM>q</EM><SUB>2</SUB> = <font color="fuchsia">', a2 ,'</font> <EM>p</EM><SUB>2</SUB>','<SUP>-<font color="fuchsia">',e2,'</SUP></font>', '<br>' );
+
+results.document.write("Maginal cost equals: ", '<font color="fuchsia">', c,'</font>', "<br>");
+
+results.document.write("Fixed cost equals: ", '<font color="fuchsia">', F, '</font>', "<br>");
+
+}
+
+function writresult() { //writes Result #: (red+underline)
+
+resultno=resultno+1;
+
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+
+}
+
+function writnondisc() { // writes non-disc into for results
+
+writresult();
+
+results.document.write('<font color="#FF0000"> If price discrimination is infeasible (i.e., only one price <EM>p = p</EM><SUB>1</SUB>= <EM>p</EM><SUB>2</SUB> must prevail in both markets):</font><br>');
+
+}
+
+function writnondisc() { // Non-discriminating monopoly is computed
+
+writresult();
+
+results.document.write('<font color="#FF0000"> If price discrimination is infeasible (i.e., only one price <EM>p = p</EM><SUB>1</SUB>= <EM>p</EM><SUB>2</SUB> must prevail in both markets):</font><br>');
+
+results.document.write('<font color="#000000"> This feature is NOT yet available (to be added in future versions)!</font>');
+
+}
+
+// end of  function
+
+function writdisc() { // Discriminating monopoly is computed
+
+writresult();
+
+results.document.write('<font color="#FF0000"> If price discrimination is possible (i.e., the monopoly can set different prices in different markets):</font><br>');
+
+results.document.write("The monopoly should sell in both markets! <br>");
+
+results.document.write("Ignoring fixed cost, the monopoly should set the price in market 1: ")
+
+results.document.write('<font color="#0000FF"><i>p</i><SUB>1</SUB> = ', round(c*e1/(e1-1)),'</font>', "<br>");
+
+results.document.write("Ignoring fixed cost, the monopoly should set the price in market 2: ")
+
+results.document.write('<font color="#0000FF"><i>p</i><SUB>2</SUB> = ', round(c*e2/(e2-1)),'</font>', "<br>");
+
+results.document.write('Ignoring fixed cost, the monopoly should sell in market 1: ');
+
+results.document.write('<font color="#0000FF">','<i>q</i><SUB>1</SUB> = ', round(a1*Math.pow(c*e1/(e1-1),-e1)), '</font>', " units<br>");
+
+results.document.write('Ignoring fixed cost, the monopoly should sell in market 2: ');
+
+results.document.write('<font color="#0000FF">','<i>q</i><SUB>2</SUB> = ', round(a2*Math.pow(c*e2/(e2-1),-e2)), '</font>', " units<br>");
+
+results.document.write('Ignoring fixed cost, total output is: ');
+
+results.document.write('<font color="#0000FF">','<i>Q</i> = ', round((a1*Math.pow(c*e1/(e1-1),-e1))+(a2*Math.pow(c*e2/(e2-1),-e2))) , '</font>', " units<br>");
+
+results.document.write("Ignoring all costs , the revenue (turnover) collected in market 1: ");
+
+results.document.write('<font color="#0000FF">','<i>R</i><SUB>1</SUB> = ', round((c*e1/(e1-1))*a1*Math.pow(c*e1/(e1-1),-e1)) , '</font>', "<br>");
+
+results.document.write("Ignoring all costs , the revenue (turnover) collected in market 2: ");
+
+results.document.write('<font color="#0000FF">','<i>R</i><SUB>2</SUB> = ', round((c*e2/(e2-1))*a2*Math.pow(c*e2/(e2-1),-e2)) , '</font>', "<br>");
+
+results.document.write("Ignoring fixed cost, the monopoly earns a profit in market 1: ");
+
+results.document.write('<font color="#0000FF">', "<EM>Profit</EM> <SUB>1</SUB> = ", round(((c*e1/(e1-1))-c)*a1*Math.pow(c*e1/(e1-1),-e1)), '</font>', "<br>");
+
+results.document.write("Ignoring fixed cost, the monopoly earns a profit in market c: ")
+
+results.document.write('<font color="#0000FF">', "<EM>Profit</EM> <SUB>2</SUB> = ", round(((c*e2/(e2-1))-c)*a2*Math.pow(c*e2/(e2-1),-e2)), '</font>', "<br>");
+
+results.document.write("Ignoring fixed cost, the total profit (both markets) is: ")
+
+results.document.write('<font color="#0000FF">', "<EM>Profit</EM> = ", round(((c*e1/(e1-1))-c)*a1*Math.pow(c*e1/(e1-1),-e1)+((c*e2/(e2-1))-c)*a2*Math.pow(c*e2/(e2-1),-e2)), '</font>', "<br>")
+
+if (((c*e1/(e1-1))-c)*a1*Math.pow(c*e1/(e1-1),-e1)+((c*e2/(e2-1))-c)*a2*Math.pow(c*e2/(e2-1),-e2) >= F)
+
+results.document.write("Taking fixed cost into account, the monopoly earns a total profit of: ", '<font color="#0000FF">', "<EM>Profit</EM> = ", round(((c*e1/(e1-1))-c)*a1*Math.pow(c*e1/(e1-1),-e1)+((c*e2/(e2-1))-c)*a2*Math.pow(c*e2/(e2-1),-e2)-F), '</font>');
+
+else 
+
+results.document.write("Taking fixed cost into account, the monopoly makes a total loss of: ", '<font color="#0000FF">', "L = ", round(F-((c*e1/(e1-1))-c)*a1*Math.pow(c*e1/(e1-1),-e1)+((c*e2/(e2-1))-c)*a2*Math.pow(c*e2/(e2-1),-e2)), '</font>');
+
+}
+
+function calc() { // start computation function (main function!)
+
+openresultswindow();
+
+writdata(); //writes the data function
+
+// non-discriminating monopoly
+
+writnondisc();
+
+// Discriminating monopoly
+
+writdisc();
+
+// The gain from price discrimination
+
+writresult();
+
+results.document.write('<font color="#FF0000"> Is there any gain from engaging in price discrimination?</font><br>');
+
+results.document.write('The change in profit resulting from price discrimination is: (feature NOT yet available!) <br>');
+
+// Now closing the page
+
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP> &nbsp; All rights reserved.<h5>');
+
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+
+</head>
+
+
+<body bgColor=white text="black">
+
+<h1 style="BACKGROUND-COLOR: aqua">Single Seller / Two Markets</h1>
+<h2>[Class of exponential (hyperbola) demand functions]</h2>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</b>: To calculate the profit-maximizing price and quantity
+produced by a single firm selling one product in a single market.</p>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and technology data:</b><br>
+
+<FORM NAME="data" onSubmit="calc()">
+<font color="#ff0000">
+Please, <STRONG>always</STRONG>
+  click 
+<INPUT type="reset" value="Reset !" id=reset1 name=reset1 onClick=initialize()>
+before changing or submitting the following parameters:
+</font>
+<ul> <li> The coefficients (<i>a</i><SUB>1</SUB> and <i>a</i><sub>2</sub>) of the demand functions <i> q</i><SUB>1</SUB> = <i> a</i><SUB>1</SUB> <i>p</i><SUB>1</SUB><i><SUP>-e</i>1</SUP> and <i> q</i><SUB>2</SUB> = <i> a</i><SUB>2</SUB> <i>p</i><SUB>2</SUB><i><SUP>-e</i>2</SUP>. 
+     <BR>Enter
+    <i>a</i><SUB>1</SUB> in this box (<i>a</i><SUB>1</SUB> &gt;  0): <INPUT id="a1input" name="a1input" value=12 size=10 onChange= "a1 =this.value">
+    <BR>Enter
+    <i>a</i><SUB>2</SUB> in this box (<i>a</i><SUB>2</SUB> &gt;  0): <INPUT id="a2input" name="a2input" value=10 size=10 onChange= "a2 =this.value">
+ <li>The absolute values of price-elasticities (<i>e</i><SUB>1</SUB> and <i>e</i><sub>2</sub>) of
+    the demand functions <i> q</i><SUB>1</SUB> = <i> a</i><SUB>1</SUB> <i>p</i><SUB>1</SUB><i><SUP>-e</i>1</SUP> and <i> q</i><SUB>2</SUB> = <i> a</i><SUB>2</SUB> <i>p</i><SUB>2</SUB><i><SUP>-e</i>2</SUP>. 
+        <BR>Enter
+    <i>e</i><SUB>1</SUB> in this box (<i>e</i><SUB>1</SUB> &gt;  0): <INPUT id="e1input" name="e1input" value=2 size=10 onChange= "e1 =this.value">
+    <BR>Enter
+    <i>e</i><SUB>2</SUB> in this box (<i>e</i><SUB>2</SUB> &gt;  0): <INPUT id="e2input" name="e2input" value=3 size=10 onChange= "e2 =this.value">
+ 
+  <li>The marginal production cost (<i>c</i>). <BR>Enter 
+     <EM>c</EM> in this box (<i>c</i> &gt;  0 or <i>c</i> = 0): <INPUT id="cinput" name="cinput" value=2 size=10 onChange= "c =this.value">
+  <li>Fixed production cost (<i>F</i>). 
+  <BR>Enter
+   <i>F</i> in this box (<i>F</i> &gt;  0 or <i>F</i> = 0): <INPUT id="Finput" name="Finput" value=4 size=10 onChange= "F =this.value"></li>
+</ul>
+<INPUT TYPE="submit" NAME=showresults VALUE="Show Results Now !">
+<INPUT type="button" value="Close Page" name="closewindow" onClick="window.close()">
+<INPUT type="button" value="Main Page" id="GoMain" name="GoMain" onClick="openwindow('index.html')">
+<INPUT type="button" value="Glossary of Terms" name="glossary" onClick="openwindow('glossary.html')">
+</FORM>
+<hr><h5>
+Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP>&nbsp; All rights reserved.
+</h5>
+
+
+</body>
+
+</html>
+<!-- text below generated by server. PLEASE REMOVE --><!-- Counter/Statistics available at http://geocities.yahoo.com --><script language="JavaScript" src="http://us.geocities.com/js_source/geov2.js"></script><script language="javascript">geovisit();</script><noscript>

@@ -1,0 +1,568 @@
+<html><head>
+<title>Single Seller / Bundling / 2-9 consumer types</title>
+<META content="Client (IE 4.0 DHTML)" name=VI60_DTCScriptingPlatform>
+<META content=JavaScript name=VI60_defaultClientScript>
+<meta http-equiv=Content-Language content=en-us>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta content="Microsoft FrontPage 4.0" name=GENERATOR>
+<meta content=FrontPage.Editor.Document name=ProgId>
+<SCRIPT language=javascript> 
+function openwindow(filename) { 
+window.open(filename, '', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+}
+
+function openresultswindow() {
+results=window.open('', 'Results', 'fullsize=yes,scrollbars=yes,status=no,resizable=yes,menubar=no,maximize=yes');
+results.document.write('<html>');
+results.document.write('<head>');
+results.document.write('<title>How-to-Price: List of Results</title>');
+results.document.write('<SCRIPT LANGUAGE=javascript>');
+results.document.write('function printpage() {'); 
+results.document.write('if (window.print) {');
+results.document.write('window.print();  }'); //end of if
+results.document.write('histor.go(0);'); //I need this reload to get this function to work
+results.document.write(' } '); //end of printpage function
+results.document.write('<\/script>');
+results.document.write('<\/head>');
+results.document.write('<body>');
+}
+
+function round(number,X) {
+// rounds number to X decimal places, defaults to 2
+X = (!X ? 2 : X);
+return Math.round(number*Math.pow(10,X))/Math.pow(10,X);
+}
+
+function comparenumbers(a,b) { // needed for soring arrays
+return a - b
+}
+
+var T, F, c, g = new Array(9), x = new Array(9), y = new Array(9), z = new Array(9), 
+n = new Array(9), q = new Array(9), qqtemp = new Array(9), pseq = new Array(36),
+revise, nmax, nmin, wmax, wmin, xmax, xmin, ymax, ymin, zmax, zmin, totaln, resultno, 
+p, profit, profittemp, totalq, r,
+p2seq = new Array(9), p3seq = new Array(9), p4seq = new Array(9),
+p2, profit2, profittemp2, totalq2, q2 = new Array(9), q2temp = new Array(9), r2,
+p3, profit3, profittemp3, totalq3, q3 = new Array(9), q3temp = new Array(9), r3,
+p4, profit4, profittemp4, totalq4, q4 = new Array(9), q4temp = new Array(9), r4,
+b, cb2, cb3, cb4 ; //cost of bundling
+
+
+function initialize() {
+T=3; F=1000; c=0; b=0; cb2=0; cb3=0; cb4=0;
+g[1]=5; g[2]=8; g[3]=4; g[4]=333; g[5]=333; g[6]=333; g[7]=333; g[8]=333; g[9]=333; 
+x[1]=2; x[2]=7; x[3]=4; x[4]=333; x[5]=333; x[6]=333; x[7]=333; x[8]=333; x[9]=333; 
+y[1]=1; y[2]=6; y[3]=4; y[4]=333; y[5]=333; y[6]=333; y[7]=333; y[8]=333; y[9]=333; 
+z[1]=0; z[2]=5; z[3]=4; z[4]=333; z[5]=333; z[6]=333; z[7]=333; z[8]=333; z[9]=333; 
+n[1]=300; n[2]=100; n[3]=300; n[4]=100; n[5]=333; n[6]=333; n[7]=333; n[8]=333; n[9]=333; 
+revise=false; nmax=1; nmin=1; wmax=1; wmin=1; xmax=1; xmin=1; ymax=1; ymin=1; zmax=1; zmin=1; totaln=0; resultno=0; //initializing variables
+}
+
+function sortdata() { // finds the higest and lowest valuations and sorts s array
+for (var i = 2; i < T/1+1/1; i++) {
+	if (n[i] > n[nmax]) nmax=i;
+	if (n[i] < n[nmin]) nmin=i;
+	if (g[i] > g[wmax]) wmax=i; //used here to compare with MC
+// not used here	if (g[i] < g[wmin]) wmin=i;
+// not used here	if (x[i] > x[xmax]) xmax=i;
+// not used here	if (x[i] < x[xmin]) xmin=i;
+// not used here	if (y[i] > y[ymax]) ymax=i;
+// not used here	if (y[i] < y[ymin]) ymin=i;
+// not used here	if (z[i] > z[zmax]) zmax=i;
+// not used here	if (z[i] < z[zmin]) zmin=i;
+} // end for statement
+}
+
+function writdata() { //writes the data provided by the user
+sortdata(); 
+results.document.write('<body text="black">');
+results.document.write('<font size="4"><span style="background-color: #00FFFF"><EM>How-to-Price</EM><SUP><font size="1">TM</font></SUP></span> proudly presents the following results for the<br> Single Seller / Bundling / 2-9 Consumer Types</font><br>');
+results.document.write('<hr><font color="fuchsia">You</font> <font color="#FF0000">have provided the following data</font>: <br>');
+results.document.write('The cost of producing each additional unit (marginal cost) is: <i>c</i> = <font color="fuchsia">', c,'</font>', "<br>");
+results.document.write('The cost (saving, if negative) of preparing a single bundle (package) containing 2, 3, or 4 units of this good: is: <i>b</i> = <font color="fuchsia">', b,'</font>', "<br>");
+results.document.write("Fixed production cost equals: ", '<font color="fuchsia">', F, '</font>', "<br>");
+results.document.write("The number of consumer types is : ", '<EM>T</EM> = <font color="fuchsia">', T,'</font>', "<br>");
+var j=0; //for building pseq array
+for (var i = 1; i < T/1+1/1; i++) {
+totaln=totaln/1+n[i]/1;
+results.document.write('<EM>n</EM><SUB>' + i +'</SUB> = <font color="fuchsia">' + n[i] + '</font> type ' + i + ' consumers: Willing to pay: ' );
+j=j/1+1/1; pseq[j]=g[i];
+results.document.write('[<font color="fuchsia">' + g[i] + '</font> for the 1<sup>st</sup> unit] ' );
+j=j/1+1/1; pseq[j]=x[i];
+results.document.write('[<font color="fuchsia">' + x[i] + '</font> for the 2<sup>nd</sup> unit] ' );
+j=j/1+1/1; pseq[j]=y[i];
+results.document.write('[<font color="fuchsia">' + y[i] + '</font> for the 3<sup>rd</sup> unit] ' );
+j=j/1+1/1; pseq[j]=z[i];
+results.document.write('[<font color="fuchsia">' + z[i] + '</font> for the 4<sup>th</sup> unit] <br>' );
+p2seq[i]=g[i]/1+x[i]/1; //bundle of 2
+p3seq[i]=g[i]/1+x[i]/1+y[i]/1; //bundle of 3
+p4seq[i]=g[i]/1+x[i]/1+y[i]/1+z[i]/1; //bundle of 4
+} // end of for i statement
+//results.document.write('The highest willingness to pay for the 1<sup>st</sup> unit is by consumers type  <font color="fuchsia">' + wmax + '</font>' + "<br>" );
+//results.document.write('The lowest willingness to pay for the 1<sup>st</sup> unit is by consumers type  <font color="fuchsia">' + wmin + '</font>' + "<br>" );
+//results.document.write('The highest willingness to pay for the 2<sup>nd</sup> unit is by consumers type  <font color="fuchsia">' + xmax + '</font>' + "<br>" );
+//results.document.write('The lowest willingness to pay for the 2<sup>nd</sup> unit is by consumers type  <font color="fuchsia">' + xmin + '</font>' + "<br>" );
+//results.document.write('The highest willingness to pay for the 3<sup>rd</sup> unit is by consumers type  <font color="fuchsia">' + ymax + '</font>' + "<br>" );
+//results.document.write('The lowest willingness to pay for the 3<sup>rd</sup> unit is by consumers type  <font color="fuchsia">' + ymin + '</font>' + "<br>" );
+//results.document.write('The highest willingness to pay for the 4<sup>th</sup> unit is by consumers type  <font color="fuchsia">' + zmax + '</font>' + "<br>" );
+//results.document.write('The lowest willingness to pay for the 4<sup>th</sup> unit is by consumers type  <font color="fuchsia">' + zmin + '</font>' + "<br>" );
+results.document.write('The largest number of consumers are type  <font color="fuchsia">' + nmax + '</font>' + "<br>" );
+results.document.write('The lowest number of consumers are type  <font color="fuchsia">' + nmin + '</font>' + "<br>" );
+results.document.write('The total number of consumers (all types combined) is  <font color="fuchsia">' + totaln + '</font>' + "<br>" );
+}
+
+function writresult() { //writes Result #: (red+underline)
+resultno=resultno+1;
+results.document.write('<hr><font color="#0000FF"> <U>Result ', resultno ,'</U>: </font><br>');
+}
+
+function revisedata(j) { // asks revision on data due to price below unit cost
+writresult();
+results.document.write('<font color="#FF0000">The analysis you requested cannot be performed since, according to the above data, observation ' + j + ' has a negative value.</font><br>' );
+results.document.write('<font color="#FF0000">Close this window and re-enter your data.</font><br>' ); 
+}
+
+function checkw() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (g[i] < 0) {revisedata(i); revise=true};
+} }
+function checkx() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (x[i] < 0) {revisedata(i); revise=true};
+} }
+function checky() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (y[i] < 0) {revisedata(i); revise=true};
+} }
+function checkz() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (z[i] < 0) {revisedata(i); revise=true};
+} }
+function checkn() {
+for (var i = 1; i < T/1+1/1; i++) {
+	if (n[i] < 0) {revisedata(i); revise=true};
+} }
+function checksequence() { //checks declining willingness to pay for each consumer type
+for (var i = 1; i < T/1+1/1; i++) {
+	if (g[i] < x[i]) { // 1st < 2nd 
+	results.document.write('<font color="#FF0000">Warning !</font> <font color="#0000FF">According to the above data, observation ' + i + ' has 1<sup>st</sup><sub>' + i + '</sub> < 2<sup>nd</sup><sub>' + i + '</sub>.</font><br>' );
+	results.document.write('<font color="#0000FF">This means that type ' + i + ' consumers are willing to pay more for each additional unit they buy (rising willingness to pay).</font><br>' );
+	}
+	if (x[i] < y[i]) { //  2nd < 3rd
+	results.document.write('<font color="#FF0000">Warning !</font> <font color="#0000FF">According to the above data, observation ' + i + ' has 2<sup>nd</sup><sub>' + i + '</sub> < 3<sup>rd</sup><sub>' + i + '</sub>.</font><br>' );
+	results.document.write('<font color="#0000FF">This means that type ' + i + ' consumers are willing to pay more for each additional unit they buy (rising willingness to pay).</font><br>' );
+	}
+	if (y[i] < z[i]) { // 3rd < 4th 
+	results.document.write('<font color="#FF0000">Warning !</font> <font color="#0000FF">According to the above data, observation ' + i + ' has 3<sup>rd</sup><sub>' + i + '</sub> < 4<sup>th</sup><sub>' + i + '</sub>.</font><br>' );
+	results.document.write('<font color="#0000FF">This means that type ' + i + ' consumers are willing to pay more for each additional unit they buy (rising willingness to pay).</font><br>' );
+	}
+} //end for
+}
+
+function writnobundling() { //writes no-bundling results
+writresult();
+results.document.write('<font color="#FF0000">No-Bundling: Suppose that the seller is contrained to sell (and price) each unit separatefly (i.e., no quantity discount)</font>: <br>');
+
+p=0; profit=0; 
+for (var j = 1; j <= T*4; j++) { //running over pseq[j]
+profittemp=0;
+	for (var i = 1; i < T/1+1/1; i++) qqtemp[i]=0; //initialize
+	for (var i = 1; i < T/1+1/1; i++) { 
+		if (c > pseq[j]) pseq[j]=c; //asigning price no lower than c
+		if (g[i] >= pseq[j]) qqtemp[i]=qqtemp[i]/1+n[i]/1;
+		if (x[i] >= pseq[j]) qqtemp[i]=qqtemp[i]/1+n[i]/1;
+		if (y[i] >= pseq[j]) qqtemp[i]=qqtemp[i]/1+n[i]/1;
+		if (z[i] >= pseq[j]) qqtemp[i]=qqtemp[i]/1+n[i]/1;
+		profittemp=profittemp/1+(pseq[j] - c)*qqtemp[i]/1;
+	} //end for
+	if (profittemp >= profit) {
+	p=pseq[j]; profit=profittemp; totalq=0;
+		for (var k = 1; k < T/1+1/1; k++) { //quant consumed by each type
+		q[k]=qqtemp[k]; totalq=totalq/1+q[k]/1; r=p*totalq;
+		}
+	}//end if
+}//end for j running of pseq[j]
+results.document.write('The seller should set the price to: '); 
+results.document.write('<i>p</i><sub>1</sub> = <font color="#0000FF">' + round(p) + '</font><br>');
+results.document.write('The total number of units sold is: '); 
+results.document.write('<i>q</i><sub>1</sub> = <font color="#0000FF">' + round(totalq) + '</font><br>');
+	for (var i = 1; i < T/1+1/1; i++) { 
+	results.document.write('Each type ' + i + ' consumer buys: '); 
+	results.document.write('<font color="#0000FF">' + round(q[i]/n[i]) + '</font> units<br>');
+	}// end for
+results.document.write('The total revenue collected by the seller is: '); 
+results.document.write('<i>r</i><sub>1</sub> = <font color="#0000FF">' + round(r) + '</font><br>');
+results.document.write('Ignoring the fixed cost, the seller earns a profit of: '); 
+results.document.write('<i>Profit</i><sub>1</sub> = <font color="#0000FF">' + round(profit) + '</font><br>');
+if (profit >= F)
+results.document.write("Taking the fixed cost into account, the monopoly earns a total profit of: ", '<EM>Profit</EM><sub>1</sub>  = <font color="#0000FF">', round(profit-F), '</font><br>');
+else 
+results.document.write("Taking the fixed cost into account, the monopoly makes a total loss of: ", '<EM>L</EM><sub>1</sub>  = <font color="#0000FF">', round(F-profit), '</font><br>');
+} //end of writnobundling function
+
+function writ2bundling() { //writes 2-unit pure-bundling results
+writresult();
+results.document.write('<font color="#FF0000">2-Unit Pure Bundling: Suppose that the seller is contrained to sell only packages (bundles) containing exactly 2 units </font>: <br>');
+p2=2*c; profit2=0; totalq2=0; r2=0;
+for (var j = 1; j <= T; j++) q2[j]=0;
+for (var j = 1; j <= T; j++) { //running over p2seq[j]
+profittemp2=0;
+	for (var i = 1; i < T/1+1/1; i++) q2temp[i]=0; //initialize
+	for (var i = 1; i < T/1+1/1; i++) { 
+		if (2*c > p2seq[j]) pseq[j]=2*c; //asigning price no lower than 2c
+		if (g[i]/1+x[i]/1 >= p2seq[j]) q2temp[i]=q2temp[i]/1+n[i]/1; //checking for 1st bundle
+		if (y[i]/1+z[i]/1 >= p2seq[j]) q2temp[i]=q2temp[i]/1+n[i]/1; //checking for 2nd bundle
+		profittemp2=profittemp2/1+(p2seq[j] - 2*c)*q2temp[i]/1;
+	} //end for
+	if (profittemp2 >= profit2) {
+	p2=p2seq[j]; profit2=profittemp2; totalq2=0;
+		for (var k = 1; k < T/1+1/1; k++) { //quant consumed by each type
+		q2[k]=q2temp[k]; totalq2=totalq2/1+q2[k]/1; r2=p2*totalq2; cb2=b*totalq2;
+		}
+	}//end if
+}//end for j running of pseq[j]
+results.document.write('The seller should set the price for the bundle with 2 units to: '); 
+results.document.write('<i>p</i><sub>2</sub> = <font color="#0000FF">' + round(p2) + '</font><br>');
+results.document.write('The total number of bundles sold (each containing 2 units of the good) is: '); 
+results.document.write('<i>q</i><sub>2</sub> = <font color="#0000FF">' + round(totalq2) + '</font><br>');
+	for (var i = 1; i < T/1+1/1; i++) { 
+	results.document.write('Each type ' + i + ' consumer buys: '); 
+	results.document.write('<font color="#0000FF">' + round(q2[i]/n[i]) + '</font> bundles (each containing 2 units)<br>');
+	}// end for
+results.document.write('The total revenue collected by the seller is: '); 
+results.document.write('<i>r</i><sub>2</sub> = <font color="#0000FF">' + round(r2) + '</font><br>');
+results.document.write('The total cost of preparing 2-unit bundles by the seller is: '); 
+results.document.write('<i>cb</i><sub>2</sub> = <font color="#0000FF">' + round(cb2) + '</font><br>');
+results.document.write('Ignoring the fixed cost, and ignoring bundling cost, the seller earns a profit of: '); 
+results.document.write('<i>Profit</i><sub>2</sub> = <font color="#0000FF">' + round(profit2) + '</font><br>');
+results.document.write('Ignoring the fixed cost, but taking bundling costs into account, the seller earns a profit of: '); 
+results.document.write('<i>Profit</i><sub>2</sub>-<i>cb</i><sub>2</sub> = <font color="#0000FF">' + round(profit2-cb2) + '</font><br>');
+if (profit2-cb2 >= F)
+results.document.write("Taking all costs (including the fixed cost) into account, the monopoly earns a total profit of: ", '<EM>Profit</EM><sub>2</sub>-<i>cb</i><sub>2</sub>-<i>F</i>  = <font color="#0000FF">', round(profit2-F-cb2), '</font><br>');
+else 
+results.document.write("Taking all costs (including the fixed cost) into account, the monopoly makes a total loss of: ", '<EM>L</EM><sub>2</sub>  = <font color="#0000FF">', round(F-profit2-cb2), '</font><br>');
+}//end writ2bundling
+
+function writ3bundling() { //writes 3-unit pure-bundling results
+writresult();
+results.document.write('<font color="#FF0000">3-Unit Pure Bundling: Suppose that the seller is contrained to sell only packages (bundles) containing exactly 3 units </font>: <br>');
+p3=3*c; profit3=0; totalq3=0; r3=0;
+for (var j = 1; j <= T; j++) q3[j]=0;
+for (var j = 1; j <= T; j++) { //running over p2seq[j]
+profittemp3=0;
+	for (var i = 1; i < T/1+1/1; i++) q3temp[i]=0; //initialize
+	for (var i = 1; i < T/1+1/1; i++) { 
+		if (3*c > p3seq[j]) pseq[j]=3*c; //asigning price no lower than 3c
+		if (g[i]/1+x[i]/1+y[i]/1 >= p3seq[j]) q3temp[i]=q3temp[i]/1+n[i]/1; //checking for 1st bundle
+		profittemp3=profittemp3/1+(p3seq[j] - 3*c)*q3temp[i]/1;
+	} //end for
+	if (profittemp3 >= profit3) {
+	p3=p3seq[j]; profit3=profittemp3; totalq3=0;
+		for (var k = 1; k < T/1+1/1; k++) { //quant consumed by each type
+		q3[k]=q3temp[k]; totalq3=totalq3/1+q3[k]/1; r3=p3*totalq3; cb3=b*totalq3;
+		}
+	}//end if
+}//end for j running of pseq[j]
+results.document.write('The seller should set the price for the bundle with 3 units to: '); 
+results.document.write('<i>p</i><sub>3</sub> = <font color="#0000FF">' + round(p3) + '</font><br>');
+results.document.write('The total number of bundles sold (each containing 3 units of the good) is: '); 
+results.document.write('<i>q</i><sub>3</sub> = <font color="#0000FF">' + round(totalq3) + '</font><br>');
+	for (var i = 1; i < T/1+1/1; i++) { 
+	results.document.write('Each type ' + i + ' consumer buys: '); 
+	results.document.write('<font color="#0000FF">' + round(q3[i]/n[i]) + '</font> bundles (each containing 3 units)<br>');
+	}// end for
+results.document.write('The total revenue collected by the seller is: '); 
+results.document.write('<i>r</i><sub>3</sub> = <font color="#0000FF">' + round(r3) + '</font><br>');
+results.document.write('The total cost of preparing 3-unit bundles by the seller is: '); 
+results.document.write('<i>cb</i><sub>3</sub> = <font color="#0000FF">' + round(cb3) + '</font><br>');
+
+results.document.write('Ignoring the fixed cost, and ignoring bundling cost, the seller earns a profit of: '); 
+results.document.write('<i>Profit</i><sub>3</sub> = <font color="#0000FF">' + round(profit3) + '</font><br>');
+results.document.write('Ignoring the fixed cost, but taking bundling costs into account, the seller earns a profit of: '); 
+results.document.write('<i>Profit</i><sub>3</sub>-<i>cb</i><sub>3</sub> = <font color="#0000FF">' + round(profit3-cb3) + '</font><br>');
+if (profit3-cb3 >= F)
+results.document.write("Taking all costs (including the fixed cost) into account, the monopoly earns a total profit of: ", '<EM>Profit</EM><sub>3</sub>-<i>cb</i><sub>3</sub>-<i>F</i>  = <font color="#0000FF">', round(profit3-F-cb3), '</font><br>');
+else 
+results.document.write("Taking all costs (including the fixed cost) into account, the monopoly makes a total loss of: ", '<EM>L</EM><sub>3</sub>  = <font color="#0000FF">', round(F-profit3-cb3), '</font><br>');
+}//end writ3bundling
+
+function writ4bundling() { //writes 4-unit pure-bundling results
+writresult();
+results.document.write('<font color="#FF0000">4-Unit Pure Bundling: Suppose that the seller is contrained to sell only packages (bundles) containing exactly 4 units </font>: <br>');
+p4=4*c; profit4=0; totalq4=0; r4=0;
+for (var j = 1; j <= T; j++) q4[j]=0;
+for (var j = 1; j <= T; j++) { //running over p4seq[j]
+profittemp4=0;
+	for (var i = 1; i < T/1+1/1; i++) q4temp[i]=0; //initialize
+	for (var i = 1; i < T/1+1/1; i++) { 
+		if (4*c > p4seq[j]) pseq[j]=4*c; //asigning price no lower than 4c
+		if (g[i]/1+x[i]/1+y[i]/1+z[i]/1 >= p4seq[j]) q4temp[i]=q4temp[i]/1+n[i]/1; //checking for 1st bundle
+		profittemp4=profittemp4/1+(p4seq[j] - 4*c)*q4temp[i]/1;
+	} //end for
+	if (profittemp4 >= profit4) {
+	p4=p4seq[j]; profit4=profittemp4; totalq4=0;
+		for (var k = 1; k < T/1+1/1; k++) { //quant consumed by each type
+		q4[k]=q4temp[k]; totalq4=totalq4/1+q4[k]/1; r4=p4*totalq4; cb4=b*totalq4;
+		}
+	}//end if
+}//end for j running of pseq[j]
+results.document.write('The seller should set the price for the bundle with 4 units to: '); 
+results.document.write('<i>p</i><sub>4</sub> = <font color="#0000FF">' + round(p4) + '</font><br>');
+results.document.write('The total number of bundles sold (each containing 4 units of the good) is: '); 
+results.document.write('<i>q</i><sub>4</sub> = <font color="#0000FF">' + round(totalq4) + '</font><br>');
+	for (var i = 1; i < T/1+1/1; i++) { 
+	results.document.write('Each type ' + i + ' consumer buys: '); 
+	results.document.write('<font color="#0000FF">' + round(q4[i]/n[i]) + '</font> bundles (each containing 4 units)<br>');
+	}// end for
+results.document.write('The total revenue collected by the seller is: '); 
+results.document.write('<i>r</i><sub>4</sub> = <font color="#0000FF">' + round(r4) + '</font><br>');
+results.document.write('The total cost of preparing 4-unit bundles by the seller is: '); 
+results.document.write('<i>cb</i><sub>4</sub> = <font color="#0000FF">' + round(cb4) + '</font><br>');
+results.document.write('Ignoring the fixed cost, and ignoring bundling cost, the seller earns a profit of: '); 
+results.document.write('<i>Profit</i><sub>4</sub> = <font color="#0000FF">' + round(profit4) + '</font><br>');
+results.document.write('Ignoring the fixed cost, but taking bundling costs into account, the seller earns a profit of: '); 
+results.document.write('<i>Profit</i><sub>4</sub>-<i>cb</i><sub>4</sub> = <font color="#0000FF">' + round(profit4-cb4) + '</font><br>');
+if (profit4-cb4 >= F)
+results.document.write("Taking all costs (including the fixed cost) into account, the monopoly earns a total profit of: ", '<EM>Profit</EM><sub>4</sub>-<i>cb</i><sub>4</sub>-<i>F</i>  = <font color="#0000FF">', round(profit4-F-cb4), '</font><br>');
+else 
+results.document.write("Taking all costs (including the fixed cost) into account, the monopoly makes a total loss of: ", '<EM>L</EM><sub>4</sub>  = <font color="#0000FF">', round(F-profit4-cb4), '</font><br>');
+}//end writ4bundling
+
+function writmixedbundling() { //writes mixed bundling results
+writresult();
+results.document.write('<font color="#FF0000">Mixed-Bundling: Suppose that the seller can sell packages and/or each product separately </font>: <br>');
+results.document.write('Under Development: This feature of the software is not yet available! <br>');
+}
+
+function writcomparebundling() { //compares and finds optimal strategy
+writresult();
+results.document.write('<font color="#FF0000">Profit Comparison: Is bundling profitable? </font>: <br>');
+var bundlingoption='no bundling'; maxprofit=profit;
+if (profit2-cb2 > maxprofit) {bundlingoption='2-unit bundles'; maxprofit=profit2-cb2; };
+if (profit3-cb3 > maxprofit) {bundlingoption='3-unit bundles'; maxprofit=profit3-cb3; };
+if (profit4-cb4 > maxprofit) {bundlingoption='4-unit bundles'; maxprofit=profit4-cb4; };
+
+if (bundlingoption=='no bundling')
+results.document.write('Selling <font color="#0000FF">each unit separately</font> (no bundling) yields the highest profit. <br>');
+else
+results.document.write('Selling <font color="#0000FF">' + bundlingoption + '</font>  yields the highest profit. <br>');	
+}
+
+function calc() { // start computation function (main function!)
+openresultswindow();
+if (T > 9) T = 9; //making sure that # Observations does not exceed 9
+if (T < 2) T = 2; //making sure that # Observations is at least 2
+writdata(); //writes the data function
+checkw(); checkx(); checky(); checkz(); checkn(); //checking for negative values
+checksequence();
+if (c > g[wmax]) { //total shut down (here we need only to check for g (1st)
+revise=true; writresult();
+results.document.write('<font color="#FF0000">The data you provided implies that the good should not be produced (sold) since 1<sup>st</sup><SUB>i</SUB> < <EM>c</EM> for all i. <br>This means that the marginal cost exceeds consumers\' willingness to pay.</font><br>' );
+results.document.write('<font color="#FF0000">Please, close this window and re-enter your data.</font><br>' ); 
+}
+	if (revise==false) { // main calc begins
+	writnobundling(); 
+	writ2bundling();	
+	writ3bundling();	
+	writ4bundling();	
+	writmixedbundling(); 
+	writcomparebundling(); 
+	} //end of if revise is false
+// Now closing the output window
+if (resultno > 1)
+results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' sets of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+else results.document.write('<hr><font color="#FF0000">End of Page:</font> This page listed <font color="#0000FF">', resultno, ' set of results</fonts><font color="#000000"> that were calculated from the data <font color="fuchsia">you</font><font color="#000000"> provided!');
+results.document.write('<hr><form><INPUT type="button" value="Close this Page !" id="close" name="close" onClick="window.close()"> ');
+results.document.write('<INPUT type="button" value="Print the Results !" id="print" name="print" onClick="printpage()"></form>');
+results.document.write('<h5>Copyright © 2002 &nbsp; <EM>How-to-Price</EM><SUP><font size="1">TM</SUP> &nbsp; All rights reserved.<h5>');
+} // end calc function
+
+// end of all functions
+
+resultno=0; //initializing results counter
+
+</SCRIPT>
+</HEAD>
+<body text=black bgColor=white>
+<h1 style="BACKGROUND-COLOR: aqua">Single 
+Seller&nbsp;/&nbsp;Bundling&nbsp;/&nbsp;2 to&nbsp;9 Consumer Types</H1>
+<p style="BACKGROUND-COLOR: lime"><b>Purpose</B>: To compute the single-seller's 
+profit-maximizing strategy regarding&nbsp;bundling (quantity discount). That is, 
+selling several units of the same product&nbsp;as a single&nbsp;package 
+(bundle). The user (you) input willingness to pay for each additional unit of 
+the&nbsp;good by each consumer type, as well as the number of consumers of each 
+type, and the seller's cost parameters. <br>Then, <em>How-to-Price</EM><sup>TM</SUP> 
+computes whether&nbsp;bundling is profitable, and how to price&nbsp;bundles as 
+well as each unit when&nbsp;sold unbundled.</P>
+<hr>
+<b style="BACKGROUND-COLOR: gold">Inputting demand and 
+technology data:</B><br>
+<FORM name=data onsubmit=calc()><font color=#ff0000>Please, <STRONG>always</STRONG> click <INPUT id=reset1 onclick=initialize() type=reset value="Reset !" name=reset1>&nbsp;before 
+changing or submitting the following parameters:</FONT> 
+<UL>
+  <LI>The cost of producing each additional unit (marginal 
+  cost) of this&nbsp;good: Enter <em>c</EM> = <INPUT 
+  id=Text102 onchange="c =this.value" size=10 value=0 name=cinput 
+  > 
+  
+  <LI>The cost of preparing a single bundle (package) containing 2, 3, or 4 units of this good: 
+  Enter <em>b</EM> = <INPUT 
+  id=Text1 onchange="b =this.value" size=10 value=0 name=binput> 
+  <BR><FONT size=2>(<font color=#ff0000>Remark:</FONT> 
+  Enter a negative number if bunding saves on the cost of packaging) </FONT>
+    
+  <li>Fixed production cost: Enter <I 
+  >F</I> = <INPUT id=Finput onchange="F =this.value" size=10 
+  value=1000 name=Finput> 
+  <li>Enter the number of consumer types <EM 
+  >T</EM>&nbsp;in this&nbsp;box (2-9):&nbsp; <INPUT 
+  id=Ninput onchange="T =this.value" size=5 value=3 name=Ninput 
+  > 
+  <LI>Below, enter&nbsp;consumers' maximum willingness to 
+  pay for&nbsp;the 1<sup>st</SUP> unit,&nbsp;2<sup 
+  >nd</SUP> unit, 3<sup>rd</SUP> unit, 
+  and the 4<sup>th</SUP> unit, and the number of consumers 
+  of this type&nbsp; 
+  (<EM>n</EM><SUB>i</SUB>):
+  <BR><FONT size=2>(<font color=#ff0000>Remark:</FONT> 
+  if, for example, you entered&nbsp; <EM>T</EM> = 3 
+  (default), the program will ignore all&nbsp;consumer types&nbsp;4 to 9, and 
+  so on...) </FONT>
+  <br>
+  
+  Consumer-type&nbsp;01: Enter 1<sup 
+  >st</SUP><SUB>01</SUB> = <INPUT 
+  id=Text128 onchange="g[1] =this.value" size=5 value=5 name=w1input 
+  >,&nbsp; 
+  2<sup>nd</SUP><SUB 
+  >01</SUB> = <INPUT id=Text129 onchange="x[1] =this.value" 
+  size=5 value=2 name=x1input>,&nbsp; 
+  3<sup>rd</SUP><SUB>01</SUB> = <INPUT 
+  id=Text129 onchange="y[1] =this.value" size=5 value=1 name=y1input 
+  >,&nbsp; 4<sup>th</SUP><SUB 
+  >01</SUB> = <INPUT id=Text129 onchange="z[1] =this.value" 
+  size=5 value=0 name=z1input>,&nbsp; <I 
+  >n</I><SUB>01</SUB> = <INPUT 
+  id=Text129 onchange="n[1] =this.value" size=5 value=300 name=n1input 
+  ><br>
+  
+  Consumer-type&nbsp;02: Enter 
+  1<sup>st</SUP><SUB>02</SUB> = <INPUT 
+  id=Text129 onchange="g[2] =this.value" size=5 value=8 name=w2input 
+  >,&nbsp; 2<sup>nd</SUP><SUB 
+  >02</SUB> = <INPUT id=Text130 onchange="x[2] =this.value" 
+  size=5 value=7 name=x2input>,&nbsp; 3<sup 
+  >rd</SUP><SUB>02</SUB> = <INPUT 
+  id=Text130 onchange="y[2] =this.value" size=5 value=6 name=y2input 
+  >,&nbsp; 4<sup>th</SUP><SUB 
+  >02</SUB> = <INPUT id=Text130 onchange="z[2] =this.value" 
+  size=5 value=5 name=z2input>,&nbsp; <I 
+  >n</I><SUB>02</SUB> = <INPUT 
+  id=Text130 onchange="n[2] =this.value" size=5 value=100 name=n2input 
+  >&nbsp;<br>
+  
+  Consumer-type&nbsp;03: 
+  Enter 1<sup>st</SUP><SUB>03</SUB> = 
+  <INPUT id=Text130 onchange="g[3] =this.value" size=5 value=4 name=w3input 
+  >,&nbsp; 2<sup>nd</SUP><SUB 
+  >03</SUB> = <INPUT id=Text131 onchange="x[3] =this.value" 
+  size=5 value=4 name=x3input>,&nbsp; 3<sup 
+  >rd</SUP><SUB>03</SUB> = <INPUT 
+  id=Text131 onchange="y[3] =this.value" size=5 value=4 name=y3input 
+  >,&nbsp; 4<sup>th</SUP><SUB 
+  >03</SUB> = <INPUT id=Text131 onchange="z[3] =this.value" 
+  size=5 value=4 name=z3input>,&nbsp; <I 
+  >n</I><SUB>03</SUB> = <INPUT 
+  id=Text131 onchange="n[3] =this.value" size=5 value=300 name=n3input 
+  >&nbsp;<br>
+  
+  Consumer-type&nbsp;04: 
+  Enter 1<sup>st</SUP><SUB>04</SUB> = 
+  <INPUT id=Text131 onchange="g[4] =this.value" size=5 value=333 name=w4input 
+  >,&nbsp; 2<sup>nd</SUP><SUB 
+  >04</SUB> = <INPUT id=Text132 onchange="x[4] =this.value" 
+  size=5 value=333 name=x4input>,&nbsp; 3<sup 
+  >rd</SUP><SUB>04</SUB> = <INPUT 
+  id=Text132 onchange="y[4] =this.value" size=5 value=333 name=y4input 
+  >,&nbsp; 4<sup>th</SUP><SUB 
+  >04</SUB> = <INPUT id=Text132 onchange="z[4] =this.value" 
+  size=5 value=333 name=z4input>,&nbsp; <I 
+  >n</I><SUB>04</SUB> = <INPUT 
+  id=Text132 onchange="n[4] =this.value" size=5 value=333 name=n4input 
+  >&nbsp;<br>Consumer-type&nbsp;05: 
+  Enter 1<sup>st</SUP><SUB>05</SUB> = 
+  <INPUT id=Text132 onchange="g[5] =this.value" size=5 value=333 name=w5input 
+  >,&nbsp; 2<sup>nd</SUP><SUB 
+  >05</SUB> = <INPUT id=Text133 onchange="x[5] =this.value" 
+  size=5 value=333 name=x5input>,&nbsp; 3<sup 
+  >rd</SUP><SUB>05</SUB> = <INPUT 
+  id=Text133 onchange="y[5] =this.value" size=5 value=333 name=y5input 
+  >,&nbsp; 4<sup>th</SUP><SUB 
+  >05</SUB> = <INPUT id=Text133 onchange="z[5] =this.value" 
+  size=5 value=333 name=z5input>,&nbsp; <I 
+  >n</I><SUB>05</SUB> = <INPUT 
+  id=Text133 onchange="n[5] =this.value" size=5 value=333 name=n5input 
+  >&nbsp;<br>Consumer-type&nbsp;06: 
+  Enter 1<sup>st</SUP><SUB>06</SUB> = 
+  <INPUT id=Text133 onchange="g[6] =this.value" size=5 value=333 name=w6input 
+  >,&nbsp; 2<sup>nd</SUP><SUB 
+  >06</SUB> = <INPUT id=Text134 onchange="x[6] =this.value" 
+  size=5 value=333 name=x6input>,&nbsp; 3<sup 
+  >rd</SUP><SUB>06</SUB> = <INPUT 
+  id=Text134 onchange="y[6] =this.value" size=5 value=333 name=y6input 
+  >,&nbsp; 4<sup>th</SUP><SUB 
+  >06</SUB> = <INPUT id=Text134 onchange="z[6] =this.value" 
+  size=5 value=333 name=z6input>,&nbsp; <I 
+  >n</I><SUB>06</SUB> = <INPUT 
+  id=Text134 onchange="n[6] =this.value" size=5 value=333 name=n6input 
+  >&nbsp;<br>Consumer-type&nbsp;07: 
+  Enter 1<sup>st</SUP><SUB>07</SUB> = 
+  <INPUT id=Text134 onchange="g[7] =this.value" size=5 value=333 name=w7input 
+  >,&nbsp; 2<sup>nd</SUP><SUB 
+  >07</SUB> = <INPUT id=Text135 onchange="x[7] =this.value" 
+  size=5 value=333 name=x7input>,&nbsp; 3<sup 
+  >rd</SUP><SUB>07</SUB> = <INPUT 
+  id=Text135 onchange="y[7] =this.value" size=5 value=333 name=y7input 
+  >,&nbsp; 4<sup>th</SUP><SUB 
+  >07</SUB> = <INPUT id=Text135 onchange="z[7] =this.value" 
+  size=5 value=333 name=z7input>,&nbsp; <I 
+  >n</I><SUB>07</SUB> = <INPUT 
+  id=Text135 onchange="n[7] =this.value" size=5 value=333 name=n7input 
+  >&nbsp;<br>Consumer-type&nbsp;08: 
+  Enter 1<sup>st</SUP><SUB>08</SUB> = 
+  <INPUT id=Text135 onchange="g[8] =this.value" size=5 value=333 name=w8input 
+  >,&nbsp; 2<sup>nd</SUP><SUB 
+  >08</SUB> = <INPUT id=Text136 onchange="x[8] =this.value" 
+  size=5 value=333 name=x8input>,&nbsp; 3<sup 
+  >rd</SUP><SUB>08</SUB> = <INPUT 
+  id=Text136 onchange="y[8] =this.value" size=5 value=333 name=y8input 
+  >,&nbsp; 4<sup>th</SUP><SUB 
+  >08</SUB> = <INPUT id=Text136 onchange="z[8] =this.value" 
+  size=5 value=333 name=z8input>,&nbsp; <I 
+  >n</I><SUB>08</SUB> = <INPUT 
+  id=Text136 onchange="n[8] =this.value" size=5 value=333 name=n8input 
+  >&nbsp;<br>Consumer-type&nbsp;09: 
+  Enter 1<sup>st</SUP><SUB>09</SUB> = 
+  <INPUT id=Text136 onchange="g[9] =this.value" size=5 value=333 name=w9input 
+  >,&nbsp; 2<sup>nd</SUP><SUB 
+  >09</SUB> = <INPUT id=Text137 onchange="x[9] =this.value" 
+  size=5 value=333 name=x9input>,&nbsp; 3<sup 
+  >rd</SUP><SUB>09</SUB> = <INPUT 
+  id=Text137 onchange="y[9] =this.value" size=5 value=333 name=y9input 
+  >,&nbsp; 4<sup>th</SUP><SUB 
+  >09</SUB> = <INPUT id=Text137 onchange="z[9] =this.value" 
+  size=5 value=333 name=z9input>,&nbsp; <I 
+  >n</I><SUB>09</SUB> = <INPUT 
+  id=Text137 onchange="n[9] =this.value" size=5 value=333 name=n9input 
+  >&nbsp;<br>
+  </LI></UL><INPUT type=submit value="Show Results Now !" name=showresults> 
+<INPUT onclick=window.close() type=button value="Close Page" name=closewindow> 
+<INPUT id=GoMain onclick="openwindow('index.html')" type=button value="Main Page" name=GoMain> 
+<INPUT onclick="openwindow('glossar.html')" type=button value="Glossar of Terms" name=glossar> 
+</FORM>
+<hr>
+
+<h5>Copyright © 2002&nbsp; <EM>How-to-Price</EM><SUP><font size=1>TM</FONT></SUP>&nbsp; All rights 
+reserved.</H5>
+
+</body></HTML>
